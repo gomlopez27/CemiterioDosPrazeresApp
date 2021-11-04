@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Home.unity
+    guid: 3924921c8fe720846bbd85bcd76b9ca1
+  - enabled: 1
+    path: Assets/Scenes/OnSpotARScene.unity
+    guid: db3426c21793b3c4e8ab2d73a33c2c60
+  - enabled: 1
+    path: Assets/Scenes/NearbyARScene.unity
+    guid: 24681d6741a65964785af47f5ab14489
+  - enabled: 1
+    path: Assets/Scenes/CemeteryMapScene.unity
+    guid: 03bd1a34a4156db41b6f5ff4d7bb71d8
+  - enabled: 1
+    path: Assets/Scenes/RoutesScene.unity
+    guid: f1c80957d8eeb1b489d3858fd42bcc73
+  - enabled: 1
+    path: Assets/Scenes/CreateRoutesScene.unity
+    guid: 2a15a6e22e9617b4c912552c76a24195
+  - enabled: 1
+    path: Assets/Scenes/ImportRoutesScene.unity
+    guid: ba9df30fd7347d147957d342a6394124
+  m_configObjects:
+    UnityEditor.XR.ARCore.ARCoreSettings: {fileID: 11400000, guid: b135ddcdfa04cb6409830862f7bf8bfc, type: 2}
+    com.unity.xr.management.loader_settings: {fileID: 11400000, guid: fb55bbca812e07c4e91d94f8ac403ba8, type: 2}

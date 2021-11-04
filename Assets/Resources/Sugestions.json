@@ -1,0 +1,33 @@
+{"personalities":[
+  	{
+	"jazID": 1431,
+	"sugestion": "Pertence ao mesmo percurso",
+	"uriId": "11",
+	"nome":"Mário Cesariny",
+	},
+	{
+	"jazID": 1439,
+	"sugestion": "Pertence ao mesmo percurso",
+	"uriId": "12",
+	"nome":"Jorge de Sena",
+	},
+	{	
+	"jazID": 2271,
+	"sugestion": "Pertence ao mesmo percurso",
+	"uriId": "15",
+	"nome":"Cesário Verde",
+	},
+	{
+	"jazID": 1580,
+	"sugestion": "Pertence ao mesmo percurso",
+	"uriId": "22",
+	"nome":"Natália Correia",
+	},
+	{
+	"jazID": 1580,
+	"sugestion": "Pertence ao mesmo percurso",
+	"uriId": "29",
+	"nome":"Adolfo Simões Müller",
+	}
+]
+}

@@ -1,0 +1,32 @@
+{"trackers":[
+	{
+	"targetCollection": "https://url.to.your/collection.wto",
+    "assetBundleAndroid": "https://url.to.your/assetbundle-android",
+	"trackerName": "trackerGuitarTwo",
+	"gpsPosition":
+		{"latitude": "38.724883",
+		"longitude": "-8.990918"},
+	"targets":[
+		{"name": "guitar2",
+		"AugmentationName": "guitar2Augmentatation",
+		"description": "Lorem ipsum dolor sit amet, consectetur. Lorem ipsum dolor sit amet, consectetur.",
+		"imageURL": "https://freepngimg.com/thumb/acoustic_guitar/10-2-acoustic-guitar-png-hd.png"}
+	]
+	},
+	{
+	"targetCollection": "https://url.to.your/collection.wto",
+    "assetBundleAndroid": "https://url.to.your/assetbundle-android",
+	"trackerName": "...",
+	"gpsPosition":
+		{"latitude": "38.724883",
+		"longitude": "-8.990918"},
+	"targets":[
+		{"name": "...",
+		"AugmentationName": "...",
+		"description": "Lorem ipsum dolor sit amet, consectetur. Lorem ipsum dolor sit amet, consectetur.",
+		"imageURL": "https://freepngimg.com/thumb/acoustic_guitar/10-2-acoustic-guitar-png-hd.png"}
+	]
+	}
+	
+]
+}

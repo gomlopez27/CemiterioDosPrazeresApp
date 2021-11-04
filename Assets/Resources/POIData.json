@@ -1,0 +1,45 @@
+{"pois":[
+	{
+	"jazId": "1500",
+	"jazLocation": "Rua 1",
+	"personName": "tracker Guitar Two",
+	"route": "trackerGuitarTwo",
+	"photoUrl": "https://img.pngio.com/avatar-icon-flat-avatar-png-256_256.png",
+	"gpsPosition":
+		{"latitude": "38.724883",
+		"longitude": "-8.990918"},
+	"moreInfo":
+		{"description": "Lorem ipsum dolor sit amet, consectetur. Lorem ipsum dolor sit amet, consectetur.",
+		"imageURL": "https://images.all-free-download.com/images/graphicthumb/guitar_47886.jpg"}
+	
+	},
+	{
+	"jazId": "2270",
+	"jazLocation": "Rua 2",
+	"personName": "Other Tracker",
+	"route": "otherTracker",
+	"photoUrl": "https://image.flaticon.com/icons/png/512/194/194938.png",
+	"gpsPosition":
+		{"latitude": "38.72493",
+		"longitude": "-8.990545"},
+	"moreInfo":
+		{"description": "Lorem ipsum dolor sit amet, consectetur. Lorem ipsum dolor sit amet, consectetur.",
+		"imageURL": "https://images.all-free-download.com/images/graphicthumb/guitar_47886.jpg"}
+	
+	},
+	{
+	"jazId": "6667",
+	"jazLocation": "Rua 3",
+	"personName": "tracker Guitar Three",
+	"route": "trackerGuitarThree",
+	"photoUrl": "https://image.flaticon.com/icons/png/512/147/147144.png",
+	"gpsPosition":
+		{"latitude": "38.724726",
+		"longitude": "-8.990750"},
+	"moreInfo":
+		{"description": "Lorem ipsum dolor sit amet, consectetur. Lorem ipsum dolor sit amet, consectetur.",
+		"imageURL": "https://images.all-free-download.com/images/graphicthumb/guitar_47886.jpg"}
+	
+	}
+]
+}

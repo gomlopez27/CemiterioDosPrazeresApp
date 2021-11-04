@@ -1,0 +1,59 @@
+{"trackers":[
+	{
+	"trackerName": "trackerGuitarTwo",
+	"targets":[
+		{"name": "guitar2",
+		"description": "Lorem ipsum dolor sit amet, consectetur. Lorem ipsum dolor sit amet, consectetur.",
+		"imageURL": "https://freepngimg.com/thumb/acoustic_guitar/10-2-acoustic-guitar-png-hd.png"}
+	],
+	"gpsPosition":
+		{"latitude": "38.724883",
+		"longitude": "-8.990918"}
+	
+	},
+	{
+	"trackerName": "trackerGuitarThree",
+	"targets":[
+		{"name": "guitar3",
+		"description": "Lorem ipsum dolor sit amet, consectetur. Lorem ipsum dolor sit amet, consectetur.",
+		"imageURL": "https://images.all-free-download.com/images/graphicthumb/guitar_47886.jpg"}
+	
+	],
+	"gpsPosition":
+		{"latitude": "38.724726",
+		"longitude": "-8.990750"}
+	
+	},
+	{
+	"trackerName": "tracker-casa",
+	"targets":[
+		{"name": "agenda",
+		"description": "Lorem ipsum dolor sit amet, consectetur. Lorem ipsum dolor sit amet, consectetur.",
+		"imageURL": "https://images.all-free-download.com/images/graphicthumb/guitar_47886.jpg"},
+		{"name": "quadro-cavemen",
+		"description": "Lorem ipsum dolor sit amet, consectetur. Lorem ipsum dolor sit amet, consectetur.",
+		"imageURL": "https://images.all-free-download.com/images/graphicthumb/guitar_47886.jpg"},
+		{"name": "quadro-borboleta",
+		"description": "Lorem ipsum dolor sit amet, consectetur. Lorem ipsum dolor sit amet, consectetur.",
+		"imageURL": "https://images.all-free-download.com/images/graphicthumb/guitar_47886.jpg"},
+		{"name": "guitarra2-frente",
+		"description": "Lorem ipsum dolor sit amet, consectetur. Lorem ipsum dolor sit amet, consectetur.",
+		"imageURL": "https://images.all-free-download.com/images/graphicthumb/guitar_47886.jpg"},
+		{"name": "guitarra2-tras",
+		"description": "Lorem ipsum dolor sit amet, consectetur. Lorem ipsum dolor sit amet, consectetur.",
+		"imageURL": "https://images.all-free-download.com/images/graphicthumb/guitar_47886.jpg"},
+		{"name": "guitarra1-frente",
+		"description": "Lorem ipsum dolor sit amet, consectetur. Lorem ipsum dolor sit amet, consectetur.",
+		"imageURL": "https://images.all-free-download.com/images/graphicthumb/guitar_47886.jpg"},
+		{"name": "guitarra1-tras",
+		"description": "Lorem ipsum dolor sit amet, consectetur. Lorem ipsum dolor sit amet, consectetur.",
+		"imageURL": "https://images.all-free-download.com/images/graphicthumb/guitar_47886.jpg"}
+	
+	],
+	"gpsPosition":
+		{"latitude": "38.724266",
+		"longitude": "-8.991785"}
+	
+	}
+]
+}

@@ -1,0 +1,103 @@
+{
+   "routes":[
+      {
+         "id":"or1",
+         "name":"Músicos – Voltas e Notas",
+         "code":"oficial",
+         "routeCategory":["Músicos"],
+         "description":"Este percurso contém os jazigos de músicos famosos que se encontram enterrados no Cemitério dos Prazeres",
+         "pois":[
+            {
+               "id":1803,
+               "latitude":38.713578242,
+               "longitude":-9.1701491226,
+               "tipoJaz":"JP",
+               "personalidades":["Viana da Motta"],
+               "description":"Lorem ipsum dolor sit amet, consectetur. Lorem ipsum dolor sit amet, consectetur.",
+               "imageURL":"https://www.casadamusica.com/ImageGen.ashx?image=/media/2332173/30130517_jos__vianna_da_motta_evento_01.jpg"
+            },
+            {
+               "id":1204,
+               "latitude":38.7141744652,
+               "longitude":-9.1711175235,
+               "tipoJaz":"JM",
+               "personalidades":["Alfredo Marceneiro"],
+               "description":"Lorem ipsum dolor sit amet, consectetur. Lorem ipsum dolor sit amet, consectetur.",
+               "imageURL":"https://www.museudofado.pt/media/2020/5/alfredomarceneiro.png"
+            },
+            {
+               "id":3696,
+               "latitude":38.7131401164,
+               "longitude":-9.1720715901,
+               "tipoJaz":"JP",
+               "personalidades":["Bernardo Sassetti"],
+               "description":"Lorem ipsum dolor sit amet, consectetur. Lorem ipsum dolor sit amet, consectetur.",
+               "imageURL":"https://www.musica-portuguesa.com/wp-content/uploads/2017/11/nova-gente-37519-noticia-bernardo-sassetti-inquerito-morte-nao-e-conclusivo-855x480.jpg"
+            },
+            {
+               "id":2227,
+               "latitude":38.7132812459,
+               "longitude":-9.1723861971,
+               "tipoJaz":"JP",
+               "personalidades":["Luís de Freitas Branco"],
+               "description":"Lorem ipsum dolor sit amet, consectetur. Lorem ipsum dolor sit amet, consectetur.",
+               "imageURL":"https://upload.wikimedia.org/wikipedia/commons/d/d8/Luiz_de_Freitas_Branco_-_Ser%C3%B5es_%28Mai1911%29.png"
+            },
+ 	    {
+               "id":6009,
+               "latitude":38.7142362258,
+               "longitude":-9.1727769584,
+               "tipoJaz":"JP",
+               "personalidades":["Hermínia Silva"],
+               "description":"Lorem ipsum dolor sit amet, consectetur. Lorem ipsum dolor sit amet, consectetur.",
+               "imageURL":"https://www.museudofado.pt/media/2020/6/herminiasilva.png"
+            },
+            {
+               "id":475,
+               "latitude":38.7153312952,
+               "longitude":-9.1720846274,
+               "tipoJaz":"JP",
+               "personalidades":["Domingos Bomtempo"],
+               "description":"Lorem ipsum dolor sit amet, consectetur. Lorem ipsum dolor sit amet, consectetur.",
+               "imageURL":"https://capeiaarraiana.pt/wp-content/uploads/2016/12/composer55.jpg"
+            }
+         ]
+      },
+      {
+         "id":"or2",
+         "name":"Atores - Último Palco",
+         "code":"oficial",
+         "description":"Este percurso contém os jazigos de atores famosos que se encontram enterrados no Cemitério dos Prazeres",
+         "routeCategory":["Atores"],
+         "pois":[
+            {
+               "id":6640,
+               "latitude":38.7123811509,
+               "longitude":-9.17065905,
+               "tipoJaz":"JP",
+               "personalidades":["Amélia Rey-Colaço"],
+               "description":"Lorem ipsum dolor sit amet, consectetur. Lorem ipsum dolor sit amet, consectetur.",
+               "imageURL":"https://www.oxigenio.fm/wp-content/uploads/2020/03/2651937479_68ce320940_b-567x768.jpg"
+            },
+            {
+               "id":1500,
+               "latitude":38.7137469821,
+               "longitude":-9.170368487,
+               "tipoJaz":"JP",
+               "personalidades":["Artistas Dramáticos - João Villaret e Vasco Santana"],
+               "description":"Lorem ipsum dolor sit amet, consectetur. Lorem ipsum dolor sit amet, consectetur.",
+               "imageURL":"https://upload.wikimedia.org/wikipedia/commons/e/ef/Lisbon%2C_the_Capela_do_Cemit%C3%A9rio_dos_Prazeres.JPG"
+            },
+            {
+               "id":1172,
+               "latitude":38.7141691565,
+               "longitude":-9.1712436539,
+               "tipoJaz":"OM",
+               "personalidades":["Raul Solnado"],
+               "description":"Lorem ipsum dolor sit amet, consectetur. Lorem ipsum dolor sit amet, consectetur.",
+               "imageURL":"https://upload.wikimedia.org/wikipedia/commons/8/8f/Raul_solnado_cnc.jpg"
+            }
+         ]
+      }
+   ]
+}

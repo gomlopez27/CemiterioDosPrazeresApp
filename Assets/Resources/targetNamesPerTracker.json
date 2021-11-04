@@ -1,0 +1,38 @@
+[
+	{
+	"wtoUrl": "https://pasev.di.fct.unl.pt/contentFiles/Giovanna/TargetCollections/tracker-casa.wto",
+	"wtoName": "Zona28",
+	"targets":[
+		{"targetName": "agenda",
+                 "augmentation": "default"},
+		{"targetName": "quadro-cavemen",
+                 "augmentation": "JazCarolinaBeatriz"},
+		{"targetName": "quadro-borboleta",
+                 "augmentation": "JazCesarioVerdeAugmentation"},
+		{"targetName": "guitarra1-frente",
+                 "augmentation": "default"},
+		{"targetName": "guitarra1-tras",
+                 "augmentation": "default"},	
+		{"targetName": "guitarra2-frente",
+                 "augmentation": "default"},
+		{"targetName": "guitarra2-tras",
+                 "augmentation": "default"}
+		]
+	},
+	{
+	"wtoUrl": "https://pasev.di.fct.unl.pt/contentFiles/Giovanna/TargetCollections/trackerGuitarTwo.wto",
+	"wtoName": "Zona27",
+	"targets":[
+		{"targetName": "guitar2",
+                 "augmentation": "augmentationTest"}
+		]
+	},
+	{
+	"wtoUrl": "https://pasev.di.fct.unl.pt/contentFiles/Giovanna/TargetCollections/trackerGuitarThree.wto",
+	"wtoName": "Zona29",
+	"targets":[
+		{"targetName": "guitar3",
+                 "augmentation": "default"}
+		]
+	}
+]
