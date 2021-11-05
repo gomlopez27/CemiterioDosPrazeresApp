@@ -110,9 +110,9 @@ public class RuntimeObjectTracker : MonoBehaviour
         if (!hasCreatedTrackers && myLoadedAssetBundle != null)
         {
             CreateObjectTrackers();
+            print("CREATED OBJ TRACKERS" + createdObjTrackers.Count);
 
         }
-
         //if (lauchDefaultAugmentation)
         //{
         //    StartCoroutine(DefaultAugmentationCreation(CurrentObjTarget.Name));

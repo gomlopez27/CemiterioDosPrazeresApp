@@ -58,8 +58,7 @@ public class PoiClickedController : MonoBehaviour
                 break;
             }
         }
-        map.GetComponent<PanZoom>().enabled = false;
-        map.GetComponent<QuadTreeCameraMovement>().enabled = false;
+ 
         SetupInfoPanel();
 
         //string filePath = Application.persistentDataPath + "/Favorites.json";
@@ -152,13 +151,13 @@ public class PoiClickedController : MonoBehaviour
                     addToFavoritesBtn.gameObject.SetActive(false);
                     removeFromFavoritesBtn.gameObject.SetActive(false);
 
-                    SetMultiplePersonalitiesList(PoisInMap["pois"][i]["personalidades"]);
+                    SetMultiplePersonalitiesList(jazId, PoisInMap["pois"][i]["personalidades"]);
                 }
                 else  /*Uma personalidade*/
                 {
                     SinglePersonality.SetActive(true);
                     MultiplePersonalities.SetActive(false);
-                    SetSinglePersonality(PoisInMap["pois"][i]["personalidades"][0]);
+                    SetSinglePersonality(jazId, PoisInMap["pois"][i]["personalidades"][0]);
                     string personId = PoisInMap["pois"][i]["personalidades"][0]["uriId"];
 
                     if(ButtonsController.GetComponent<FavoritePoisMap>().isFavorite(jazId, personId))
@@ -195,7 +194,7 @@ public class PoiClickedController : MonoBehaviour
 
  
 
-    void SetSinglePersonality(JSONNode Personality)
+    void SetSinglePersonality(string jazId, JSONNode Personality)
     {
 
         Image personalityImage = InfoPanel.transform.Find("SinglePersonality/PersonImage").GetComponent<Image>();
@@ -207,11 +206,11 @@ public class PoiClickedController : MonoBehaviour
         personalityBio.text = Personality["description"];
         SeeMoreBtn.onClick.AddListener(()=> {
             PersonInfoPanel.SetActive(true);
-            SetMoreInfoPersonality(Personality);
+            SetMoreInfoPersonality(jazId, Personality);
         });
     }
 
-    void SetMultiplePersonalitiesList(JSONNode PersonalitiesList)
+    void SetMultiplePersonalitiesList(string jazId, JSONNode PersonalitiesList)
     {
         GameObject ListArea = MultiplePersonalities.transform.Find("ScrollArea/Content").gameObject;
         GameObject PersonalityItem = ListArea.transform.GetChild(0).gameObject;
@@ -224,7 +223,7 @@ public class PoiClickedController : MonoBehaviour
             string personName = PersonalitiesList[i]["nome"];
             GameObject g = Instantiate(PersonalityItem, ListArea.transform);
             g.name = "person-" + personId;
-            g.transform.Find("PersonName").GetComponent<Text>().text = personName;
+            g.transform.Find("MoreBtn/PersonName").GetComponent<Text>().text = personName;
             Button AddFav = g.transform.Find("FavPersBtn").GetComponent<Button>();
             Button RemoveFav = g.transform.Find("NotFavPersBtn").GetComponent<Button>();
             Button SeeMore = g.transform.Find("MoreBtn").GetComponent<Button>();
@@ -259,7 +258,7 @@ public class PoiClickedController : MonoBehaviour
                 PersonInfoPanel.gameObject.SetActive(true);
                 print("on click" + Personality["nome"]);
 
-                SetMoreInfoPersonality(Personality);
+                SetMoreInfoPersonality(jazId,Personality);
             });
         }
         //Destroy(PersonalityItem);
@@ -280,14 +279,43 @@ public class PoiClickedController : MonoBehaviour
         }
     }
 
-    void SetMoreInfoPersonality(JSONNode Personality)
+    void SetMoreInfoPersonality(string jazId, JSONNode Personality)
     {
         Image personalityImage = PersonInfoPanel.transform.Find("Image").GetComponent<Image>();
         Text personalityName = PersonInfoPanel.transform.Find("PersonName").GetComponent<Text>();
-        Text personalityBio = PersonInfoPanel.transform.Find("BioText").GetComponent<Text>();
+        Text personalityBio = PersonInfoPanel.transform.Find("Scroll View/Viewport/Content").GetComponent<Text>();
         Davinci.get().load(Personality["imageURL"]).into(personalityImage).start();
         personalityName.text = Personality["nome"];
         personalityBio.text = Personality["description"];
+        string personId = Personality["uriId"];
+
+        Button AddFav = PersonInfoPanel.transform.Find("Buttons/AddToFavsBtn").GetComponent<Button>();
+        Button RemoveFav = PersonInfoPanel.transform.Find("Buttons/RemoveToFavsBtn").GetComponent<Button>();
+
+        if (ButtonsController.GetComponent<FavoritePoisMap>().isFavorite(jazId, personId))
+        {
+            AddFav.gameObject.SetActive(false);
+            RemoveFav.gameObject.SetActive(true);
+        }
+        else
+        {
+            AddFav.gameObject.SetActive(true);
+            RemoveFav.gameObject.SetActive(false);
+        }
+
+        AddFav.onClick.AddListener(() => {
+            AddFav.gameObject.SetActive(false);
+            RemoveFav.gameObject.SetActive(true);
+            ButtonsController.GetComponent<FavoritePoisMap>().AddPersonalityToFavs(jazId, personId);
+
+        });
+
+        RemoveFav.onClick.AddListener(() => {
+            RemoveFav.gameObject.SetActive(false);
+            AddFav.gameObject.SetActive(true);
+            ButtonsController.GetComponent<FavoritePoisMap>().RemovePersonalityFromFav(jazId, personId);
+
+        });
     }
    
     public void TakeMeThere()
@@ -301,7 +329,7 @@ public class PoiClickedController : MonoBehaviour
 
         _directionsFact.Start();
         InfoPanel.SetActive(false);
-        map.GetComponent<PanZoom>().enabled = true;
+   
        // yield return new WaitForSeconds(0.5f);
         DirectionsPanel.SetActive(true);
         takeMeThreBtnClicked = true;

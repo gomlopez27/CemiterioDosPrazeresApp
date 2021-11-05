@@ -139,14 +139,14 @@ public class RoutePageArea : MonoBehaviour
                 if (go.name.Equals("Panel1") /*|| go.name.Equals("Panel2")*/)
                 {
                     go.SetActive(false);
-                    Map.GetComponent<PanZoom>().enabled = true;
-                    Map.GetComponent<PanZoom>().SetCameraInitialPosition();
+                    Map.GetComponent<MapPanning>().enabled = true;
+                    Map.GetComponent<MapPanning>().SetCameraInitialPosition();
 
                 }
                 if (go.name.Equals("RouteInfoPanel"))
                 {
                     panel1.SetActive(true);
-                    Map.GetComponent<PanZoom>().enabled = false;
+                    Map.GetComponent<MapPanning>().enabled = false;
 
                 }
                 //if (go.name.Equals("PoiInfoPanel"))

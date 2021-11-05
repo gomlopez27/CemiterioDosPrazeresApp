@@ -208,11 +208,14 @@ public class ObjectTrackerSlotsController : MonoBehaviour
         if(ObjecTrackersGO.Count == 0)
         {
             ObjecTrackersGO = this.GetComponent<RuntimeObjectTracker>().GetObjectTrackers();
+
+
         }
 
         if (ObjecTrackersGO.Count > 0 && isUpdating && hasLocation)
         {
             ActivateObjectTracker();
+
         }
 
 

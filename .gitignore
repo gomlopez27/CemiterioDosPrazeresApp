@@ -35,3 +35,6 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+Assets/AssetBundles/augmentations-Windows
+Assets/AssetBundles/augmentations-Android
+*.log

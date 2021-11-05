@@ -171,7 +171,6 @@ public class SearchMap : MonoBehaviour
             closeSearchBtn.gameObject.SetActive(false);
         }
 
-        searchInputField.Select();
         searchInputField.text = "";
 
         foreach (POIMapSpecifications poi in poisInMap)

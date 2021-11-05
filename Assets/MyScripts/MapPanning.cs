@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class PanZoom : MonoBehaviour
+public class MapPanning : MonoBehaviour
 {
     [SerializeField]
     public Camera _referenceCamera;

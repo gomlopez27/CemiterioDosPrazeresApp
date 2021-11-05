@@ -1,3 +1,4 @@
+using Mapbox.Examples;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -32,6 +33,7 @@ public class MapPanelController : MonoBehaviour
             if (InfoPanel.activeInHierarchy || FilterPanel.activeInHierarchy)
             {
                 DeactivatePoiClick();
+                DeactiveMapMovement();
             }
             else
             {
@@ -39,6 +41,7 @@ public class MapPanelController : MonoBehaviour
                 {
                     ActivatePoiClick();
                 }
+                ActiveMapMovement();
 
             }
         }
@@ -59,5 +62,16 @@ public class MapPanelController : MonoBehaviour
         {
             p.transform.GetChild(0).GetComponent<PoiClicked>().enabled = true;
         }
+    }
+
+    void DeactiveMapMovement()
+    {
+        Map.GetComponent<MapPanning>().enabled = false;
+        Map.GetComponent<QuadTreeCameraMovement>().enabled = false;
+    }
+    void ActiveMapMovement()
+    {
+        Map.GetComponent<MapPanning>().enabled = true;
+        Map.GetComponent<QuadTreeCameraMovement>().enabled = true;
     }
 }
