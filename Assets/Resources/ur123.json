@@ -1,0 +1,27 @@
+{
+	"id" : "ur123",
+	"name" : "Cópia dos Músicos – Voltas e Notas",
+	"code" : "ur123",
+	"routeCategory" : ["Personalizado"],
+	"description" : "Este percurso é a copia do percurso oficial que contém os jazigos de músicos famosos que se encontram enterrados no Cemitério dos Prazeres",
+	"pois" : [
+            {
+               "id" : "1803"
+            },
+            {
+               "id" : "1204"
+            },
+            {
+               "id" : "3696"
+            },
+            {
+               "id" : "2227"
+            },
+            {
+               "id" : "6009"
+            },
+            {
+               "id" : "475"
+            }
+         ]
+}

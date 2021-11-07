@@ -10,6 +10,7 @@ using UnityEngine.UI;
 public class SaveCreatedRoute : MonoBehaviour
 {
     public const string UNOFFICIAL_ROUTE_ID = "ur";
+    public const string UNOFFICIAL_ROUTE = "unofficial";
 
     [SerializeField]
     InputField InputRouteName;
@@ -294,7 +295,7 @@ public class SaveCreatedRoute : MonoBehaviour
                 for (int k = 0; k < UnofficialRoutesList["routes"][i]["pois"].Count; k++)
                 {
                     Poi p = new Poi();
-                    p.ID = UnofficialRoutesList["routes"][i]["pois"][k]["id"];
+                    p.id = UnofficialRoutesList["routes"][i]["pois"][k]["id"];
                     //p.latitude = AllRoutesList["routes"][i]["pois"][k]["latitude"];
                     //p.longitude = AllRoutesList["routes"][i]["pois"][k]["longitude"];
                     //p.tipoJaz = AllRoutesList["routes"][i]["pois"][k]["tipoJaz"];
@@ -338,14 +339,14 @@ public class SaveCreatedRoute : MonoBehaviour
         if (UnofficialRoutesObjList.Count == 0)
         {
             createdRoute.id = UNOFFICIAL_ROUTE_ID + "1";
-            createdRoute.code = "unnofficial1";
+            createdRoute.code = UNOFFICIAL_ROUTE + "1";
 
         }
         else
         {
             int id = UnofficialRoutesObjList.Count + 1;
             createdRoute.id = UNOFFICIAL_ROUTE_ID + id.ToString();
-            createdRoute.code = "unnofficial" + id.ToString();
+            createdRoute.code = UNOFFICIAL_ROUTE + id.ToString();
 
         }
         createdRoute.name = this.routeName;
@@ -362,7 +363,7 @@ public class SaveCreatedRoute : MonoBehaviour
             //JSONNode poiJson = GetJaz(finalChoicesPois[k]);
             //string jazIdent = finalChoicesPois[k];
             print(k + " " + finalChoicesPois[k]);
-            p.ID = finalChoicesPois[k];
+            p.id = finalChoicesPois[k];
             //p.latitude = this.GetComponent<JazInformations>().GetJazLongitude(jazIdent);
             //p.longitude = this.GetComponent<JazInformations>().GetJazLongitude(jazIdent);
             //p.tipoJaz = this.GetComponent<JazInformations>().GetJazType(jazIdent);
@@ -384,7 +385,7 @@ public class SaveCreatedRoute : MonoBehaviour
         UnofficialRoutesObjList.Add(createdRoute);
         print("After Add " + UnofficialRoutesObjList.Count);
         SaveRouteToJson();
-        this.GetComponent<SerializableRouteElements>().SaveRouteCodeToJson(createdRoute.code);
+        this.GetComponent<SerializableDataElements>().SaveRouteCodeToJson(createdRoute.code);
         StartCoroutine(ShowLoadingScreen());
     }
 

@@ -47,7 +47,7 @@ public class HomePageItems : MonoBehaviour
         int count = 0;
         foreach(int i in aux)
         {
-            print( count++ + " " + i);
+            //print( count++ + " " + i);
         }
         return aux;
     }
@@ -62,13 +62,13 @@ public class HomePageItems : MonoBehaviour
         for (int i = 0; i < 10; i++)
         {
             int indexPoi = auxPois[i];
-            print("indexPoi: " + indexPoi);
+            //print("indexPoi: " + indexPoi);
             GameObject g = Instantiate(PoiListItem, InitialPagePoiList.transform);
             Image jazImg = g.transform.Find("ImageBackground/JazImage").GetComponent<Image>();
             Text personNameTxt = g.transform.Find("ImageBackground/SeeMoreBtn/PersonName").GetComponent<Text>();
             Button seeMore = g.transform.Find("ImageBackground/SeeMoreBtn").GetComponent<Button>();
 
-            print("count personalities " + PoisList["pois"][indexPoi]["personalidades"].Count);
+            //print("count personalities " + PoisList["pois"][indexPoi]["personalidades"].Count);
             int indexPerson = Random.Range(0, PoisList["pois"][indexPoi]["personalidades"].Count);
             string personName = PoisList["pois"][indexPoi]["personalidades"][indexPerson]["nome"];
             string url = PoisList["pois"][indexPoi]["personalidades"][indexPerson]["imageURL"];

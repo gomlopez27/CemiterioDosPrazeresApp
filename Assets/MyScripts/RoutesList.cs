@@ -84,9 +84,8 @@ public class RoutesList : MonoBehaviour
 
             for (int i = 0; i < UnofficialRoutesList["routes"].Count; i++)
             {
-                JSONNode r = UnofficialRoutesList["routes"][i];
-                print("ur id: " + r["id"]);
-                if (codes.Contains(r["id"]))
+                JSONNode r = UnofficialRoutesList["routes"][i];            
+                if (codes.Contains(r["code"]))
                 {
                     AllRoutes.Add(r);
                 }
@@ -146,7 +145,6 @@ public class RoutesList : MonoBehaviour
     {
         //GameObject RouteListItem = this.transform.GetChild(0).gameObject;
 
-        Debug.Log("ALL ROUTES LIST COUNT: " + AllRoutes.Count);
         if (AllRoutes.Count == 0)
         {
             RouteListItem.SetActive(false);

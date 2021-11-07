@@ -2461,6 +2461,7 @@ GameObject:
   - component: {fileID: 624806617}
   - component: {fileID: 624806616}
   - component: {fileID: 624806620}
+  - component: {fileID: 624806621}
   m_Layer: 5
   m_Name: Page Area
   m_TagString: Untagged
@@ -2548,9 +2549,21 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 624806615}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7e61957753279d141b9b04d4a7a2afaa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &624806621
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 624806615}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0401151b4317c7a48a388f3f640dd3db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &652557349

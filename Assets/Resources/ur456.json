@@ -1,0 +1,22 @@
+{
+"id" : "ur456",
+"name" : "Meu Percurso",
+"code" : "ur456",
+"routeCategory" : ["Personalizado"],
+"description" : "Meu percurso de teste ",
+	"pois" : [
+            {
+               "id" : "1439"
+            },
+            {
+               "id" : "1431"
+            },
+            {
+               "id" : "1803"
+            },
+            {
+               "id" : "2227"
+            }
+         ]
+}
+      

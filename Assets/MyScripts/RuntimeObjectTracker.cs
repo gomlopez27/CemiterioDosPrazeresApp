@@ -16,9 +16,9 @@ public class RuntimeObjectTracker : MonoBehaviour
     [SerializeField] GameObject WikitudeCamera;
     [SerializeField] GameObject defaultAugmententation;
     [SerializeField] Button MoreInfoButton;
-    [SerializeField] Image imageUI;
-    [SerializeField] Text nameUI;
-    [SerializeField] Text descriptionUI;
+    //[SerializeField] Image imageUI;
+    //[SerializeField] Text nameUI;
+    //[SerializeField] Text descriptionUI;
     [SerializeField] GameObject defaultAugmentationPanel;
     [SerializeField] Image defaultAugmentationImage;
     [SerializeField] Text defaultAugmentationText;
@@ -61,18 +61,24 @@ public class RuntimeObjectTracker : MonoBehaviour
     {
         MoreInfoButton.onClick.AddListener(LoadMoreInfo);
 
-        string bundleUrl = "https://pasev.di.fct.unl.pt/contentFiles/Giovanna/AssetBundles/";
+        myLoadedAssetBundle = MainDataHolder.myAssetBundle;
 
-#if UNITY_ANDROID && !UNITY_EDITOR
-        print("UNITY_ANDROID");
-        StartCoroutine(LoadAssetBundle(bundleUrl + "augmentations-Android"));
-        //testAssetBundle("augmentations-Android");
-#elif  UNITY_EDITOR
-        print("UNITY_EDITOR");
-       StartCoroutine(LoadAssetBundle(bundleUrl + "augmentations-Windows"));
-        //testAssetBundle("augmentations-Windowss");
+//        string bundleUrl = "https://pasev.di.fct.unl.pt/contentFiles/Giovanna/AssetBundles/";
 
-#endif
+        //#if UNITY_ANDROID && !UNITY_EDITOR
+        //        print("UNITY_ANDROID");
+        //        if(myLoadedAssetBundle == null){
+        //            StartCoroutine(LoadAssetBundle(bundleUrl + "augmentations-Android"));
+        //        }
+        //        //testAssetBundle("augmentations-Android");
+        //#elif UNITY_EDITOR
+        //        if (myLoadedAssetBundle == null)
+        //        {
+        //            print("UNITY_EDITOR");
+        //            StartCoroutine(LoadAssetBundle(bundleUrl + "augmentations-Windows"));
+        //            //testAssetBundle("augmentations-Windowss");
+        //        }
+        //#endif
 
     }
 
@@ -128,7 +134,7 @@ public class RuntimeObjectTracker : MonoBehaviour
 
     public void CreateObjectTrackers()
     {
-        TextAsset json = Resources.Load<TextAsset>("CreateObjectTrackers"); //TODO: change back
+        TextAsset json = Resources.Load<TextAsset>("CreateObjectTrackersOld"); //TODO: change back
         //TextAsset json = Resources.Load<TextAsset>("targetNamesPerTracker");
 
         JSONNode ObjectTrackersList = JSON.Parse(json.ToString());
@@ -260,13 +266,14 @@ public class RuntimeObjectTracker : MonoBehaviour
         {
             print("NOT REQUEST ERROR");
 
+            myLoadedAssetBundle = DownloadHandlerAssetBundle.GetContent(request);
+
             if (myLoadedAssetBundle != null)
             {
                 print("myLoadedAssetBundle != null");
                 myLoadedAssetBundle.Unload(false);
             }
 
-            myLoadedAssetBundle = DownloadHandlerAssetBundle.GetContent(request);
         }
    
     }
@@ -284,14 +291,14 @@ public class RuntimeObjectTracker : MonoBehaviour
 
     public IEnumerator DefaultAugmentationCreation(string targetName)
     {
-        //JSONNode jaz = this.GetComponent<JazInformations>().GetJaz(targetName);
-        JSONNode jaz = this.GetComponent<JazInformations>().GetJaz("2271");
+        JSONNode jaz = this.GetComponent<JazInformations>().GetJaz(targetName);
+        //JSONNode jaz = this.GetComponent<JazInformations>().GetJaz("2271");
         int personCout = jaz["personalidades"].Count;
 
         
         if (personCout > 1)
         {
-            defaultAugmentationImage.sprite = imageUI.sprite;
+            //defaultAugmentationImage.sprite = imageUI.sprite;
             defaultAugmentationText.text = "Este jazigo tem " + personCout + " personalidades";
             for(int i = 0; i < personCout; i++)
             {
@@ -329,76 +336,19 @@ public class RuntimeObjectTracker : MonoBehaviour
 
         if (jaz["personalidades"].Count > 1)
         {
-            MultiplePersonalitiesPage.SetActive(true);
-            SetMultiplePersonalitiesList(jaz["jazImage"], jaz["personalidades"]);
+           //MultiplePersonalitiesPage.SetActive(true);
+            this.GetComponent<JazInformationPage>().SetMultiplePersonalitiesList(jaz["jazImage"], jaz["personalidades"]);
         }
         else
         {
-            OnePersonalityPage.SetActive(true);
-            MultiplePersonalitiesPage.SetActive(false);
-            SetSinglePersonality(jaz["personalidades"][0]);
+            //OnePersonalityPage.SetActive(true);
+            //MultiplePersonalitiesPage.SetActive(false);
+            this.GetComponent<JazInformationPage>().SetSinglePersonality(jaz["personalidades"][0]);
             
         }
         dataLoaded = true;
      
     }
-
-
-    void SetSinglePersonality(JSONNode Personality)
-    {
-
-        Image personalityImage = OnePersonalityContent.transform.Find("Info/PersonImage").GetComponent<Image>();
-        Text personalityName = OnePersonalityContent.transform.Find("Info/PersonName").GetComponent<Text>();
-        Text personalityBio = OnePersonalityContent.transform.Find("BioText").GetComponent<Text>();
-        Davinci.get().load(Personality["imageURL"]).setCached(true).into(personalityImage).start();
-        personalityName.text = Personality["nome"];
-        personalityBio.text = Personality["description"];
-       
-    }
-
-    void SetMultiplePersonalitiesList(string jazImageUrl, JSONNode PersonalitiesList)
-    {
-        MultiplePersonalitiesPage.SetActive(true);
-        OnePersonalityPage.SetActive(false);
-        Image jazImage = MultiplePersonalitiesPage.transform.Find("HeaderImage").gameObject.GetComponent<Image>();
-        Davinci.get().load(jazImageUrl).setCached(true).into(jazImage).start();
-        GameObject ListArea = MultiplePersonalitiesPage.transform.Find("ScrollArea/Content").gameObject;
-        GameObject PersonalityItem = ListArea.transform.GetChild(0).gameObject;
-        PersonalityItem.SetActive(true);
-
-        if(ListArea.transform.childCount > 1)
-        {
-            for (int i = 1; i < ListArea.transform.childCount; i++)
-            {
-                Destroy(ListArea.transform.GetChild(i).gameObject);
-            }
-        }
-
-        print("childCount " + ListArea.transform.childCount);
-        for (int i = 0; i < PersonalitiesList.Count; i++)
-        {
-            string personId = PersonalitiesList[i]["uriId"];
-            string personName = PersonalitiesList[i]["nome"];
-            GameObject g = Instantiate(PersonalityItem, ListArea.transform);
-            g.name = "person-" + personId;
-            g.transform.Find("PersonName").GetComponent<Text>().text = personName;
-            //Button SeeMore = g.transform.Find("MoreBtn").GetComponent<Button>();
-            Button BtnItem = g.transform.GetComponent<Button>();
-            print("" + BtnItem.name);
-            JSONNode Personality = PersonalitiesList[i];
-            BtnItem.onClick.AddListener(() =>
-            {
-
-                print("on click" + Personality["nome"]);
-                OnePersonalityPage.SetActive(true);
-                SetSinglePersonality(Personality);
-            });
-        }
-        PersonalityItem.SetActive(false);
-
-
-    }
-
 
     public void BackButtonFromSinglePerson()
     {
@@ -416,6 +366,62 @@ public class RuntimeObjectTracker : MonoBehaviour
         }
 
     }
+    //void SetSinglePersonality(JSONNode Personality)
+    //{
+
+    //    Image personalityImage = OnePersonalityContent.transform.Find("Info/PersonImage").GetComponent<Image>();
+    //    Text personalityName = OnePersonalityContent.transform.Find("Info/PersonName").GetComponent<Text>();
+    //    Text personalityBio = OnePersonalityContent.transform.Find("BioText").GetComponent<Text>();
+    //    Davinci.get().load(Personality["imageURL"]).setCached(true).into(personalityImage).start();
+    //    personalityName.text = Personality["nome"];
+    //    personalityBio.text = Personality["description"];
+
+    //}
+
+    //void SetMultiplePersonalitiesList(string jazImageUrl, JSONNode PersonalitiesList)
+    //{
+    //    MultiplePersonalitiesPage.SetActive(true);
+    //    OnePersonalityPage.SetActive(false);
+    //    Image jazImage = MultiplePersonalitiesPage.transform.Find("HeaderImage").gameObject.GetComponent<Image>();
+    //    Davinci.get().load(jazImageUrl).setCached(true).into(jazImage).start();
+    //    GameObject ListArea = MultiplePersonalitiesPage.transform.Find("ScrollArea/Content").gameObject;
+    //    GameObject PersonalityItem = ListArea.transform.GetChild(0).gameObject;
+    //    PersonalityItem.SetActive(true);
+
+    //    if(ListArea.transform.childCount > 1)
+    //    {
+    //        for (int i = 1; i < ListArea.transform.childCount; i++)
+    //        {
+    //            Destroy(ListArea.transform.GetChild(i).gameObject);
+    //        }
+    //    }
+
+    //    print("childCount " + ListArea.transform.childCount);
+    //    for (int i = 0; i < PersonalitiesList.Count; i++)
+    //    {
+    //        string personId = PersonalitiesList[i]["uriId"];
+    //        string personName = PersonalitiesList[i]["nome"];
+    //        GameObject g = Instantiate(PersonalityItem, ListArea.transform);
+    //        g.name = "person-" + personId;
+    //        g.transform.Find("PersonName").GetComponent<Text>().text = personName;
+    //        //Button SeeMore = g.transform.Find("MoreBtn").GetComponent<Button>();
+    //        Button BtnItem = g.transform.GetComponent<Button>();
+    //        print("" + BtnItem.name);
+    //        JSONNode Personality = PersonalitiesList[i];
+    //        BtnItem.onClick.AddListener(() =>
+    //        {
+
+    //            print("on click" + Personality["nome"]);
+    //            OnePersonalityPage.SetActive(true);
+    //            SetSinglePersonality(Personality);
+    //        });
+    //    }
+    //    PersonalityItem.SetActive(false);
+
+
+    //}
+
+
 
     IEnumerator GetTexture(string url)
     {
@@ -431,7 +437,7 @@ public class RuntimeObjectTracker : MonoBehaviour
             var myTexture = ((DownloadHandlerTexture)www.downloadHandler).texture;
             Sprite sprite = Sprite.Create(myTexture,
             new Rect(0, 0, myTexture.width, myTexture.height), Vector2.zero);
-            imageUI.sprite = sprite;
+            //imageUI.sprite = sprite;
 
         }
     }

@@ -33,14 +33,17 @@ public class ImportRoutes : MonoBehaviour
     {
         RouteListGO.GetComponent<RoutesList>().enabled = false;
         unofficialRoutesListFilePath = Application.persistentDataPath + "/UnofficialRoutesList.json";
-      
+        print(unofficialRoutesListFilePath);
         ConfirmPanel.SetActive(true);
         LoadingPanel.SetActive(false);
+
+        print("From static class UnofficialRoutes.Count: " + MainDataHolder.UnofficialRoutes.Count);
+        print("From static class UnofficialRoutes 1ª rota: " + MainDataHolder.UnofficialRoutes[0].name);
     }
 
     void Update()
     {
-        RouteDataHolder.CurrentCanvasImportRoutes = ImportRouteGO;
+        //RouteDataHolder.CurrentCanvasImportRoutes = ImportRouteGO;
 
     }
 
@@ -82,14 +85,14 @@ public class ImportRoutes : MonoBehaviour
             for (int k = 0; k < jsonRoutesList["routes"][i]["pois"].Count; k++)
             {
                 Poi p = new Poi();
-                p.ID = jsonRoutesList["routes"][i]["pois"][k]["id"];
+                p.id = jsonRoutesList["routes"][i]["pois"][k]["id"];
                 route.pois.Add(p);
             }
 
             Routes.Add(route);
         }
     }
-   
+
     void AddFirstUnnoficialRoute(JSONNode r)
     {
         print("AddFirstUnnoficialRoute");
@@ -111,14 +114,15 @@ public class ImportRoutes : MonoBehaviour
         for (int k = 0; k < r["pois"].Count; k++)
         {
             Poi p = new Poi();
-            p.ID = r["pois"][k]["id"];
+            p.id = r["pois"][k]["id"];
 
 
             route.pois.Add(p);
         }
         Routes.Add(route);
+        //return route;
     }
-    
+
     IEnumerator GetImportedRoute(string code)
     {
         string codeFilePath = Application.persistentDataPath + "/" + code + ".json";
@@ -149,14 +153,15 @@ public class ImportRoutes : MonoBehaviour
 
             RouteListGO.GetComponent<RoutesList>().AddImportedRoute(RouteNode);
             print("List<Route> Routes: " + Routes.Count);
-            foreach(Route r in Routes) {
+            foreach (Route r in Routes)
+            {
                 print(r.name);
             }
             RoutesCollection rc = new RoutesCollection();
             rc.RoutesCol = Routes;
             string jsonToWrite = rc.Serialize().ToString(3);
             System.IO.File.WriteAllText(unofficialRoutesListFilePath, jsonToWrite);
-            this.GetComponent<SerializableRouteElements>().SaveRouteCodeToJson(RouteNode["code"]);
+            this.GetComponent<SerializableDataElements>().SaveRouteCodeToJson(RouteNode["code"]);
             yield return new WaitForSeconds(3);
             SceneManager.LoadScene("RoutesScene");
             //LoadingPanel.SetActive(false);
@@ -175,10 +180,40 @@ public class ImportRoutes : MonoBehaviour
             ToastMsgWrongCode.SetActive(true);
             yield return new WaitForSeconds(1.5f);
             ToastMsgWrongCode.SetActive(false);
-
-
         }
-
-
     }
+
+    //IEnumerator GetImportedRoute(string code)
+    //{
+    //    string codeFilePath = Application.persistentDataPath + "/" + code + ".json";
+    //    Routes = new List<Route>();
+    //    if (System.IO.File.Exists(codeFilePath))
+    //    {
+    //        ConfirmPanel.SetActive(false);
+    //        LoadingPanel.SetActive(true);
+    //        print(codeFilePath);
+
+
+    //        Routes = MainDataHolder.UnofficialRoutes;
+    //        Route r = AddFirstUnnoficialRoute(RouteNode);
+    //        Routes.Add(r);
+    //        MainDataHolder.UnofficialRoutes = Routes;
+
+
+    //        RouteListGO.GetComponent<RoutesList>().AddImportedRoute(RouteNode);
+
+    //        this.GetComponent<SerializableDataElements>().SaveUpdatedRoutesList(Routes, "ur");
+    //        this.GetComponent<SerializableDataElements>().SaveRouteCodeToJson(RouteNode["code"]);
+    //        yield return new WaitForSeconds(3);
+    //        SceneManager.LoadScene("RoutesScene");
+
+    //    }
+    //    else
+    //    {
+    //        print("Código Não existe");
+    //        ToastMsgWrongCode.SetActive(true);
+    //        yield return new WaitForSeconds(1.5f);
+    //        ToastMsgWrongCode.SetActive(false);
+    //    }
+    //}
 }

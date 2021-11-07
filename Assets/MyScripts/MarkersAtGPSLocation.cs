@@ -9,25 +9,26 @@ using System;
 public class MarkersAtGPSLocation : MonoBehaviour
 {
     //Constants
-    public const string Near = "Já deve conseguir ver este jazigo!"; //inferior a 10 m
-    public const string Close = "Encontra-se perto deste jazigo, mas não o suficiente para o ver!"; //entre 10 e 20m
-    public const string Far = "Encontra-se demasiado longe deste jazigo para o conseguir ver!"; //maior que 20
+    public const string NEAR = "Já deve conseguir ver este jazigo!"; //inferior a 10 m
+    public const string CLOSE = "Encontra-se perto deste jazigo, mas não o suficiente para o ver!"; //entre 10 e 20m
+    public const string FAR = "Encontra-se demasiado longe deste jazigo para o conseguir ver!"; //maior que 20
     
-    //Public Variables
-    public GameObject POIPrefab;
-    public GameObject InitialPanel;
-    public GameObject MoreInfoPanel;
-    public GameObject RadarPanel;
-    public GameObject ArSession;
-    public GameObject ArSessionOrigin;
-    public Image imageUI;
-    public Text nameUI;
-    public Text descriptionUI;
-    public Text titleMoreInfoPage;
-    public Text numberOfCurrentPOIs;
-    public Slider slider;
-    public Text sliderText;
-    
+    [SerializeField] GameObject POIPrefab;
+    [SerializeField] GameObject InitialPanel;
+    [SerializeField] GameObject MoreInfoPanel;
+    [SerializeField] GameObject RadarPanel;
+    [SerializeField] GameObject ArSession;
+    [SerializeField] GameObject ArSessionOrigin;
+    //[SerializeField] Image imageUI;
+    //[SerializeField] Text nameUI;
+    //[SerializeField] Text descriptionUI;
+    //[SerializeField] Text titleMoreInfoPage;
+    [SerializeField] Text numberOfCurrentPOIs;
+    [SerializeField] Slider slider;
+    [SerializeField] Text sliderText;
+    [SerializeField] Text JazClickedTitle;
+    [SerializeField] GameObject OnePersonalityPage;
+    [SerializeField] GameObject MultiplePersonalitiesPage;
     //Private Variables
     private Text jazID;
     private Text jazLoc;
@@ -102,7 +103,7 @@ public class MarkersAtGPSLocation : MonoBehaviour
         for (int i = 0; i < PoiListData["pois"].Count; i++)
         {
             //GameObject POIObject = new GameObject("GPSStageObject-"+ PoiListData["pois"][i]["ID"]);
-            GameObject POIObject = new GameObject(PoiListData["pois"][i]["ID"]);
+            GameObject POIObject = new GameObject(PoiListData["pois"][i]["ID"]); //TODO: mudar para id completo
            
             var loc = new Location()
             {
@@ -170,16 +171,14 @@ public class MarkersAtGPSLocation : MonoBehaviour
             GameObject POIPanel = poiPrefab.transform.Find("Canvas/Panel").gameObject;
             string jazId = poiPrefab.transform.Find("Canvas/Panel/ContentPanel/TopContentPanel/TitleContentPanel/jazigoTextId").GetComponent<Text>().text;
 
-            print(poi.gameObject.name);
+            //print(poi.gameObject.name);
             Button moreInfo = POIPanel.AddComponent<Button>();
+
             moreInfo.onClick.AddListener(() => {
-                MoreInfoPanel.SetActive(true);
-                InitialPanel.SetActive(false);
-                ArSession.SetActive(false);
-                ArSessionOrigin.SetActive(false);
-               // clickedId = jazId;
                 clickedId = poi.gameObject.name;
-                LoadData();
+
+                // clickedId = jazId;
+                LoadMoreInfo(clickedId);
             });
           
         }
@@ -221,33 +220,33 @@ public class MarkersAtGPSLocation : MonoBehaviour
         }
     }
 
-    public void LoadData()
-    {
-        for (int i = 0; i < PoiListData["pois"].Count; i++)
-        {
-            if (PoiListData["pois"][i]["ID"].Equals(clickedId))
-            {
-                titleMoreInfoPage.text = "Jazigo nº" + PoiListData["pois"][i]["ID"];
-                //nameUI.text = PoiListData["pois"][i]["personName"];
-                if (PoiListData["pois"][i]["personalidades"].Count > 1)
-                {
-                    nameUI.text = "Múltiplas pessoas encontram-se sepultadas neste jazigo.";
-                    descriptionUI.text = PoiListData["pois"][i]["personalidades"][0]["description"];
-                }
-                else
-                {
-                    nameUI.text = PoiListData["pois"][i]["personalidades"][0]["nome"];
-                    descriptionUI.text = PoiListData["pois"][i]["moreInfo"]["description"];
-                }
-                //Davinci.get().load(PoiListData["pois"][i]["moreInfo"]["imageURL"]).setCached(true).into(imageUI).start();
-                Davinci.get().load(PoiListData["pois"][i]["jazImage"]).setCached(true).into(imageUI).start();
+    //public void LoadData()
+    //{
+    //    for (int i = 0; i < PoiListData["pois"].Count; i++)
+    //    {
+    //        if (PoiListData["pois"][i]["ID"].Equals(clickedId))
+    //        {
+    //            titleMoreInfoPage.text = "Jazigo nº" + PoiListData["pois"][i]["ID"];
+    //            //nameUI.text = PoiListData["pois"][i]["personName"];
+    //            if (PoiListData["pois"][i]["personalidades"].Count > 1)
+    //            {
+    //                nameUI.text = "Múltiplas pessoas encontram-se sepultadas neste jazigo.";
+    //                descriptionUI.text = PoiListData["pois"][i]["personalidades"][0]["description"];
+    //            }
+    //            else
+    //            {
+    //                nameUI.text = PoiListData["pois"][i]["personalidades"][0]["nome"];
+    //                descriptionUI.text = PoiListData["pois"][i]["moreInfo"]["description"];
+    //            }
+    //            //Davinci.get().load(PoiListData["pois"][i]["moreInfo"]["imageURL"]).setCached(true).into(imageUI).start();
+    //            Davinci.get().load(PoiListData["pois"][i]["jazImage"]).setCached(true).into(imageUI).start();
 
-            }
+    //        }
             
-        }
+    //    }
     
 
-    }
+    //}
 
     public void ChangeRangePOI(int stepValue)
     {
@@ -286,8 +285,6 @@ public class MarkersAtGPSLocation : MonoBehaviour
         //ChangeRangePOI(sliderValue);
     }
 
-  
-
     public void DistanceFromPOI(PlaceAtLocation poi)
     {
         GameObject poiPrefab = poi.gameObject.transform.GetChild(0).gameObject;
@@ -296,15 +293,15 @@ public class MarkersAtGPSLocation : MonoBehaviour
 
         if(distance <= 10)
         {
-            percurso.text = Near;
+            percurso.text = NEAR;
         }
         else if(distance > 10 && distance < 21)
         {
-            percurso.text = Close;
+            percurso.text = CLOSE;
         }
         else
         {
-            percurso.text = Far;
+            percurso.text = FAR;
 
         }
 
@@ -322,6 +319,55 @@ public class MarkersAtGPSLocation : MonoBehaviour
         sliderText.text = "?";
         numberOfCurrentPOIs.text = allPOIs.Length.ToString();
         hasUsedSlider = false;
+    }
+
+
+    public void LoadMoreInfo(string jazIdClicked)
+    {
+        print("load: "+jazIdClicked);
+        InitialPanel.SetActive(false);
+        MoreInfoPanel.SetActive(true);
+        ArSession.SetActive(false);
+        ArSessionOrigin.SetActive(false);
+        JSONNode jaz = this.GetComponent<JazInformations>().GetJaz(jazIdClicked); //TODO: change back
+
+       
+        //JSONNode jaz = this.GetComponent<JazInformations>().GetJaz("1500");
+
+
+        JazClickedTitle.text = jaz["tipoJaz"] + " " + jazIdClicked;
+
+        if (jaz["personalidades"].Count > 1)
+        {
+            this.GetComponent<JazInformationPage>().SetMultiplePersonalitiesList(jaz["jazImage"], jaz["personalidades"]);
+        }
+        else
+        {
+            this.GetComponent<JazInformationPage>().SetSinglePersonality(jaz["personalidades"][0]);
+        }
+        //dataLoaded = true;
+
+    }
+
+    public void BackButtonFromSinglePerson()
+    {
+        if (MultiplePersonalitiesPage.activeInHierarchy)
+        {
+            OnePersonalityPage.SetActive(false);
+        }
+        else
+        {
+            BackButton();
+        }
+
+    }
+
+    public void BackButton()
+    {
+        InitialPanel.SetActive(true);
+        MoreInfoPanel.SetActive(false);
+        ArSession.SetActive(true);
+        ArSessionOrigin.SetActive(true);
     }
 
 }
