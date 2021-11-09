@@ -8,16 +8,17 @@ namespace Mapbox.Unity.Location
 	using Mapbox.CheapRulerCs;
 	using System;
 	using System.Linq;
+    using UnityEngine.SceneManagement;
 
 
 
-	/// <summary>
-	/// The DeviceLocationProvider is responsible for providing real world location and heading data,
-	/// served directly from native hardware and OS. 
-	/// This relies on Unity's <see href="https://docs.unity3d.com/ScriptReference/LocationService.html">LocationService</see> for location
-	/// and <see href="https://docs.unity3d.com/ScriptReference/Compass.html">Compass</see> for heading.
-	/// </summary>
-	public class DeviceLocationProvider : AbstractLocationProvider
+    /// <summary>
+    /// The DeviceLocationProvider is responsible for providing real world location and heading data,
+    /// served directly from native hardware and OS. 
+    /// This relies on Unity's <see href="https://docs.unity3d.com/ScriptReference/LocationService.html">LocationService</see> for location
+    /// and <see href="https://docs.unity3d.com/ScriptReference/Compass.html">Compass</see> for heading.
+    /// </summary>
+    public class DeviceLocationProvider : AbstractLocationProvider
 	{
 
 
@@ -90,8 +91,16 @@ namespace Mapbox.Unity.Location
 #if UNITY_ANDROID
 		private bool _gotPermissionRequestResponse = false;
 
-		private void OnAllow() { _gotPermissionRequestResponse = true; }
-		private void OnDeny() { _gotPermissionRequestResponse = true; }
+		private void OnAllow() {
+			Scene currentScene = SceneManager.GetActiveScene();
+			SceneManager.LoadScene(currentScene.name);
+
+			//_gotPermissionRequestResponse = true;
+		}
+		private void OnDeny() {
+			//_gotPermissionRequestResponse = true;
+			print("Permissao de localizaçao recusada!");
+		}
 		private void OnDenyAndNeverAskAgain() { _gotPermissionRequestResponse = true; }
 #endif
 
@@ -162,7 +171,7 @@ namespace Mapbox.Unity.Location
 #if UNITY_ANDROID
 			if (!_locationService.isEnabledByUser)
 			{
-				UniAndroidPermission.RequestPermission(AndroidPermission.ACCESS_FINE_LOCATION);
+				UniAndroidPermission.RequestPermission(AndroidPermission.ACCESS_FINE_LOCATION, OnAllow, OnDeny);
 				//wait for user to allow or deny
 				while (!_gotPermissionRequestResponse) { yield return _wait1sec; }
 			}

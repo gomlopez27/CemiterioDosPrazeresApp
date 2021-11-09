@@ -32,7 +32,7 @@
 	"wtoName": "Zona18",
 	"targets":[
 		{"targetName": "1803",
-                 "augmentation": "Cube"}
+                 "augmentation": "default"}
 		  ]
    }, 
    {
@@ -46,7 +46,7 @@
 		{"targetName": "1500",
                  "augmentation": "JazCarolinaBeatriz"},
 		{"targetName": "1803",
-                 "augmentation": "Cube"},
+                 "augmentation": "default"},
 		  ]
    },
    {
@@ -110,7 +110,7 @@
 	"wtoName": "Zona39",
 	"targets":[
 		{"targetName": "1580",
-                 "augmentation": "Cube"},
+                 "augmentation": "default"},
 		{"targetName": "1204",
                  "augmentation": "default"},
 		{"targetName": "2870",

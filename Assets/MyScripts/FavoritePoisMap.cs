@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 [System.Serializable]
@@ -65,6 +66,8 @@ public class FavoritesBD
 
 public class FavoritePoisMap : MonoBehaviour
 {
+    public const string MapScene = "CemeteryMapScene";
+
     [SerializeField]
     GameObject FavoritesListArea;
     [SerializeField]
@@ -368,6 +371,29 @@ public class FavoritePoisMap : MonoBehaviour
                 break;
             }
         }
+    }
+
+    void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    // called second
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        Debug.Log("OnSceneLoaded: " + scene.name);
+        Debug.Log(mode);
+        if (!scene.name.Equals(MapScene))
+        {
+            SaveToJson();
+
+        }
+    }
+
+    void OnApplicationQuit()
+    {
+        Debug.Log("Application ending after " + Time.time + " seconds");
+        SaveToJson();
     }
 
 }

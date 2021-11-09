@@ -29,6 +29,7 @@ public class MarkersAtGPSLocation : MonoBehaviour
     [SerializeField] Text JazClickedTitle;
     [SerializeField] GameObject OnePersonalityPage;
     [SerializeField] GameObject MultiplePersonalitiesPage;
+    [SerializeField] GameObject Loading;
     //Private Variables
     private Text jazID;
     private Text jazLoc;
@@ -67,6 +68,7 @@ public class MarkersAtGPSLocation : MonoBehaviour
         slider.onValueChanged.AddListener((v) => {
             sliderText.text = v.ToString();
             sliderValue = (int)v;
+
         });
 
     }
@@ -271,6 +273,7 @@ public class MarkersAtGPSLocation : MonoBehaviour
         }
 
         numberOfCurrentPOIs.text = count.ToString();
+        Loading.SetActive(false);
 
     }
 
@@ -278,6 +281,8 @@ public class MarkersAtGPSLocation : MonoBehaviour
     {
         savedSliderValue = sliderValue;
         hasUsedSlider = true;
+        Loading.SetActive(true);
+
         //previousSliderClicked = currentSliderClicked;
         //currentSliderClicked = !currentSliderClicked;
         //numberOfCurrentPOIs.text = countPOIWithinDistance.ToString();
@@ -319,6 +324,7 @@ public class MarkersAtGPSLocation : MonoBehaviour
         sliderText.text = "?";
         numberOfCurrentPOIs.text = allPOIs.Length.ToString();
         hasUsedSlider = false;
+        RadarPanel.SetActive(true);
     }
 
 

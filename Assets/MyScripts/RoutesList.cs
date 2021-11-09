@@ -53,35 +53,39 @@ public class RoutesList : MonoBehaviour
         {
             string jsonCodesRoutesList = File.ReadAllText(codesListFilePath);
             CodesList = JSON.Parse(jsonCodesRoutesList.ToString());
-           
+            codes = new List<string>();
+            for (int i = 0; i < CodesList.Count; i++)
+            {
+                codes.Add(CodesList[i]);
+            }
         }
-        TextAsset json = Resources.Load<TextAsset>("RoutesList");
-        RouteList = JSON.Parse(json.ToString());
+        TextAsset jsonRouteList = Resources.Load<TextAsset>("RoutesList");
+        
+        if(jsonRouteList != null){
+            RouteList = JSON.Parse(jsonRouteList.ToString());
+        }
 
     }
 
     public void Start()
     {
         AllRoutes = new List<JSONNode>();
-  
-
+ 
         RouteGeneralView = RouteGeneralCanvas.transform.Find("SafeArea/GeneralInfoArea").gameObject;
         absMap = Map.GetComponent<AbstractMap>();
-        codes = new List<string>();
-        for (int i = 0; i < CodesList.Count; i++)
+
+        if(RouteList != null)
         {
-            codes.Add(CodesList[i]);
+            for (int i = 0; i < RouteList["routes"].Count; i++)
+            {
+                JSONNode r = RouteList["routes"][i];
+                AllRoutes.Add(r);
+            }
         }
 
-        for (int i = 0; i < RouteList["routes"].Count; i++)
-        {
-            JSONNode r = RouteList["routes"][i];
-            AllRoutes.Add(r);
-        }
 
-        if (System.IO.File.Exists(routesListFilePath))
+        if (UnofficialRoutesList != null && codes != null)
         {
-
             for (int i = 0; i < UnofficialRoutesList["routes"].Count; i++)
             {
                 JSONNode r = UnofficialRoutesList["routes"][i];            

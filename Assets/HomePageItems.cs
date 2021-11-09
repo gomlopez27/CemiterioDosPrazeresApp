@@ -25,7 +25,6 @@ public class HomePageItems : MonoBehaviour
         PoisList = JSON.Parse(jsonPois.ToString());
         TextAsset jsonRoutes = Resources.Load<TextAsset>("ThemedRoutes");
         ThemedRoutesList = JSON.Parse(jsonRoutes.ToString());
-
         SetupInitialPagePois();
         SetupInitialPageThemedRoutes();
     }

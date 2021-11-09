@@ -103,7 +103,7 @@ public class PoiCollection
             }
 
             poiObj["percursos"] = routesList;
-           
+
             var personList = new JSONArray();
             foreach (Personality person in p.personalidades)
             {
@@ -112,7 +112,7 @@ public class PoiCollection
                 personObj["nome"] = person.nome;
                 personObj["description"] = person.description;
                 personObj["imageURL"] = person.imageUrl;
-                
+
                 personList.Add(personObj);
             }
             poiObj["personalidades"] = personList;
@@ -176,11 +176,8 @@ public class SerializableDataElements : MonoBehaviour
     private string officialRoutesListFilePath;
     private string unofficialRoutesListFilePath;
     private string codesRoutesListFilePath;
+    List<string> routeCodes;
 
-    private List<string> codes;
-    private List<Poi> PoisList;
-    private List<Route> OfficialRoutes;
-    private List<Route> UnofficialRoutes;
 
     // Start is called before the first frame update
     void Start()
@@ -189,19 +186,15 @@ public class SerializableDataElements : MonoBehaviour
         officialRoutesListFilePath = Application.persistentDataPath + "/OfficialRoutesList.json";
         unofficialRoutesListFilePath = Application.persistentDataPath + "/UnofficialRoutesList.json";
         codesRoutesListFilePath = Application.persistentDataPath + "/RoutesCodesList.json";
-
-        codes = new List<string>();
-        OfficialRoutes = new List<Route>();
-        UnofficialRoutes = new List<Route>();
-      
-        CreatePoiListFromJson();
-        CreateOfficialRouteListFromJson();
-        CreateUnofficialRouteListFromJson();
-        CreateRoutesCodeListFromJson();
+        routeCodes = new List<string>();
+        //CreatePoiListFromJson();
+        //CreateOfficialRouteListFromJson();
+        //CreateUnofficialRouteListFromJson();
+        //CreateRoutesCodeListFromJson();
     }
-   
 
-    List<Poi> ConvertJsonToPoiList(JSONNode jsonPoiList)
+
+    public List<Poi> ConvertJsonToPoiList(JSONNode jsonPoiList)
     {
         List<Poi> PoiAux = new List<Poi>();
 
@@ -243,11 +236,11 @@ public class SerializableDataElements : MonoBehaviour
 
         return PoiAux;
     }
-    List<Route> ConvertJsonToRouteList(JSONNode jsonRoutesList)
+    public List<Route> ConvertJsonToRouteList(JSONNode jsonRoutesList)
     {
         List<Route> RoutesAux = new List<Route>();
 
-       // print("jsonRoutesList.Count " + jsonRoutesList["routes"].Count);
+        // print("jsonRoutesList.Count " + jsonRoutesList["routes"].Count);
         for (int i = 0; i < jsonRoutesList["routes"].Count; i++)
         {
             Route route = new Route();
@@ -278,53 +271,71 @@ public class SerializableDataElements : MonoBehaviour
         return RoutesAux;
     }
 
-    void CreatePoiListFromJson()
+    //public bool CreatePoiListFromJson(string filePath)
+    //{
+    //    if (System.IO.File.Exists(filePath))
+    //    {
+    //        string poisJsonString = File.ReadAllText(filePath);
+    //        JSONNode PoisNode = JSON.Parse(poisJsonString.ToString());
+    //        List<Poi> PoisList = ConvertJsonToPoiList(PoisNode);
+    //        MainDataHolder.PopularPois = PoisList;
+    //        print("MainDataHolder.PopularPois: " + MainDataHolder.PopularPois.Count);
+    //        return true;
+
+    //    }
+    //    print("poisListFilePath not found");
+    //    return false;
+    //}
+
+    //public bool CreateOfficialRouteListFromJson(string filePath)
+    //{
+    //    if (System.IO.File.Exists(filePath))
+    //    {
+    //        string jsonOffiRoutes = File.ReadAllText(filePath);
+    //        JSONNode OfficialRoutesJson = JSON.Parse(jsonOffiRoutes.ToString());
+    //        List<Route> OfficialRoutes = ConvertJsonToRouteList(OfficialRoutesJson);
+    //        MainDataHolder.OfficialRoutes = OfficialRoutes;
+    //        return true;
+    //    }
+
+    //    print("officialRoutesListFilePath not found");
+    //    return false;
+    //}
+
+    //public bool CreateUnofficialRouteListFromJson(string filePath)
+    //{
+    //    if (System.IO.File.Exists(filePath))
+    //    {
+    //        string jsonUnoRoutes = File.ReadAllText(filePath);
+    //        JSONNode UnofficialRoutesJson = JSON.Parse(jsonUnoRoutes.ToString());
+    //        List<Route> UnofficialRoutes = ConvertJsonToRouteList(UnofficialRoutesJson);
+    //        MainDataHolder.UnofficialRoutes = UnofficialRoutes;
+    //        return true;
+    //    }
+    //    print("unofficialRoutesListFilePath not found");
+    //    return false;
+    //}
+
+    public void CreateRoutesCodeListFromJson(string filePath)
     {
-        if (System.IO.File.Exists(poisListFilePath))
+        List<string> codes = new List<string>();
+
+        if (System.IO.File.Exists(filePath))
         {
-            string poisJsonString = File.ReadAllText(poisListFilePath);
-            JSONNode PoisNode = JSON.Parse(poisJsonString.ToString());
-            PoisList = ConvertJsonToPoiList(PoisNode);
-            MainDataHolder.PopularPois = PoisList;
-        }
-        else
-        {
-            print("poisListFilePath not found");
+            string json = File.ReadAllText(filePath);
+            JSONNode CodesList = JSON.Parse(json.ToString());
+
+            for (int i = 0; i < CodesList.Count; i++)
+            {
+                codes.Add(CodesList[i]);
+            }
+            routeCodes = codes;
+            MainDataHolder.RouteCodes = codes;
         }
     }
 
-    void CreateOfficialRouteListFromJson()
-    {
-        if (System.IO.File.Exists(officialRoutesListFilePath))
-        {
-            string jsonOffiRoutes = File.ReadAllText(officialRoutesListFilePath);
-            JSONNode OfficialRoutesJson = JSON.Parse(jsonOffiRoutes.ToString());
-            OfficialRoutes = ConvertJsonToRouteList(OfficialRoutesJson);
-            MainDataHolder.OfficialRoutes = OfficialRoutes;
-        }
-        else
-        {
-            print("officialRoutesListFilePath not found");
-        }
-    }
-
-    void CreateUnofficialRouteListFromJson()
-    {
-
-        if (System.IO.File.Exists(unofficialRoutesListFilePath))
-        {
-            string jsonUnoRoutes = File.ReadAllText(unofficialRoutesListFilePath);
-            JSONNode UnofficialRoutesJson = JSON.Parse(jsonUnoRoutes.ToString());
-            UnofficialRoutes = ConvertJsonToRouteList(UnofficialRoutesJson);
-            MainDataHolder.UnofficialRoutes = UnofficialRoutes;
-        }
-        else
-        {
-            print("unofficialRoutesListFilePath not found");
-        }
-    }
-    
-    void CreateRoutesCodeListFromJson()
+    /*Old method, depois apagar e trocar pelo debaixo*/
+    public void SaveRouteCodeToJson(string code)
     {
         if (System.IO.File.Exists(codesRoutesListFilePath))
         {
@@ -333,19 +344,12 @@ public class SerializableDataElements : MonoBehaviour
 
             for (int i = 0; i < CodesList.Count; i++)
             {
-                print(CodesList[i]);
-                codes.Add(CodesList[i]);
+                routeCodes.Add(CodesList[i]);
             }
-            MainDataHolder.RouteCodes = codes;
-
         }
-    }
-
-    public void SaveRouteCodeToJson(string code)
-    {
-        codes.Add(code);
+        routeCodes.Add(code);
         RoutesCodesCollection rc = new RoutesCodesCollection();
-        rc.RoutesCodes = codes;
+        rc.RoutesCodes = routeCodes;
         string jsonToWrite = rc.Serialize().ToString(3);
         System.IO.File.WriteAllText(codesRoutesListFilePath, jsonToWrite);
     }
@@ -357,6 +361,7 @@ public class SerializableDataElements : MonoBehaviour
         string jsonToWrite = rc.Serialize().ToString(3);
         System.IO.File.WriteAllText(codesRoutesListFilePath, jsonToWrite);
     }
+    
     public void SaveUpdatedPoiList(List<Poi> updatedList)
     {
         PoiCollection pc = new PoiCollection();

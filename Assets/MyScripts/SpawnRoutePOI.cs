@@ -64,18 +64,18 @@ public class SpawnRoutePOI : MonoBehaviour
         //}
         //else
         //{ }
-            TextAsset json = Resources.Load<TextAsset>("RoutesList");
-            RouteList = JSON.Parse(json.ToString());
+            //TextAsset json = Resources.Load<TextAsset>("RoutesList");
+            //RouteList = JSON.Parse(json.ToString());
 
         
-        string routesListFilePath = Application.persistentDataPath + "/UnofficialRoutesList.json";
-        if (System.IO.File.Exists(routesListFilePath))
-        {
-            string jsonUnofficialRoutesList = File.ReadAllText(routesListFilePath);
-            UnofficialRoutesList = JSON.Parse(jsonUnofficialRoutesList.ToString());
-            print("UnofficialRoutesList " + UnofficialRoutesList["routes"].Count);
+        //string routesListFilePath = Application.persistentDataPath + "/UnofficialRoutesList.json";
+        //if (System.IO.File.Exists(routesListFilePath))
+        //{
+        //    string jsonUnofficialRoutesList = File.ReadAllText(routesListFilePath);
+        //    UnofficialRoutesList = JSON.Parse(jsonUnofficialRoutesList.ToString());
+        //    print("UnofficialRoutesList " + UnofficialRoutesList["routes"].Count);
 
-        }
+        //}
 
     }
 

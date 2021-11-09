@@ -14,7 +14,7 @@ public class RuntimeObjectTracker : MonoBehaviour
 
     public const string DEFAULT_AUGM = "default";
     [SerializeField] GameObject WikitudeCamera;
-    [SerializeField] GameObject defaultAugmententation;
+    //[SerializeField] GameObject defaultAugmententation;
     [SerializeField] Button MoreInfoButton;
     //[SerializeField] Image imageUI;
     //[SerializeField] Text nameUI;
@@ -168,7 +168,8 @@ public class RuntimeObjectTracker : MonoBehaviour
                 else
                 {
                     //Vai para default augmentation
-                    objTrackable.Drawable = null;
+                    //objTrackable.Drawable = null;
+                    objTrackable.Drawable = defaultAugmentationPanel;
                 }
                 //if (objTrackable.Drawable == null)
                 //{
@@ -188,10 +189,13 @@ public class RuntimeObjectTracker : MonoBehaviour
                     MoreInfoButton.gameObject.SetActive(true);               
                     CurrentObjTarget = objTarget;
                     print("CurrentObjTarget name: " + CurrentObjTarget.Name);
-                    if (augmentation.Equals(DEFAULT_AUGM))
+                    //print("augmentation name: " + augmentation);
+                    //if (objTrackable.Drawable == defaultAugmentationPanel)
+                    if (augmentation.Equals(DEFAULT_AUGM) )
                     {
                         print("DEFAULT_AUGM");
-                        lauchDefaultAugmentation = true;
+                        //lauchDefaultAugmentation = true;
+                        defaultAugmentationPanel.SetActive(true);
                         StartCoroutine(DefaultAugmentationCreation(CurrentObjTarget.Name));
                     }
                 });
@@ -199,8 +203,12 @@ public class RuntimeObjectTracker : MonoBehaviour
                 objTrackable.OnObjectLost.AddListener((objTarget) =>
                 {
                     MoreInfoButton.gameObject.SetActive(false);
-                    defaultAugmentationPanel.SetActive(false);
-                    lauchDefaultAugmentation = false;
+                    if (augmentation.Equals(DEFAULT_AUGM))
+                    {
+                        defaultAugmentationPanel.SetActive(false);
+
+                    }
+                    //lauchDefaultAugmentation = false;
                 });
             }
 

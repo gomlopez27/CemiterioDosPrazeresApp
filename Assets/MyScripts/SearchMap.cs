@@ -2,6 +2,8 @@ using SimpleJSON;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -50,16 +52,16 @@ public class SearchMap : MonoBehaviour
             StartCoroutine(ShowNotFound());
             NotFound = false;
         }
-        if (Input.GetKeyDown("space"))
-        {
-            print("Space key was pressed");
-        }
+        //if (Input.GetKeyDown("space"))
+        //{
+        //    print("Space key was pressed");
+        //}
 
-        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter) 
-            /*|| inputField.touchScreenKeyboard.status == TouchScreenKeyboard.Status.Done*/)
-        {
-            print("enter key was pressed");
-        }
+        //if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter) 
+        //    /*|| inputField.touchScreenKeyboard.status == TouchScreenKeyboard.Status.Done*/)
+        //{
+        //    print("enter key was pressed");
+        //}
 
     }
 
@@ -93,40 +95,9 @@ public class SearchMap : MonoBehaviour
                     string id = PoiList["pois"][i]["ID"];
                     if (id.Equals(searchInput))
                     {
-                        FindPoiInMap(jazId);
-                        break;
-                    }
-
-                    if (i == PoiList["pois"].Count - 1)
-                    {
-                        NotFound = true;
-
-                    }
-                }
-
-            }
-            else
-            {
-                //vai procurar o nome introduzido na lista de personalidades e se encontrar faz match do id do jazigo
-                string poiIdMatched = "";
-                bool found = false;
-                for (int i = 0; i < PoiList["pois"].Count; i++)
-                {
-                    for (int j = 0; j < PoiList["pois"][i]["personalidades"].Count; j++)
-                    {
-                        string name = PoiList["pois"][i]["personalidades"][j]["nome"];
-                        if (name.ToLower().Equals(searchInput.ToLower()))
-                        {
-                            poiIdMatched = PoiList["pois"][i]["ID"];
-                            found = true;
-                            break;
-                        }
-
-                    }
-                    if (found)
-                    {
-                        print("FOUND corresponing ID: " + Int32.Parse(poiIdMatched));
-                        FindPoiInMap(Int32.Parse(poiIdMatched));
+                        HashSet<string> aux = new HashSet<string>();
+                        aux.Add(id);
+                        FindPoiInMap(aux);
                         break;
                     }
                     else
@@ -135,22 +106,61 @@ public class SearchMap : MonoBehaviour
                         {
                             NotFound = true;
                         }
-                    }
+                    }                  
+                }
+            }
+            else
+            {
+                //vai procurar o nome introduzido na lista de personalidades e se encontrar faz match do id do jazigo
+                HashSet<string> poisIdMatched = new HashSet<string>();
+                //bool found = false;
+                for (int i = 0; i < PoiList["pois"].Count; i++)
+                {
+                    for (int j = 0; j < PoiList["pois"][i]["personalidades"].Count; j++)
+                    {
+                        string name = PoiList["pois"][i]["personalidades"][j]["nome"];
+                        string nameClean = MainDataHolder.RemoveAccents(name).ToLower();
+                        string searchInputClean = MainDataHolder.RemoveAccents(searchInput).ToLower();
+                        print("nameClean: " + nameClean);
 
+                        if (nameClean.Equals(searchInputClean) || nameClean.Contains(searchInputClean))
+                        {
+                            print("searchInputClean: " + searchInputClean);
+                            string poiIdMatched = PoiList["pois"][i]["ID"];
+                            poisIdMatched.Add(poiIdMatched);
+                            //found = true;
+                            break;
+                        }
+                    }
                 }
 
+                if (poisIdMatched.Count > 0)
+                {
+                    print(poisIdMatched.Count);
+                    foreach(string s in poisIdMatched)
+                    {
+                        print("FOUND corresponing ID: " + s);
+
+                    }
+                    //FindPoiInMap(Int32.Parse(poiIdMatched));
+                    FindPoiInMap(poisIdMatched);
+                }
+                else
+                {
+                    //if (i == PoiList["pois"].Count - 1)
+                    //{
+                    NotFound = true;                    
+                }
             }
         }
     }
-
-    void FindPoiInMap(int jazId)
+  
+    void FindPoiInMap(HashSet<string> matchedIds)
     {
  
         foreach (POIMapSpecifications poi in poisInMap)
         {
-            int numId = Int32.Parse(poi.id);
-   
-            if (jazId == numId)
+            if (matchedIds.Contains(poi.id))
             {
                 poi.transform.GetChild(0).Find("pinpoint").GetComponent<MeshRenderer>().material.color = Color.green;
             }

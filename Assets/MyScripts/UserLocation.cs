@@ -37,8 +37,9 @@ public class UserLocation : MonoBehaviour
 	}
 	void Start()
 	{
-		initialCameraPos = _referenceCamera.transform.position;		
-	
+		initialCameraPos = _referenceCamera.transform.position;
+
+		_statusText.gameObject.SetActive(true);
 
 		if (null == _locationProvider)
 		{
@@ -50,31 +51,34 @@ public class UserLocation : MonoBehaviour
 	void Update()
 	{
 		Location currLoc = _locationProvider.CurrentLocation;
-
 		if (currLoc.IsLocationServiceInitializing)
 		{
-			_statusText.text = "location services are initializing";
+			//_statusText.text = "location services are initializing";
+			_statusText.text = "Serviços de localização estão a inicializar.";
 
 		}
 		else
 		{
 			if (!currLoc.IsLocationServiceEnabled)
 			{
-				_statusText.text = "location services not enabled";
+				//_statusText.text = "location services not enabled";
+				_statusText.text = "Serviços de localização não estão ativos";
 
 			}
 			else
 			{
+				_statusText.text = "Serviços de localização ativos";
+
 				if (currLoc.LatitudeLongitude.Equals(Vector2d.zero))
 				{
 
-					_statusText.text = "Waiting for location ....";
+					//_statusText.text = "Waiting for location ....";
+					_statusText.text = "A carregar localização...";
 				}
 				else
 				{
-				
-
-					_statusText.text = string.Format("{0}", currLoc.LatitudeLongitude);
+					//_statusText.text = string.Format("{0}", currLoc.LatitudeLongitude);
+					_statusText.gameObject.SetActive(false);
 					latlong = currLoc.LatitudeLongitude;
 					//print(latlong);
 				}
