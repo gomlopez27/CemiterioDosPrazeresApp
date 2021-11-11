@@ -43,8 +43,14 @@ public class LoadScenes : MonoBehaviour
     {
         SceneManager.LoadScene("RoutesScene");
 
-    }    
-    
+    }
+
+    public void LoadRouteListScene()
+    {
+        SceneManager.LoadScene("RouteListScene");
+
+    }
+
     public void LoadCreateRoutesScene()
     {
         SceneManager.LoadScene("CreateRoutesScene");

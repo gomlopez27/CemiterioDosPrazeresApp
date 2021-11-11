@@ -1,5 +1,5 @@
 using Mapbox.Utils;
-using System.Collections;
+using SimpleJSON;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,12 +11,23 @@ public static class RouteDataHolder
     public static string routeId;
     public static string routeName;
     public static List<GameObject> routePois;
+
     public static GameObject CurrentCanvasRouteList;
     public static GameObject CurrentCanvasGeneralInfo;
     public static GameObject CurrentCanvasDirectionsMode;
     public static GameObject CurrentCanvasImportRoutes;
     public static GameObject LocationBasedGame;
     public static GameObject Directions;
+
+    public static Route currentRoute;
+    public static JSONNode jsonRouteList;
+    public static JSONNode jsonUnofficialRoutesList;
+
+    //State during route diretions
+    public static List<GameObject> updatedRoutePoisInMap;
+    public static List<string> savedPoisReached;
+
+
 
     //public Transform InitialCameraTransform
     //{

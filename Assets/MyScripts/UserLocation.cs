@@ -35,7 +35,7 @@ public class UserLocation : MonoBehaviour
 			return;
 		}
 	}
-	void Start()
+	public void Start()
 	{
 		initialCameraPos = _referenceCamera.transform.position;
 
@@ -45,6 +45,8 @@ public class UserLocation : MonoBehaviour
 		{
 			_locationProvider = LocationProviderFactory.Instance.DefaultLocationProvider as AbstractLocationProvider;
 		}
+
+		print("START USERLOCATION");
 	}
 
 
@@ -80,7 +82,7 @@ public class UserLocation : MonoBehaviour
 					//_statusText.text = string.Format("{0}", currLoc.LatitudeLongitude);
 					_statusText.gameObject.SetActive(false);
 					latlong = currLoc.LatitudeLongitude;
-					//print(latlong);
+					//print("currLoc.IsLocationUpdated " + currLoc.IsLocationUpdated + " : " + latlong);
 				}
 			}
 		}

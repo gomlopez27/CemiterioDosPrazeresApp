@@ -77,7 +77,7 @@ public class RouteDirectionsArea : MonoBehaviour
     bool hasShowedToast;
     //Dictionary<string, bool> visitedPois;
     GameObject RouteGeneralView;
-
+    GameObject dirLine;
     private void Awake()
     {
 
@@ -236,7 +236,7 @@ public class RouteDirectionsArea : MonoBehaviour
                 }
                 else
                 {
-                    print("Index: " + i);
+                    //print("Index: " + i);
                     if (!hasShowedToast) { 
                         StartCoroutine(ShowToastMsg());
                     }
@@ -467,4 +467,34 @@ public class RouteDirectionsArea : MonoBehaviour
         return deg * (Math.PI / 180);
     }
 
+
+    public void PauseDirectionsInAr()
+    {
+        GameObject localDirLine = GameObject.Find("direction waypoint  entity");
+        dirLine = localDirLine;
+        localDirLine.SetActive(false);
+        //PlayerController.GetComponent<UserLocation>().enabled = false;
+
+        foreach (GameObject go in routePois)
+        {
+            go.transform.parent.gameObject.SetActive(false);
+        }
+    }
+
+    public void ActivateDirectionsAfterAr()
+    {
+        //PlayerController.GetComponent<UserLocation>().enabled = true;
+        //PlayerController.GetComponent<UserLocation>().Start();
+        print("dirLine: " + dirLine.name);
+
+        dirLine.SetActive(true);
+
+        POIMapSpecifications[] PoiInMap = GameObject.FindObjectsOfType<POIMapSpecifications>(true);
+        
+        print("cont: " + PoiInMap.Length); 
+        foreach (POIMapSpecifications go in PoiInMap)
+        {
+            go.gameObject.SetActive(true);
+        }
+    }
 }

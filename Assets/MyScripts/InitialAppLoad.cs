@@ -145,33 +145,13 @@ public class InitialAppLoad : MonoBehaviour
             string jsonToWrite = www.downloadHandler.text;
             JSONNode UnofficialRoutesJson = JSON.Parse(jsonToWrite.ToString());
             List<Route> UnofficialRoutes = this.GetComponent<SerializableDataElements>().ConvertJsonToRouteList(UnofficialRoutesJson);
-            MainDataHolder.UnofficialRoutes = UnofficialRoutes; System.IO.File.WriteAllText(unofficialRoutesListFilePath, jsonToWrite);
+            MainDataHolder.UnofficialRoutes = UnofficialRoutes; 
+            System.IO.File.WriteAllText(unofficialRoutesListFilePath, jsonToWrite);
             print("MainDataHolder.UnofficialRoutes: " + MainDataHolder.UnofficialRoutes.Count);
 
         }
     }
   
-    public IEnumerator ShowDownloadProgress(string name, UnityWebRequest www)
-    {
-        while (!www.isDone)
-        {
-            string progress= (string.Format("{0:0%}", www.downloadProgress));
-            print(name + " " + progress);
-           // process = www.downloadProgress;
-            yield return new WaitForSeconds(.01f);
-        }
-    }
-
-    public IEnumerator MyDownloadProgress(string name, UnityWebRequest www)
-    {
-        while (!www.isDone)
-        {
-            string progress = (string.Format("{0:0%}", www.downloadProgress));
-            print(name + " " + progress);
-            // process = www.downloadProgress;
-            yield return new WaitForSeconds(.01f);
-        }
-    }
 
     IEnumerator LoadAssetBundle(string url)
     {

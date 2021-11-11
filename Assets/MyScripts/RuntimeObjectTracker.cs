@@ -28,6 +28,7 @@ public class RuntimeObjectTracker : MonoBehaviour
     [SerializeField] GameObject OnePersonalityPage;
     [SerializeField] GameObject MultiplePersonalitiesPage;
     [SerializeField] GameObject OnePersonalityContent;
+    [SerializeField] GameObject LoadingText;
 
     private GameObject trackerObject;
     private string onRecognizedObjName;
@@ -93,6 +94,7 @@ public class RuntimeObjectTracker : MonoBehaviour
             myLoadedAssetBundle.Unload(false);
         }
 
+
         myLoadedAssetBundle = AssetBundle.LoadFromFile(Path.Combine(Application.streamingAssetsPath, name));
     
         if (myLoadedAssetBundle == null)
@@ -117,7 +119,7 @@ public class RuntimeObjectTracker : MonoBehaviour
         {
             CreateObjectTrackers();
             print("CREATED OBJ TRACKERS" + createdObjTrackers.Count);
-
+            LoadingText.SetActive(false);
         }
         //if (lauchDefaultAugmentation)
         //{

@@ -138,6 +138,7 @@ public class ObjectTrackerSlotsController : MonoBehaviour
     Text ActiveTracker; //debug
     [SerializeField]
     Text userCurrentZone;//debug
+
     //horizontal(X) - longitude
     //vertical(y) - latitude
     private GPSPointDecimalPart topLeftDecimal; //apenas parte decimal do
@@ -354,17 +355,19 @@ public class ObjectTrackerSlotsController : MonoBehaviour
                 go.SetActive(true);
                 ot.enabled = true;
                 ActiveTracker.text = go.name;
+                //LoadingText.SetActive(false);
             }
             else
             {
                 go.SetActive(false);
                 ot.enabled = false;
-     
+                //LoadingText.SetActive(true);
+
                 //if (ot.gameObject.activeSelf)
                 //    ot.gameObject.SetActive(false);
             }
 
-         
+
 
         }
     }
