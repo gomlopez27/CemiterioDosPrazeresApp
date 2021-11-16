@@ -17,15 +17,6 @@
                "imageURL":"https://www.casadamusica.com/ImageGen.ashx?image=/media/2332173/30130517_jos__vianna_da_motta_evento_01.jpg"
             },
             {
-               "id":1204,
-               "latitude":38.7141744652,
-               "longitude":-9.1711175235,
-               "tipoJaz":"JM",
-               "personalidades":["Alfredo Marceneiro"],
-               "description":"Lorem ipsum dolor sit amet, consectetur. Lorem ipsum dolor sit amet, consectetur.",
-               "imageURL":"https://www.museudofado.pt/media/2020/5/alfredomarceneiro.png"
-            },
-            {
                "id":3696,
                "latitude":38.7131401164,
                "longitude":-9.1720715901,
@@ -42,24 +33,6 @@
                "personalidades":["Luís de Freitas Branco"],
                "description":"Lorem ipsum dolor sit amet, consectetur. Lorem ipsum dolor sit amet, consectetur.",
                "imageURL":"https://upload.wikimedia.org/wikipedia/commons/d/d8/Luiz_de_Freitas_Branco_-_Ser%C3%B5es_%28Mai1911%29.png"
-            },
- 	    {
-               "id":6009,
-               "latitude":38.7142362258,
-               "longitude":-9.1727769584,
-               "tipoJaz":"JP",
-               "personalidades":["Hermínia Silva"],
-               "description":"Lorem ipsum dolor sit amet, consectetur. Lorem ipsum dolor sit amet, consectetur.",
-               "imageURL":"https://www.museudofado.pt/media/2020/6/herminiasilva.png"
-            },
-            {
-               "id":475,
-               "latitude":38.7153312952,
-               "longitude":-9.1720846274,
-               "tipoJaz":"JP",
-               "personalidades":["Domingos Bomtempo"],
-               "description":"Lorem ipsum dolor sit amet, consectetur. Lorem ipsum dolor sit amet, consectetur.",
-               "imageURL":"https://capeiaarraiana.pt/wp-content/uploads/2016/12/composer55.jpg"
             }
          ]
       },

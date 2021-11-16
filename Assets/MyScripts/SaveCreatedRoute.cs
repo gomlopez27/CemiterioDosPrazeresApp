@@ -255,7 +255,7 @@ public class SaveCreatedRoute : MonoBehaviour
     {
         LoadingPanel.SetActive(true);
         yield return new WaitForSeconds(5);
-        Scenes.LoadRoutesScene();
+        Scenes.LoadRouteListScene();
 
     }
 

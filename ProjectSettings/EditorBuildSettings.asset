@@ -27,16 +27,16 @@ EditorBuildSettings:
     path: Assets/Scenes/ImportRoutesScene.unity
     guid: ba9df30fd7347d147957d342a6394124
   - enabled: 0
-    path: Assets/Scenes/RoutesScene.unity
+    path: Assets/Scenes/Old scenes/RoutesScene.unity
     guid: 20aaed84bdf229a448eae9731932dd4b
   - enabled: 1
-    path: Assets/RouteListScene.unity
+    path: Assets/Scenes/RouteListScene.unity
     guid: f1c80957d8eeb1b489d3858fd42bcc73
   - enabled: 1
-    path: Assets/RoutePageScene.unity
+    path: Assets/Scenes/RoutePageScene.unity
     guid: 2bf300d0656e61d47a0cdc50a474bc71
   - enabled: 1
-    path: Assets/RouteDirectionsScene.unity
+    path: Assets/Scenes/RouteDirectionsScene.unity
     guid: 3af4ecc2598a6694495261e595250795
   m_configObjects:
     UnityEditor.XR.ARCore.ARCoreSettings: {fileID: 11400000, guid: b135ddcdfa04cb6409830862f7bf8bfc, type: 2}

@@ -1,6 +1,7 @@
 using SimpleJSON;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
@@ -36,15 +37,18 @@ public class InitialAppLoad : MonoBehaviour
 #if UNITY_ANDROID && !UNITY_EDITOR
         print("UNITY_ANDROID");
         if(myLoadedAssetBundle == null){
-            StartCoroutine(DownloadAsset(bundleUrl + "augmentations-Android"));
+            //StartCoroutine(DownloadAsset(bundleUrl + "augmentations-Android"));
             //StartCoroutine(LoadAssetBundle(bundleUrl + "augmentations-Android"));
+                        StartCoroutine(LoadAssetBundleLocally());
+
         }
         //testAssetBundle("augmentations-Android");
 #elif UNITY_EDITOR
         if (myLoadedAssetBundle == null)
         {
             print("UNITY_EDITOR");
-            StartCoroutine(DownloadAsset(bundleUrl + "augmentations-Windows"));
+            //StartCoroutine(DownloadAsset(bundleUrl + "augmentations-Windows"));
+            StartCoroutine(LoadAssetBundleLocally());
             //StartCoroutine(LoadAssetBundle(bundleUrl + "augmentations-Windows"));
             //testAssetBundle("augmentations-Windowss");
         }
@@ -209,7 +213,7 @@ public class InitialAppLoad : MonoBehaviour
         
     }
 
-    IEnumerator DownloadAsset(string url)
+    IEnumerator DownloadAssetFromServer(string url)
     {
 
         using (var uwr = UnityWebRequestAssetBundle.GetAssetBundle(url))
@@ -234,7 +238,35 @@ public class InitialAppLoad : MonoBehaviour
             this.GetComponent<LoadScenes>().LoadHomeScene();
         }
     }
-
+     
     
+    IEnumerator LoadAssetBundleLocally()
+    {
+        var bundleLoadRequest = AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, "augmentationsprefabs"));
+        while (!bundleLoadRequest.isDone)
+        {
+            string s = (string.Format("{0:0%}", bundleLoadRequest.progress));
+            loadedPercentage.text = s;
+            slider.value = bundleLoadRequest.progress;
+            yield return null;
+        }
+        yield return bundleLoadRequest;
 
+        AssetBundle myLoadedAssetBundle = bundleLoadRequest.assetBundle;
+        if (myLoadedAssetBundle == null)
+        {
+            Debug.Log("Failed to load AssetBundle!");
+            yield break;
+        }
+
+        MainDataHolder.myAssetBundle = myLoadedAssetBundle;
+        print("Asset bundle loaded!");
+
+        GameObject[] assetsLoadRequest = myLoadedAssetBundle.LoadAllAssets<GameObject>();
+        yield return assetsLoadRequest;
+        MainDataHolder.augmentationsGO = assetsLoadRequest;
+        myLoadedAssetBundle.Unload(false);
+        this.GetComponent<LoadScenes>().LoadHomeScene();
+
+    }
 }

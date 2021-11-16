@@ -26,6 +26,7 @@ public class MarkersAtGPSLocation : MonoBehaviour
     [SerializeField] Text numberOfCurrentPOIs;
     [SerializeField] Slider slider;
     [SerializeField] Text sliderText;
+    [SerializeField] Text sliderMaxText;
     [SerializeField] Text JazClickedTitle;
     [SerializeField] GameObject OnePersonalityPage;
     [SerializeField] GameObject MultiplePersonalitiesPage;
@@ -34,7 +35,7 @@ public class MarkersAtGPSLocation : MonoBehaviour
     private Text jazID;
     private Text jazLoc;
     private Text nomeJaz;
-    private Text percursoJaz;
+    private Text distanciaJaz;
     private Image fotoPOI; 
     private JSONNode PoiListData;
     private int countPhotos;
@@ -66,8 +67,20 @@ public class MarkersAtGPSLocation : MonoBehaviour
         allPOIs = FindObjectsOfType<PlaceAtLocation>(true);
 
         slider.onValueChanged.AddListener((v) => {
-            sliderText.text = v.ToString();
             sliderValue = (int)v;
+
+
+            if(sliderValue == 51)
+            {
+                sliderText.text = "?";
+                sliderMaxText.text = "Sem limite";
+            }
+            else
+            {
+                sliderText.text = v.ToString();
+
+                sliderMaxText.text = "50m";
+            }
 
         });
 
@@ -104,6 +117,7 @@ public class MarkersAtGPSLocation : MonoBehaviour
     {
         for (int i = 0; i < PoiListData["pois"].Count; i++)
         {
+            string jazId = PoiListData["pois"][i]["ID"];
             //GameObject POIObject = new GameObject("GPSStageObject-"+ PoiListData["pois"][i]["ID"]);
             GameObject POIObject = new GameObject(PoiListData["pois"][i]["ID"]); //TODO: mudar para id completo
            
@@ -129,21 +143,22 @@ public class MarkersAtGPSLocation : MonoBehaviour
             PlaceAtLocation.AddPlaceAtComponent(POIObject, loc, opts);
 
             GameObject thisPOI = Instantiate(POIPrefab, POIObject.transform);
-
+            //SetupMarkerWithData(thisPOI, i);
             //Find the correct text to change
             jazID = thisPOI.transform.Find("Canvas/Panel/ContentPanel/TopContentPanel/TitleContentPanel/jazigoTextId").GetComponent<Text>();
             jazLoc = thisPOI.transform.Find("Canvas/Panel/ContentPanel/TopContentPanel/TitleContentPanel/LocalText").GetComponent<Text>();
             nomeJaz = thisPOI.transform.Find("Canvas/Panel/ContentPanel/BottomContentPanel/NomePessoa").GetComponent<Text>();
-            percursoJaz = thisPOI.transform.Find("Canvas/Panel/ContentPanel/BottomContentPanel/NomePercurso").GetComponent<Text>();
+            distanciaJaz = thisPOI.transform.Find("Canvas/Panel/ContentPanel/BottomContentPanel/Distancia").GetComponent<Text>();
             fotoPOI = thisPOI.transform.Find("Canvas/Panel/ContentPanel/TopContentPanel/photo").GetComponent<Image>();
 
             //Change the text
             jazID.text = PoiListData["pois"][i]["ID"];
             jazLoc.text = PoiListData["pois"][i]["jazLocation"];
+            //Davinci.get().load(PoiListData["pois"][i]["jazImage"]).setCached(true).into(fotoPOI).start();
 
             print(PoiListData["pois"][i]["ID"] + "; number of ppl: " + PoiListData["pois"][i]["personalidades"].Count);
             print("person: " + PoiListData["pois"][i]["personalidades"][0]["nome"]);
-            
+
             if (PoiListData["pois"][i]["personalidades"].Count > 1)
             {
                 nomeJaz.text = "Múltiplas pessoas encontram-se sepultadas neste jazigo.";
@@ -165,14 +180,42 @@ public class MarkersAtGPSLocation : MonoBehaviour
         poiCreated = true;
     }
 
+    void SetupMarkerWithData(GameObject thisPOI, int i)
+    {
+        //Find the correct text to change
+        jazID = thisPOI.transform.Find("Canvas/Panel/ContentPanel/TitleContentPanel/jazigoText").GetComponent<Text>();
+        jazLoc = thisPOI.transform.Find("Canvas/Panel/ContentPanel/BottomContentPanel/LocalText").GetComponent<Text>();
+        //nomeJaz = thisPOI.transform.Find("Canvas/Panel/ContentPanel/BottomContentPanel/NomePessoa").GetComponent<Text>();
+        distanciaJaz = thisPOI.transform.Find("Canvas/Panel/ContentPanel/BottomContentPanel/Distancia").GetComponent<Text>();
+        fotoPOI = thisPOI.transform.Find("Canvas/Top/ImageBackground/photo").GetComponent<Image>();
+
+        Davinci.get().load(PoiListData["pois"][i]["jazImage"]).setCached(true).into(fotoPOI).start();
+
+        //Change the text
+        string jazType = PoiListData["pois"][i]["tipoJaz"];
+        string jazId = PoiListData["pois"][i]["ID"];
+
+        if (PoiListData["pois"][i]["personalidades"].Count > 1)
+        {
+            jazID.text = jazType + " " + jazId + ": " + "Múltiplas Personalidades";
+        }
+        else
+        {
+            string personName = PoiListData["pois"][i]["personalidades"][0]["nome"];
+            jazID.text = jazType + " " + jazId + ": " + personName;
+        }
+
+        jazLoc.text = PoiListData["pois"][i]["jazLocation"];
+        print(jazID.text);
+    }
+
     public void AddListenersToPois()
     {
        foreach(PlaceAtLocation poi in allPOIs)
         {
             GameObject poiPrefab = poi.gameObject.transform.GetChild(0).gameObject;
             GameObject POIPanel = poiPrefab.transform.Find("Canvas/Panel").gameObject;
-            string jazId = poiPrefab.transform.Find("Canvas/Panel/ContentPanel/TopContentPanel/TitleContentPanel/jazigoTextId").GetComponent<Text>().text;
-
+            //string jazId = poiPrefab.transform.Find("Canvas/Panel/ContentPanel/TopContentPanel/TitleContentPanel/jazigoTextId").GetComponent<Text>().text;
             //print(poi.gameObject.name);
             Button moreInfo = POIPanel.AddComponent<Button>();
 
@@ -293,20 +336,20 @@ public class MarkersAtGPSLocation : MonoBehaviour
     public void DistanceFromPOI(PlaceAtLocation poi)
     {
         GameObject poiPrefab = poi.gameObject.transform.GetChild(0).gameObject;
-        Text percurso = poiPrefab.transform.Find("Canvas/Panel/ContentPanel/BottomContentPanel/NomePercurso").GetComponent<Text>();
+        Text distanteToPoi = poiPrefab.transform.Find("Canvas/Panel/ContentPanel/BottomContentPanel/Distancia").GetComponent<Text>();
         double distance = poi.SceneDistance;
 
         if(distance <= 10)
         {
-            percurso.text = NEAR;
+            distanteToPoi.text = NEAR;
         }
         else if(distance > 10 && distance < 21)
         {
-            percurso.text = CLOSE;
+            distanteToPoi.text = CLOSE;
         }
         else
         {
-            percurso.text = FAR;
+            distanteToPoi.text = FAR;
 
         }
 
@@ -320,7 +363,7 @@ public class MarkersAtGPSLocation : MonoBehaviour
             poi.gameObject.SetActive(true);
         }
 
-        slider.value = slider.minValue;
+        slider.value = slider.maxValue;
         sliderText.text = "?";
         numberOfCurrentPOIs.text = allPOIs.Length.ToString();
         hasUsedSlider = false;

@@ -101,7 +101,7 @@ public class SpawnRoutePOI : MonoBehaviour
             //_spawnedObjectsTranforms[i] = spawnedObject.transform;
             spawnedObject.transform.localScale = new Vector3(_spawnScale, _spawnScale, _spawnScale);
         }
-
+         
 
         //if (checkRouteInfo)
         //{

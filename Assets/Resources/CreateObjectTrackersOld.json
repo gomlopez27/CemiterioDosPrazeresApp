@@ -40,13 +40,13 @@
 	"wtoName": "Zona28",
 	"targets":[
 		{"targetName": "1431",
-                 "augmentation": "JazHerminiaSilva"},
-		{"targetName": "1439",
-                 "augmentation": "JazCesarioVerdeAugmentation"},
-		{"targetName": "1500",
-                 "augmentation": "JazCarolinaBeatriz"},
-		{"targetName": "1803",
                  "augmentation": "default"},
+		{"targetName": "1439",
+                 "augmentation": "default"},
+		{"targetName": "1500",
+                 "augmentation": "default"},
+		{"targetName": "1803",
+                 "augmentation": "default"}
 		  ]
    },
    {

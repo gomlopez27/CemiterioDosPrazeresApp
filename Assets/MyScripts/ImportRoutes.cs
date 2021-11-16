@@ -163,7 +163,7 @@ public class ImportRoutes : MonoBehaviour
             System.IO.File.WriteAllText(unofficialRoutesListFilePath, jsonToWrite);
             this.GetComponent<SerializableDataElements>().SaveRouteCodeToJson(RouteNode["code"]);
             yield return new WaitForSeconds(3);
-            SceneManager.LoadScene("RoutesScene");
+            this.GetComponent<LoadScenes>().LoadRouteListScene();
             //LoadingPanel.SetActive(false);
             //ImportRouteGO.SetActive(false);
             //RouteListGO.GetComponent<RoutesList>().enabled = true;

@@ -8452,6 +8452,7 @@ MonoBehaviour:
   RouteDurationTxt: {fileID: 0}
   RouteDistanceTxt: {fileID: 0}
   RouteTitle: {fileID: 0}
+  JazInfo: {fileID: 0}
 --- !u!222 &1880367526
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -8762,6 +8763,7 @@ GameObject:
   - component: {fileID: 1973139688}
   - component: {fileID: 1973139689}
   - component: {fileID: 1973139690}
+  - component: {fileID: 1973139691}
   m_Layer: 5
   m_Name: ImportRoutes
   m_TagString: Untagged
@@ -8823,6 +8825,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0401151b4317c7a48a388f3f640dd3db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1973139691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1973139687}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4c56b231afad844f969eb2ab44e3433, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1992247861
 GameObject:
   m_ObjectHideFlags: 0
@@ -8833,7 +8847,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1992247864}
   - component: {fileID: 1992247863}
-  - component: {fileID: 1992247862}
   m_Layer: 0
   m_Name: Routes
   m_TagString: Untagged
@@ -8841,24 +8854,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1992247862
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1992247861}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 89144d25502a45f4a948a00d3c4729d8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CurrentCanvasRouteList: {fileID: 417952416}
-  CurrentCanvasGeneralInfo: {fileID: 0}
-  CurrentCanvasDirectionsMode: {fileID: 0}
-  CurrentCanvasImportRoutes: {fileID: 0}
-  LocationBasedGame: {fileID: 0}
-  Directions: {fileID: 0}
 --- !u!114 &1992247863
 MonoBehaviour:
   m_ObjectHideFlags: 0

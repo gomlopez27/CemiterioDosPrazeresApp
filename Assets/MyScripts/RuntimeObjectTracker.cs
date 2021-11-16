@@ -64,6 +64,10 @@ public class RuntimeObjectTracker : MonoBehaviour
 
         myLoadedAssetBundle = MainDataHolder.myAssetBundle;
 
+        foreach(GameObject go in MainDataHolder.augmentationsGO)
+        {
+            print("augmentationsGO: " + go.name);
+        }
 //        string bundleUrl = "https://pasev.di.fct.unl.pt/contentFiles/Giovanna/AssetBundles/";
 
         //#if UNITY_ANDROID && !UNITY_EDITOR
@@ -115,7 +119,7 @@ public class RuntimeObjectTracker : MonoBehaviour
     
     private void Update()
     {
-        if (!hasCreatedTrackers && myLoadedAssetBundle != null)
+        if (!hasCreatedTrackers && MainDataHolder.augmentationsGO != null)
         {
             CreateObjectTrackers();
             print("CREATED OBJ TRACKERS" + createdObjTrackers.Count);
@@ -131,6 +135,7 @@ public class RuntimeObjectTracker : MonoBehaviour
         //    DeactivateAllObjectTrackers();
 
         //}
+
     }
 
 
@@ -160,31 +165,47 @@ public class RuntimeObjectTracker : MonoBehaviour
                 objTrackable.TargetPattern = targetName;
                 string augmentation = ObjectTrackersList[i]["targets"][k]["augmentation"];
                 //Debug.Log("augmentation: " + augmentation);
-
                 string assetBundleName = "assets/augmentationsprefabs/" + augmentation + ".prefab";
-               
-                if (myLoadedAssetBundle.Contains(assetBundleName))
-                {
-                    objTrackable.Drawable = myLoadedAssetBundle.LoadAsset<GameObject>(augmentation);
-                }
-                else
-                {
-                    //Vai para default augmentation
-                    //objTrackable.Drawable = null;
-                    objTrackable.Drawable = defaultAugmentationPanel;
-                }
-                //if (objTrackable.Drawable == null)
-                //{
-                //    Debug.Log("Failed to load AssetBundle!");
-                //    //objTrackable.Drawable = defaultAugmententation;
+                string resourcesOathName = "augmentations/" + augmentation + ".prefab";
 
+                if (!augmentation.Equals(DEFAULT_AUGM))
+                {
+                    foreach (GameObject go in MainDataHolder.augmentationsGO)
+                    {
+                        if (go.name.Equals(augmentation))
+                        {
+                            objTrackable.Drawable = go;
+                            objTrackable.ExtendedTracking = true;
+                            break;
+                        }
+                    }
+                    //if (/*myLoadedAssetBundle != null && */myLoadedAssetBundle.Contains(assetBundleName))
+                    //{
+                    //    objTrackable.Drawable = myLoadedAssetBundle.LoadAsset<GameObject>(augmentation);
+
+                    //}
+                    //else
+                    //{
+                    //    GameObject go = Resources.Load<GameObject>(resourcesOathName);
+                    //    print("BUscar augmenteation as minhas pastas " + go.name);
+
+                    //    objTrackable.Drawable = go;
+
+                    //}
+
+                }
+                //if (myLoadedAssetBundle.Contains(assetBundleName))
+                //{
+                //    objTrackable.Drawable = myLoadedAssetBundle.LoadAsset<GameObject>(augmentation);
                 //}
                 //else
                 //{
-                //    string assetBundleName = "assets/augmentationsprefabs/" + augmentation + ".prefab";
-                //    objTrackable.Drawable = myLoadedAssetBundle.LoadAsset<GameObject>(augmentation);
-
+                //    //Vai para default augmentation
+                //    //objTrackable.Drawable = null;
+                //    objTrackable.Drawable = defaultAugmentationPanel;
                 //}
+
+                
 
                 objTrackable.OnObjectRecognized.AddListener((objTarget) =>
                 {
@@ -193,12 +214,13 @@ public class RuntimeObjectTracker : MonoBehaviour
                     print("CurrentObjTarget name: " + CurrentObjTarget.Name);
                     //print("augmentation name: " + augmentation);
                     //if (objTrackable.Drawable == defaultAugmentationPanel)
-                    if (augmentation.Equals(DEFAULT_AUGM) )
+                    if (augmentation.Equals(DEFAULT_AUGM))
                     {
                         print("DEFAULT_AUGM");
                         //lauchDefaultAugmentation = true;
+                        /*StartCoroutine(*/DefaultAugmentationCreation(CurrentObjTarget.Name);
                         defaultAugmentationPanel.SetActive(true);
-                        StartCoroutine(DefaultAugmentationCreation(CurrentObjTarget.Name));
+
                     }
                 });
 
@@ -299,7 +321,7 @@ public class RuntimeObjectTracker : MonoBehaviour
         }
     }
 
-    public IEnumerator DefaultAugmentationCreation(string targetName)
+    public /*IEnumerator*/ void DefaultAugmentationCreation(string targetName)
     {
         JSONNode jaz = this.GetComponent<JazInformations>().GetJaz(targetName);
         //JSONNode jaz = this.GetComponent<JazInformations>().GetJaz("2271");
@@ -314,16 +336,16 @@ public class RuntimeObjectTracker : MonoBehaviour
             {
                 string personImageUrl = jaz["personalidades"][i]["imageURL"];
                 Davinci.get().load(personImageUrl).setCached(true).into(defaultAugmentationImage).start();
-                yield return new WaitForSeconds(1.5f);
-                defaultAugmentationPanel.SetActive(true);
+                //yield return new WaitForSeconds(1.5f);
+                //defaultAugmentationPanel.SetActive(true);
             }
         }
         else
         {
             string personImageUrl = jaz["personalidades"][0]["imageURL"];
             Davinci.get().load(personImageUrl).setCached(true).into(defaultAugmentationImage).start();
-            yield return new WaitForSeconds(1);
-            defaultAugmentationPanel.SetActive(true);
+            //yield return new WaitForSeconds(1);
+           // defaultAugmentationPanel.SetActive(true);
 
             defaultAugmentationText.text = jaz["personalidades"][0]["nome"];
         }

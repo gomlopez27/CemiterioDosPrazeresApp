@@ -13,6 +13,8 @@ public class FilterMap : MonoBehaviour
     Button SaveFilterChoices;
     [SerializeField]
     GameObject FilterByRouteArea;
+    [SerializeField]
+    Button NrOfFilteredPois;
     private JSONNode PoiList;
     private POIMapSpecifications[] poisInMap;
     private HashSet<string> FilterByRouteTags;
@@ -35,8 +37,30 @@ public class FilterMap : MonoBehaviour
         SaveFilterChoices.onClick.AddListener(()=> {
             FindFilteredPois(selectedTags);
             FilterPanel.SetActive(false);
+            print("selectedTags.Count: " + selectedTags.Count);
+
+            if(selectedTags.Count==1 && selectedTags.Contains("Ver tudo"))
+            {
+                NrOfFilteredPois.gameObject.SetActive(false);
+
+            }
+            else
+            {
+                NrOfFilteredPois.gameObject.SetActive(true);
+
+            }
+
         }
         );
+
+        NrOfFilteredPois.onClick.AddListener(() =>
+        {
+            foreach (POIMapSpecifications poi in poisInMap)
+            {
+                poi.transform.GetChild(0).Find("pinpoint").GetComponent<MeshRenderer>().material.color = Color.red;
+            }
+            NrOfFilteredPois.gameObject.SetActive(false);
+        });
     }
 
     // Update is called once per frame
@@ -155,11 +179,8 @@ public class FilterMap : MonoBehaviour
             print("selected tags: " + s);
         }
 
-
-
         List<string> matchedIds = new List<string>();
         bool found = false;
-
 
         for (int i = 0; i < PoiList["pois"].Count; i++)
         {
@@ -177,7 +198,6 @@ public class FilterMap : MonoBehaviour
                         break; 
                     }
                 }
-
                 if (found)
                 {
                     break;
@@ -185,12 +205,22 @@ public class FilterMap : MonoBehaviour
             }
             
         }
-
         FilterPoisOnMap(matchedIds);
     }
 
     void FilterPoisOnMap(List<string> jazIds)
     {
+        Text filteredPoisNr = NrOfFilteredPois.transform.GetChild(0).GetComponent<Text>();
+        if (jazIds.Count > 1)
+        {
+            filteredPoisNr.text = jazIds.Count.ToString() + " jazigos selecionados.";
+        }
+        else
+        {
+            filteredPoisNr.text = jazIds.Count.ToString() + " jazigo selecionado.";
+
+        }
+
         foreach (POIMapSpecifications poi in poisInMap)
         {
             if (jazIds.Count == 0)

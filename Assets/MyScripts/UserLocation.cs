@@ -109,10 +109,13 @@ public class UserLocation : MonoBehaviour
 
     public void CenterMapInUserLoc()
     {
-		_referenceCamera.transform.position = initialCameraPos;
-		_map.SetCenterLatitudeLongitude(latlong);
-        _map.UpdateMap(_map.CenterLatitudeLongitude, _map.InitialZoom);
-        print("LATLONG: " + string.Format("{0}", _map.CenterLatitudeLongitude));
+		_referenceCamera.transform.position = new Vector3(Player.transform.position.x,
+															 _referenceCamera.transform.position.y,
+															 Player.transform.position.z);
 
-    }
+		_map.SetCenterLatitudeLongitude(latlong);
+		_map.UpdateMap(_map.CenterLatitudeLongitude, _map.InitialZoom);
+		//      print("LATLONG: " + string.Format("{0}", _map.CenterLatitudeLongitude));
+		//_referenceCamera.transform.position = initialCameraPos;
+	}
 }

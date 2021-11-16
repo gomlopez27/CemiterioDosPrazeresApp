@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,23 +6,27 @@ using UnityEngine.UI;
 
 public class JazCarolinaAnimation : MonoBehaviour
 {
-    public GameObject mainAudio;
-    public GameObject Carolina3DModel;
-    public GameObject guideAvatar;
-    public Button StopBtn;
-    public Button PlayBtn;
-    public Button PauseBtn;
-    public Button More30Btn;
-    public Button Minus30Btn;
+    public const int CHANGE_TIME_VALUE = 10;
+    [SerializeField] GameObject mainAudio;
+    [SerializeField] GameObject Carolina3DModel;
+    [SerializeField] GameObject guideAvatar;
+    [SerializeField] Button StopBtn;
+    [SerializeField] Button PlayBtn;
+    [SerializeField] Button PauseBtn;
+    [SerializeField] Button More10Btn;
+    [SerializeField] Button Minus10Btn;
+    [SerializeField] Slider slider;
+    [SerializeField] Text AudioTotalTime;
+    [SerializeField] Text AudioCurrentTime;
     //public GameObject VotingTable;
     //public GameObject VotePaper;
     //public GameObject VotePaperPos;
-  
+
     private AudioSource audioSourceMain;
 
     private Animator anim;
 
-    private bool PoemPlaying;
+    private bool MainAudioPlaying;
     private bool guideIsBack;
     private bool VotingTableVisible;
     private bool VotingTableInvisible;
@@ -33,6 +38,13 @@ public class JazCarolinaAnimation : MonoBehaviour
         PlayMainAudio();
         AudioControllerButtons();
         print(audioSourceMain.clip.name);
+
+        float clipLenght = audioSourceMain.clip.length;
+        slider.maxValue = clipLenght;
+        TimeSpan t = TimeSpan.FromSeconds(clipLenght);
+        string clipLenghtFormated = string.Format("{0:D2}:{1:D2}", t.Minutes, t.Seconds);
+        AudioTotalTime.text = clipLenghtFormated;
+
     }
 
     // Update is called once per frame
@@ -53,13 +65,25 @@ public class JazCarolinaAnimation : MonoBehaviour
         //{
         //    NotShowVotingTable();
         //}
-        if (PoemPlaying && audioSourceMain.time == audioSourceMain.clip.length)
+
+        if (MainAudioPlaying)
+        {
+            //StartCoroutine(ShowGuide());
+            //print("current time: " + audioSourceMain.time);
+            float currTime = audioSourceMain.time;
+            TimeSpan t = TimeSpan.FromSeconds(currTime);
+            string clipLenghtFormated = string.Format("{0:D2}:{1:D2}", t.Minutes, t.Seconds);
+
+            AudioCurrentTime.text = clipLenghtFormated;
+            slider.value = currTime;
+
+           
+        }
+        if (MainAudioPlaying && audioSourceMain.time == audioSourceMain.clip.length)
         {
             StopAugmentation();
         }
-        {
-
-        }
+        
 
     }
 
@@ -68,7 +92,7 @@ public class JazCarolinaAnimation : MonoBehaviour
         Carolina3DModel.SetActive(true);
         guideAvatar.SetActive(false);
         audioSourceMain.Play();
-        PoemPlaying = true;
+        MainAudioPlaying = true;
         //yield return new WaitForSeconds(audioSourceMain.clip.length);
         //PoemPlaying = false;
 
@@ -89,7 +113,7 @@ public class JazCarolinaAnimation : MonoBehaviour
     void StopAugmentation()
     {
         //Carolina3DModel.SetActive(false);
-        PoemPlaying = false;
+        MainAudioPlaying = false;
         anim.enabled = false;
         audioSourceMain.Stop();
         PlayBtn.gameObject.SetActive(true);
@@ -145,38 +169,38 @@ public class JazCarolinaAnimation : MonoBehaviour
 
         });
 
-        More30Btn.onClick.AddListener(() =>
+        More10Btn.onClick.AddListener(() =>
         {
 
-            if (audioSourceMain.time + 30 > audioSourceMain.clip.length)
+            if (audioSourceMain.time + CHANGE_TIME_VALUE > audioSourceMain.clip.length)
             {
                 // audioSourceMain.time = audioSourceMain.clip.length;
                 audioSourceMain.Stop();
                 anim.enabled = false;
 
-                Debug.Log("audioSourceYesPoem.time + 30 " + (audioSourceMain.time + 30f));
+                Debug.Log("audioSourceYesPoem.time + 10 " + (audioSourceMain.time + 10f));
                 Debug.Log("audioSourceYesPoem.length " + audioSourceMain.clip.length);
 
             }
             else
             {
-                audioSourceMain.time = audioSourceMain.time + 30;
+                audioSourceMain.time = audioSourceMain.time + CHANGE_TIME_VALUE;
 
             }
 
         });
 
-        Minus30Btn.onClick.AddListener(() =>
+        Minus10Btn.onClick.AddListener(() =>
         {
 
-            if (audioSourceMain.time - 30 < 0)
+            if (audioSourceMain.time - CHANGE_TIME_VALUE < 0)
             {
                 audioSourceMain.time = 0;
 
             }
             else
             {
-                audioSourceMain.time = audioSourceMain.time - 30;
+                audioSourceMain.time = audioSourceMain.time - CHANGE_TIME_VALUE;
 
             }
             Debug.Log("audioSourceYesPoem.time " + audioSourceMain.time);

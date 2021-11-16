@@ -38,3 +38,6 @@ sysinfo.txt
 Assets/AssetBundles/augmentations-Windows
 Assets/AssetBundles/augmentations-Android
 *.log
+AssetBundles/Android/augmentationsprefabs
+AssetBundles/StandaloneWindows/augmentationsprefabs
+Assets/StreamingAssets/augmentationsprefabs

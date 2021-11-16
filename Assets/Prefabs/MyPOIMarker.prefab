@@ -579,7 +579,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 20, y: 0}
   m_SizeDelta: {x: 200, y: 200}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &8048423074265619128
@@ -703,7 +703,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -30, y: 235}
+  m_SizeDelta: {x: 0, y: 235}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &3935874917385764218
 CanvasRenderer:
@@ -804,7 +804,7 @@ GameObject:
   - component: {fileID: 8957700613947203375}
   - component: {fileID: 5961225377838158778}
   m_Layer: 0
-  m_Name: NomePercurso
+  m_Name: Distancia
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

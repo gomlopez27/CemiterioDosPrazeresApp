@@ -77,9 +77,9 @@ public class FavoritePoisMap : MonoBehaviour
     [SerializeField]
     GameObject ConfirmDeletePanel;
     [SerializeField]
-    public Camera _referenceCamera;
+    Camera _referenceCamera;
     [SerializeField]
-    AbstractMap _map;
+    GameObject Map;
     [SerializeField]
     Button FavoriteListBtn;
     [SerializeField]
@@ -87,19 +87,23 @@ public class FavoritePoisMap : MonoBehaviour
     [SerializeField]
     JazInformations jazInfo;
 
+    private AbstractMap AbsMap;
     private JSONNode FavoritesListJSON;
     private JSONNode FavoritesListJSONTest;
     private JSONNode PoisJson;
-
     //private string filePath;
     private string favoritesFilePath;
     private POIMapSpecifications[] poisInMap;
     private Dictionary<string, HashSet<string>> favoritePersonalities;
+    List<GameObject> pois;
+
 
     void Start()
     {
         favoritesFilePath = Application.persistentDataPath + "/FavoritesList.json";
         favoritePersonalities = new Dictionary<string, HashSet<string>>();
+        pois = new List<GameObject>();
+        AbsMap = Map.GetComponent<AbstractMap>();
         GetFromJson();
         FavoriteListBtn.onClick.AddListener(() => {
             DeactivatePoiOnMap();
@@ -109,6 +113,11 @@ public class FavoritePoisMap : MonoBehaviour
 
     private void Update()
     {
+        if (pois.Count == 0)
+        {
+            pois = Map.GetComponent<MySpawnOnMap>().GetSpawnedPois();
+
+        }
     }
 
     public void AddPersonalityToFavs(string jazId, string personId)
@@ -279,6 +288,7 @@ public class FavoritePoisMap : MonoBehaviour
                         SeePoiInMapBtn.onClick.AddListener(() =>
                         {
                             DestroyFavList();
+                            print("focus on: " + jazId);
                             FocusInMap(jazId);
                         });
                     }
@@ -342,23 +352,23 @@ public class FavoritePoisMap : MonoBehaviour
 
     public void FocusInMap(string id)
     {
+        ActivatePoiOnMap();
+
         foreach (POIMapSpecifications poi in poisInMap)
         {
             if (poi.id.Equals(id))
             {
                 string auxName = "Poi-" + id;
-                print(auxName);
-
-                GameObject poiAux = GameObject.Find(auxName);
-
-                //_referenceCamera.transform.position = new Vector3(poiAux.transform.position.x,
-                //                                             _referenceCamera.transform.position.y,
-                //                                             poiAux.transform.position.z);
-                string location = poi.latitude + "," + poi.longitude;
-                Vector2d latlong = Conversions.StringToLatLon(location);
+                GameObject poiAux = poi.transform.GetChild(0).gameObject;
+                _referenceCamera.transform.position = new Vector3(poiAux.transform.position.x,
+                                                             _referenceCamera.transform.position.y,
+                                                             poiAux.transform.position.z);
+                //string location = poi.latitude + "," + poi.longitude;
+                //print(location);
+                //Vector2d latlong = Conversions.StringToLatLon(location);
                 poi.transform.GetChild(0).Find("pinpoint").GetComponent<MeshRenderer>().material.color = Color.green;
-                _map.SetCenterLatitudeLongitude(latlong);
-                _map.UpdateMap(_map.CenterLatitudeLongitude, 17.5f);
+                //AbsMap.SetCenterLatitudeLongitude(latlong);
+                //AbsMap.UpdateMap(AbsMap.CenterLatitudeLongitude, 17f);
                 ClearBtn.gameObject.SetActive(true);
 
                 ClearBtn.onClick.AddListener(() =>
@@ -370,7 +380,13 @@ public class FavoritePoisMap : MonoBehaviour
 
                 break;
             }
+            else
+            {
+                poi.transform.GetChild(0).Find("pinpoint").GetComponent<MeshRenderer>().material.color = Color.red;
+
+            }
         }
+  
     }
 
     void OnEnable()

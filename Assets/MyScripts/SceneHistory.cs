@@ -21,14 +21,13 @@ public class SceneHistory : MonoBehaviour
     private void Start()
     {
 
-        if (gameObject.scene.name.Equals(OnSpotARScene))
+        if (gameObject.scene.name.Equals(OnSpotARScene) && SceneHistory.PreviousScene != null && !PreviousScene.Equals(NearbyARScene))
         {
             PreviousSceneToAr = PreviousScene;
         }
         Debug.Log("Current Scene: " + gameObject.scene.name);
-        Debug.Log("PreviousScene: " + SceneHistory.PreviousScene);
-
-        Debug.Log("PreviousSceneToAr: " + SceneHistory.PreviousSceneToAr);
+        Debug.Log("Previous Scene: " + SceneHistory.PreviousScene);
+        Debug.Log("Previous Scene To Ar: " + SceneHistory.PreviousSceneToAr);
 
     }
 
@@ -38,7 +37,7 @@ public class SceneHistory : MonoBehaviour
         {
             SceneManager.LoadScene("Home");
         }
-        else if (gameObject.scene.name.Equals(NearbyARScene))
+        else if (gameObject.scene.name.Equals(OnSpotARScene) || gameObject.scene.name.Equals(NearbyARScene))
         {
             SceneManager.LoadScene(SceneHistory.PreviousSceneToAr);
 

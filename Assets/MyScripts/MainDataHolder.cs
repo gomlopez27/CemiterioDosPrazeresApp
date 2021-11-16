@@ -11,6 +11,7 @@ public static class MainDataHolder
     public static List<Route> UnofficialRoutes;
     public static List<string> RouteCodes;
     public static AssetBundle myAssetBundle;
+    public static GameObject[] augmentationsGO;
     //public static List<GameObject> ObjectTrackers;
 
     public static string RemoveAccents(this string text)

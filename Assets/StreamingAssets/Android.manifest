@@ -1,0 +1,7 @@
+ManifestFileVersion: 0
+CRC: 4084405895
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: augmentationsprefabs
+      Dependencies: {}
