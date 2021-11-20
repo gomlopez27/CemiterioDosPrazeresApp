@@ -41,13 +41,23 @@ public class GPSPointDecimalPart
     long CheckNumberOfDigits(string coordinate)
     {
         string sCoordinate = coordinate.ToString();
-        string decimalPart = sCoordinate.Split(',')[1];
+        string virgula = ",";
+        string decimalPart = "";
+        if (sCoordinate.Contains(virgula))
+        {
+            decimalPart = sCoordinate.Split(',')[1];
+
+        }
+        else
+        {
+            decimalPart = sCoordinate.Split('.')[1];
+
+        }
 
         int nrOfDigits = decimalPart.Length;
 
         if (nrOfDigits < 10)
         {
-            Debug.Log("ENTREI NO IF");
             int valuesLeft = 10 - nrOfDigits;
             string zeros = AppendZeros(valuesLeft);
             decimalPart += zeros;
@@ -57,11 +67,9 @@ public class GPSPointDecimalPart
         }
         else if (nrOfDigits > 10)
         {
-            Debug.Log("nrOfDigits > 10: " + decimalPart);
-
             //string digit10 = decimalPart.Split(decimalPart[9])[0];
             string digit10 = decimalPart.Substring(0, 10);
-
+            Debug.Log("nrOfDigits > 10 " + digit10);
             long value = ConvertStringToNumber(digit10);
             return value;
         }
@@ -168,7 +176,9 @@ public class ObjectTrackerSlotsController : MonoBehaviour
         topRightDecimal = new GPSPointDecimalPart(topRight);
         bottomLeftDecimal = new GPSPointDecimalPart(bottomLeft);
         bottomRightDecimal = new GPSPointDecimalPart(bottomRight);
+        
         ObjecTrackersGO = new List<GameObject>();
+
         CalculateDifferences();
         CalculateDivisionFactor();
         print(filePath);
@@ -206,11 +216,10 @@ public class ObjectTrackerSlotsController : MonoBehaviour
             isUpdating = !isUpdating;
         }
 
-        if(ObjecTrackersGO.Count == 0)
+
+        if (ObjecTrackersGO.Count == 0)
         {
             ObjecTrackersGO = this.GetComponent<RuntimeObjectTracker>().GetObjectTrackers();
-
-
         }
 
         if (ObjecTrackersGO.Count > 0 && isUpdating && hasLocation)
@@ -223,10 +232,14 @@ public class ObjectTrackerSlotsController : MonoBehaviour
     }
     private IEnumerator StartLocationService()
     {
+        //print("StartLocationService");
+
         if (!Permission.HasUserAuthorizedPermission(Permission.FineLocation))
         {
             Permission.RequestUserPermission(Permission.FineLocation);
             Permission.RequestUserPermission(Permission.CoarseLocation);
+
+            print("GIVE PERMISIIONS");
         }
 
 
@@ -238,6 +251,8 @@ public class ObjectTrackerSlotsController : MonoBehaviour
 
             yield return new WaitForSeconds(3);
         }
+
+        print("Input.location.Start");
 
 
         // Start service before querying location
@@ -328,9 +343,13 @@ public class ObjectTrackerSlotsController : MonoBehaviour
     IEnumerator UserCurrentSlot()
     {
         GPSPointDecimalPart userLocation = new GPSPointDecimalPart(new GPSPoint(userCurrentLat, userCurrentLong));
+        print("userLocation: lat " + userLocation.latitude);
+
         int x = CalculateSlotX(userLocation);
         int y = CalculateSlotY(userLocation);
         string aux = "Zona" + x + y;
+
+        print("AUX ZONA: " + aux);
         if (!userCurrentSlot.Equals(aux))
         {
             userCurrentSlot = aux;
@@ -342,6 +361,7 @@ public class ObjectTrackerSlotsController : MonoBehaviour
     }
     public void ActivateObjectTracker()
     {
+        //print("ActivateObjectTracker");
         foreach (GameObject go in ObjecTrackersGO)
         {
           

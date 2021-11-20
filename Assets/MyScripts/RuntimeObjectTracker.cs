@@ -251,7 +251,8 @@ public class RuntimeObjectTracker : MonoBehaviour
 
     public List<GameObject> GetObjectTrackers()
     {
-        return createdObjTrackers;
+        List<GameObject> aux = new List<GameObject>(createdObjTrackers);
+        return aux;
     }
 
     public void DeactivateAllObjectTrackers()
