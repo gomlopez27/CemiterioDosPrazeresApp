@@ -15,14 +15,14 @@ public class HomePageItems : MonoBehaviour
     [SerializeField]
     GameObject RouteListItem;
 
-    private JSONNode PoisList;
+    //private JSONNode PoisList;
     private JSONNode ThemedRoutesList;
 
     // Start is called before the first frame update
     void Start()
     {
-        TextAsset jsonPois = Resources.Load<TextAsset>("MapPopularPOI");
-        PoisList = JSON.Parse(jsonPois.ToString());
+        //TextAsset jsonPois = Resources.Load<TextAsset>("MapPopularPOI");
+        //PoisList = JSON.Parse(jsonPois.ToString());
         TextAsset jsonRoutes = Resources.Load<TextAsset>("ThemedRoutes");
         ThemedRoutesList = JSON.Parse(jsonRoutes.ToString());
         SetupInitialPagePois();
@@ -43,17 +43,17 @@ public class HomePageItems : MonoBehaviour
             int indexPoi = Random.Range(0, max - 1);
             aux.Add(indexPoi);
         }
-        int count = 0;
-        foreach(int i in aux)
-        {
-            //print( count++ + " " + i);
-        }
+        //int count = 0;
+        //foreach(int i in aux)
+        //{
+        //    //print( count++ + " " + i);
+        //}
         return aux;
     }
 
     void SetupInitialPagePois()
     {
-        HashSet<int> PoiIndexes = GenerateRandom(PoisList["pois"].Count);
+        HashSet<int> PoiIndexes = GenerateRandom(MainDataHolder.PopularPois.Count);
         List<int> auxPois = new List<int>();
         auxPois.AddRange(PoiIndexes);
         PoiListItem.SetActive(true);
@@ -68,13 +68,13 @@ public class HomePageItems : MonoBehaviour
             Button seeMore = g.transform.Find("ImageBackground/SeeMoreBtn").GetComponent<Button>();
 
             //print("count personalities " + PoisList["pois"][indexPoi]["personalidades"].Count);
-            int indexPerson = Random.Range(0, PoisList["pois"][indexPoi]["personalidades"].Count);
-            string personName = PoisList["pois"][indexPoi]["personalidades"][indexPerson]["nome"];
-            string url = PoisList["pois"][indexPoi]["personalidades"][indexPerson]["imageURL"];
+            int indexPerson = Random.Range(0, MainDataHolder.PopularPois[indexPoi].Personalities.Count);
+            string personName = MainDataHolder.PopularPois[indexPoi].Personalities[indexPerson].Name;
+            string url = MainDataHolder.PopularPois[indexPoi].Personalities[indexPerson].ImageUrl;
 
             if(url.Equals("")||url == null)
             {
-                url = PoisList["pois"][indexPoi]["jazImage"];
+                url = MainDataHolder.PopularPois[indexPoi].JazImage;
             }
 
             Davinci.get().load(url).into(jazImg).start();

@@ -27,6 +27,7 @@ public class RoutesListCOPY : MonoBehaviour
     string codesListFilePath;
     JSONNode CodesList;
     List<string> codes;
+
     private void Awake()
     {
 
@@ -157,33 +158,33 @@ public class RoutesListCOPY : MonoBehaviour
     private void ItemClicked(JSONNode routeJson)
     {
         Route route = new Route();
-        route.id = routeJson["id"];
-        print(route.id);
-        route.name = routeJson["name"];
-        route.code = routeJson["code"];
-        route.description = routeJson["description"];
+        route.Id = routeJson["id"];
+        print(route.Id);
+        route.Name = routeJson["name"];
+        route.Code = routeJson["code"];
+        route.Description = routeJson["description"];
 
-        route.routeCategory = new List<string>();
+        route.RouteCategory = new List<string>();
 
         for (int j = 0; j < routeJson["routeCategory"].Count; j++)
         {
-            route.routeCategory.Add(routeJson["routeCategory"][j]);
+            route.RouteCategory.Add(routeJson["routeCategory"][j]);
         }
 
-        route.pois = new List<Poi>();
+        route.Pois = new List<Poi>();
         for (int k = 0; k < routeJson["pois"].Count; k++)
         {
             Poi p = new Poi();
-            p.id = routeJson["pois"][k]["id"];
-            p.latitude = routeJson["pois"][k]["latitude"];
-            p.longitude = routeJson["pois"][k]["longitude"];
-            route.pois.Add(p);
+            p.Id = routeJson["pois"][k]["id"];
+            p.Latitude = routeJson["pois"][k]["latitude"];
+            p.Longitude = routeJson["pois"][k]["longitude"];
+            route.Pois.Add(p);
         }
 
-        print("routeName " + route.name);
+        print("routeName " + route.Name);
 
         RouteDataHolder.currentRoute = route;
-        print("currentRoute routeName " + RouteDataHolder.currentRoute.name);
+        print("currentRoute routeName " + RouteDataHolder.currentRoute.Name);
 
         RouteDataHolder.jsonRouteList = RouteList;
         RouteDataHolder.jsonUnofficialRoutesList = UnofficialRoutesList;

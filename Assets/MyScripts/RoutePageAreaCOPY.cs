@@ -3,7 +3,6 @@ using Mapbox.Unity.Map;
 using Mapbox.Unity.MeshGeneration.Factories;
 using Mapbox.Unity.Utilities;
 using Mapbox.Utils;
-using SimpleJSON;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -34,8 +33,8 @@ public class RoutePageAreaCOPY : MonoBehaviour
     Text RouteDistanceTxt;
     [SerializeField]
     Text RouteTitle;
-    [SerializeField]
-    JazInformations JazInfo;
+    //[SerializeField]
+    //JazInformations JazInfo;
     //[SerializeField]
     //RouteDataHolder dataHolder;
 
@@ -72,19 +71,19 @@ public class RoutePageAreaCOPY : MonoBehaviour
         panel1 = this.transform.Find("Panel1").gameObject;
         //routePoisInMap = new List<GameObject>();
 
-        if (RouteDataHolder.currentRoute.code.Equals(OFFICIAL_ROUTE))
+        if (RouteDataHolder.currentRoute.Code.Equals(OFFICIAL_ROUTE))
         {
-            routePoisInMap = Map.GetComponent<SpawnRoutePOI>().RouteClicked(RouteDataHolder.currentRoute.id, RouteDataHolder.jsonRouteList);
+            routePoisInMap = Map.GetComponent<SpawnRoutePOI>().RouteClicked(RouteDataHolder.currentRoute.Id, RouteDataHolder.jsonRouteList);
    
         }
         else
         {
-            routePoisInMap = Map.GetComponent<SpawnRoutePOI>().RouteClicked(RouteDataHolder.currentRoute.id, RouteDataHolder.jsonUnofficialRoutesList);
+            routePoisInMap = Map.GetComponent<SpawnRoutePOI>().RouteClicked(RouteDataHolder.currentRoute.Id, RouteDataHolder.jsonUnofficialRoutesList);
         }
 
         //RouteDataHolder.currentRoutePoisInMap = routePoisInMap;
         currentRoute = RouteDataHolder.currentRoute;
-        RouteTitle.text = currentRoute.name;
+        RouteTitle.text = currentRoute.Name;
 
         SetUpDirectionsRoute();
         StartRouteBtn.onClick.AddListener(StartRoute);
@@ -156,7 +155,7 @@ public class RoutePageAreaCOPY : MonoBehaviour
 
         poisOnMapTranforms = new Transform[size];
 
-        for (int i = 0; i < currentRoute.pois.Count; i++)
+        for (int i = 0; i < currentRoute.Pois.Count; i++)
         {
             GameObject g = Instantiate(poiItem, PoisRouteListArea.transform);
             poisOnMapTranforms[i] = routePoisInMap[i].transform;
@@ -164,16 +163,16 @@ public class RoutePageAreaCOPY : MonoBehaviour
             int poiOrder = i + 1;
             g.transform.Find("POIOrderNr").GetComponent<Text>().text = "Ponto " + poiOrder.ToString();
             Text poiName = g.transform.Find("POIName").GetComponent<Text>();
-            string jazId = currentRoute.pois[i].id;
-            JSONNode jaz = JazInfo.GetJaz(jazId);
-            if(jaz["personalidades"].Count > 1)
+            string jazId = currentRoute.Pois[i].Id;
+            Poi jaz = MainDataHolder.GetPoi(jazId);
+            if(jaz.Personalities.Count > 1)
             {
-                poiName.text = jaz["tipoJaz"] + " " + jazId + ": Múltiplas Personalidades";
+                poiName.text = jaz.JazType + " " + jazId + ": Múltiplas Personalidades";
 
             }
             else
             {
-                poiName.text = jaz["tipoJaz"] + " " + jazId + ": " + jaz["personalidades"][0]["nome"];
+                poiName.text = jaz.JazType + " " + jazId + ": " + jaz.Personalities[0].Name;
 
             }
 

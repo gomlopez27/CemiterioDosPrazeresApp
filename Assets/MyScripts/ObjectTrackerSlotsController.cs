@@ -11,10 +11,10 @@ using SimpleJSON;
 [System.Serializable]
 public class GPSPoint
 {
-    public double latitude;
-    public double longitude;
+    public string latitude;
+    public string longitude;
 
-    public GPSPoint(double latitudePoint, double longitudePoint)
+    public GPSPoint(string latitudePoint, string longitudePoint)
     {
         this.latitude = latitudePoint;
         this.longitude = longitudePoint;
@@ -31,10 +31,10 @@ public class GPSPointDecimalPart
     {
         //int auxLatDecimalPart = (int)(coordinates.latitude - Math.Truncate(coordinates.latitude));
         //int auxLngDecimalPart = (int)(coordinates.longitude - Math.Truncate(coordinates.longitude));
-        string Lat = coordinates.latitude.ToString();
-        string Lng = coordinates.longitude.ToString();
-        this.latitude = CheckNumberOfDigits(Lat);
-        this.longitude = CheckNumberOfDigits(Lng);
+        //string Lat = coordinates.latitude.ToString();
+        //string Lng = coordinates.longitude.ToString();
+        this.latitude = CheckNumberOfDigits(coordinates.latitude);
+        this.longitude = CheckNumberOfDigits(coordinates.longitude);
 
     }
 
@@ -131,13 +131,13 @@ public class JazSlotsCollection
 public class ObjectTrackerSlotsController : MonoBehaviour
 {
     [SerializeField]
-    GPSPoint topLeft;
+    GPSPoint topLeft; // 38.7157566728 49480, -9.1733239635 74608
     [SerializeField]
-    GPSPoint topRight;
+    GPSPoint topRight; // 38.7157566728 49480, -9.1691090879 19518
     [SerializeField]
-    GPSPoint bottomLeft;
+    GPSPoint bottomLeft; // 38.7111113202 25577, -9.1733239635 74608
     [SerializeField]
-    GPSPoint bottomRight; //Ponto origem
+    GPSPoint bottomRight; //Ponto origem: 38.7111113202 25577, -9.1691090879 19518
     [SerializeField]
     int horizontalSlots; //Número de slots na horizontal
     [SerializeField]
@@ -182,22 +182,22 @@ public class ObjectTrackerSlotsController : MonoBehaviour
         CalculateDifferences();
         CalculateDivisionFactor();
         print(filePath);
-        TextAsset jsonPoisInMap = Resources.Load<TextAsset>("MapPopularPOI");
-        JSONNode PoisJson = JSON.Parse(jsonPoisInMap.ToString());
+        //TextAsset jsonPoisInMap = Resources.Load<TextAsset>("MapPopularPOI");
+        //JSONNode PoisJson = JSON.Parse(jsonPoisInMap.ToString());
 
+   
         if (!System.IO.File.Exists(filePath))
         {
-           
-            printPoisSlotNames(filePath, PoisJson);
+            printPoisSlotNames(filePath);
         }
         else
         {
             string jsonSlots = File.ReadAllText(filePath);
             JSONNode SlotsJSON = JSON.Parse(jsonSlots.ToString());
             print("SlotsJSON count: " + SlotsJSON.Count);
-            if(PoisJson["pois"].Count > SlotsJSON.Count)
+            if (MainDataHolder.PopularPois.Count > SlotsJSON.Count)
             {
-                printPoisSlotNames(filePath, PoisJson);
+                printPoisSlotNames(filePath);
             }
         }
 
@@ -342,7 +342,7 @@ public class ObjectTrackerSlotsController : MonoBehaviour
 
     IEnumerator UserCurrentSlot()
     {
-        GPSPointDecimalPart userLocation = new GPSPointDecimalPart(new GPSPoint(userCurrentLat, userCurrentLong));
+        GPSPointDecimalPart userLocation = new GPSPointDecimalPart(new GPSPoint(userCurrentLat.ToString(), userCurrentLong.ToString()));
         print("userLocation: lat " + userLocation.latitude);
 
         int x = CalculateSlotX(userLocation);
@@ -392,16 +392,16 @@ public class ObjectTrackerSlotsController : MonoBehaviour
         }
     }
 
-    void printPoisSlotNames(string filePath, JSONNode PoisJson)
+    void printPoisSlotNames(string filePath)
     {
      
         Dictionary<string, string> aux = new Dictionary<string, string>();
 
-        for(int i = 0; i < PoisJson["pois"].Count; i++)
+        for(int i = 0; i < MainDataHolder.PopularPois.Count; i++)
         {
-            string id = PoisJson["pois"][i]["ID"];
-            double lat = PoisJson["pois"][i]["latitude"];
-            double lng = PoisJson["pois"][i]["longitude"];
+            string id = MainDataHolder.PopularPois[i].Id;
+            string lat = MainDataHolder.PopularPois[i].Latitude.ToString();
+            string lng = MainDataHolder.PopularPois[i].Longitude.ToString();
             print(id);
             GPSPointDecimalPart jazLocation = new GPSPointDecimalPart(new GPSPoint(lat, lng));
             int x = CalculateSlotX(jazLocation);

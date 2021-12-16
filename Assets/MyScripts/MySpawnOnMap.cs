@@ -26,12 +26,12 @@ public class MySpawnOnMap : MonoBehaviour
 
 	public GameObject Directions;
 
-	private JSONNode PoisInMap;
+	//private JSONNode PoisInMap;
 
 	private void Awake()
 	{
-		TextAsset json = Resources.Load<TextAsset>("MapPopularPOI");
-		PoisInMap = JSON.Parse(json.ToString());
+		//TextAsset json = Resources.Load<TextAsset>("MapPopularPOI");
+		//PoisInMap = JSON.Parse(json.ToString());
 		//POIPhotosArray = new Sprite[PoiListData["pois"].Count];
 		//LoadPOIPhotos();
 	}
@@ -50,17 +50,17 @@ public class MySpawnOnMap : MonoBehaviour
 		//	_spawnedObjects.Add(instance);
 		//}
 
-		print("COUNT:" + PoisInMap["pois"].Count);
+		//print("COUNT:" + PoisInMap["pois"].Count);
+		print("COUNT:" + MainDataHolder.PopularPois.Count);
 
-		_locations = new Vector2d[PoisInMap["pois"].Count];
+		_locations = new Vector2d[MainDataHolder.PopularPois.Count];
 		_spawnedObjects = new List<GameObject>();
-		for (int i = 0; i < PoisInMap["pois"].Count; i++)
+		for (int i = 0; i < MainDataHolder.PopularPois.Count; i++)
 		{
-			string poiId = PoisInMap["pois"][i]["ID"];
-			string lat = PoisInMap["pois"][i]["latitude"];
-			string lng = PoisInMap["pois"][i]["longitude"];
+			string poiId = MainDataHolder.PopularPois[i].Id;
+			string lat = MainDataHolder.PopularPois[i].Latitude;
+			string lng = MainDataHolder.PopularPois[i].Longitude;
 			string location = lat + "," + lng;
-
 			_locations[i] = Conversions.StringToLatLon(location);
 
 			GameObject POILocation = new GameObject("Poi-" + poiId);

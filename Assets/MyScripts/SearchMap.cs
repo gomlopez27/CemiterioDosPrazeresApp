@@ -1,4 +1,3 @@
-using SimpleJSON;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,6 +8,8 @@ using UnityEngine.UI;
 
 public class SearchMap : MonoBehaviour
 {
+    [SerializeField]
+    GameObject Map;
     [SerializeField]
     InputField inputField;
     [SerializeField]
@@ -24,16 +25,16 @@ public class SearchMap : MonoBehaviour
     private TouchScreenKeyboard keyboard;
 
     private string searchInput;
-    private JSONNode PoiList;
-    private POIMapSpecifications[] poisInMap;
+    //private JSONNode PoiList;
+    //private POIMapSpecifications[] poisInMap;
+    private List<GameObject> SpawnedPois;
     private bool NotFound;
     // Start is called before the first frame update
     void Start()
     {
 
-        TextAsset json = Resources.Load<TextAsset>("MapPopularPOI");
-        PoiList = JSON.Parse(json.ToString());
-        poisInMap = GameObject.FindObjectsOfType<POIMapSpecifications>(true);
+        //TextAsset json = Resources.Load<TextAsset>("MapPopularPOI");
+        //PoiList = JSON.Parse(json.ToString());
         NotFound = false;
         searchBtn.onClick.AddListener(DoSearch);
     }
@@ -41,11 +42,10 @@ public class SearchMap : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        while(poisInMap.Length <= 0)
-        {
-            print(poisInMap.Length);
-            poisInMap = GameObject.FindObjectsOfType<POIMapSpecifications>(true);
-        }
+        //while(poisInMap.Length <= 0)
+        //{
+        //    poisInMap = GameObject.FindObjectsOfType<POIMapSpecifications>(true);
+        //}
 
         if (NotFound)
         {
@@ -85,24 +85,30 @@ public class SearchMap : MonoBehaviour
     {
         //if (inputField.touchScreenKeyboard.status == TouchScreenKeyboard.Status.Done)
         //{ }
+
+        //poisInMap = GameObject.FindObjectsOfType<POIMapSpecifications>(true);
+        SpawnedPois = new List<GameObject>();
+        SpawnedPois = Map.GetComponent<MySpawnOnMap>().GetSpawnedPois();
+   
+
         if (searchInput != null)
         {
             //o search input é um numero, logo é um id, caso contrario é uma string e é um nome
             if (Int32.TryParse(searchInput, out int jazId))
             {
-                for (int i = 0; i < PoiList["pois"].Count; i++)
+                for (int i = 0; i < MainDataHolder.PopularPois.Count; i++)
                 {
-                    string id = PoiList["pois"][i]["ID"];
+                    string id = MainDataHolder.PopularPois[i].Id;
                     if (id.Equals(searchInput))
                     {
                         HashSet<string> aux = new HashSet<string>();
                         aux.Add(id);
-                        FindPoiInMap(aux);
+                        FindPoiInMap(aux, SpawnedPois);
                         break;
                     }
                     else
                     {
-                        if (i == PoiList["pois"].Count - 1)
+                        if (i == MainDataHolder.PopularPois.Count - 1)
                         {
                             NotFound = true;
                         }
@@ -114,11 +120,11 @@ public class SearchMap : MonoBehaviour
                 //vai procurar o nome introduzido na lista de personalidades e se encontrar faz match do id do jazigo
                 HashSet<string> poisIdMatched = new HashSet<string>();
                 //bool found = false;
-                for (int i = 0; i < PoiList["pois"].Count; i++)
+                for (int i = 0; i < MainDataHolder.PopularPois.Count; i++)
                 {
-                    for (int j = 0; j < PoiList["pois"][i]["personalidades"].Count; j++)
+                    for (int j = 0; j < MainDataHolder.PopularPois[i].Personalities.Count; j++)
                     {
-                        string name = PoiList["pois"][i]["personalidades"][j]["nome"];
+                        string name = MainDataHolder.PopularPois[i].Personalities[j].Name;
                         string nameClean = MainDataHolder.RemoveAccents(name).ToLower();
                         string searchInputClean = MainDataHolder.RemoveAccents(searchInput).ToLower();
                         print("nameClean: " + nameClean);
@@ -126,7 +132,7 @@ public class SearchMap : MonoBehaviour
                         if (nameClean.Equals(searchInputClean) || nameClean.Contains(searchInputClean))
                         {
                             print("searchInputClean: " + searchInputClean);
-                            string poiIdMatched = PoiList["pois"][i]["ID"];
+                            string poiIdMatched = MainDataHolder.PopularPois[i].Id;
                             poisIdMatched.Add(poiIdMatched);
                             //found = true;
                             break;
@@ -143,7 +149,7 @@ public class SearchMap : MonoBehaviour
 
                     }
                     //FindPoiInMap(Int32.Parse(poiIdMatched));
-                    FindPoiInMap(poisIdMatched);
+                    FindPoiInMap(poisIdMatched, SpawnedPois);
                 }
                 else
                 {
@@ -155,20 +161,34 @@ public class SearchMap : MonoBehaviour
         }
     }
   
-    void FindPoiInMap(HashSet<string> matchedIds)
+    void FindPoiInMap(HashSet<string> matchedIds, List<GameObject> SpawnedPois)
     {
- 
-        foreach (POIMapSpecifications poi in poisInMap)
+        foreach (GameObject poi in SpawnedPois)
         {
-            if (matchedIds.Contains(poi.id))
+            string poiId = poi.transform.parent.gameObject.GetComponent<POIMapSpecifications>().GetId();
+
+            if (matchedIds.Contains(poiId))
             {
-                poi.transform.GetChild(0).Find("pinpoint").GetComponent<MeshRenderer>().material.color = Color.green;
+                poi.transform.Find("pinpoint").GetComponent<MeshRenderer>().material.color = Color.green;
             }
             else
             {
-                poi.transform.GetChild(0).Find("pinpoint").GetComponent<MeshRenderer>().material.color = Color.gray;
+                poi.transform.Find("pinpoint").GetComponent<MeshRenderer>().material.color = Color.gray;
             }
+
         }
+
+       //foreach (POIMapSpecifications poi in poisInMap)
+       // {
+       //     if (matchedIds.Contains(poi.id))
+       //     {
+       //         poi.transform.GetChild(0).Find("pinpoint").GetComponent<MeshRenderer>().material.color = Color.green;
+       //     }
+       //     else
+       //     {
+       //         poi.transform.GetChild(0).Find("pinpoint").GetComponent<MeshRenderer>().material.color = Color.gray;
+       //     }
+       // }
         closeSearchBtn.gameObject.SetActive(true);
         SearchPanel.SetActive(false);
 
@@ -176,6 +196,9 @@ public class SearchMap : MonoBehaviour
 
     public void ResetSearch()
     {
+        SpawnedPois = new List<GameObject>();
+        SpawnedPois = Map.GetComponent<MySpawnOnMap>().GetSpawnedPois();
+
         if (closeSearchBtn.gameObject.activeInHierarchy)
         {
             closeSearchBtn.gameObject.SetActive(false);
@@ -183,10 +206,11 @@ public class SearchMap : MonoBehaviour
 
         searchInputField.text = "";
 
-        foreach (POIMapSpecifications poi in poisInMap)
+        //foreach (POIMapSpecifications poi in poisInMap)
+        foreach (GameObject poi in SpawnedPois)
         {
-         
-            poi.transform.GetChild(0).Find("pinpoint").GetComponent<MeshRenderer>().material.color = Color.red;
+
+            poi.transform.Find("pinpoint").GetComponent<MeshRenderer>().material.color = Color.red;
             
         }
     }

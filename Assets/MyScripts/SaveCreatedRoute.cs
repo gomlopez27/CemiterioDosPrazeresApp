@@ -32,7 +32,7 @@ public class SaveCreatedRoute : MonoBehaviour
     List<string> finalChoicesPersonalities;
     string routeName;
     string routeDescription;
-    JSONNode AllPoiList;
+    //JSONNode AllPoiList;
     JSONNode UnofficialRoutesList;
     //RoutesCollection rc;
     List<Route> UnofficialRoutesObjList;
@@ -42,8 +42,8 @@ public class SaveCreatedRoute : MonoBehaviour
 
     private void Awake()
     {
-        TextAsset jsonAllPoiList = Resources.Load<TextAsset>("MapPopularPOI");
-        AllPoiList = JSON.Parse(jsonAllPoiList.ToString());
+        //TextAsset jsonAllPoiList = Resources.Load<TextAsset>("MapPopularPOI");
+        //AllPoiList = JSON.Parse(jsonAllPoiList.ToString());
 
         //jsonAllRoutesList = Resources.Load<TextAsset>("RoutesList");
         //AllRoutesList = JSON.Parse(jsonAllRoutesList.ToString());
@@ -127,7 +127,8 @@ public class SaveCreatedRoute : MonoBehaviour
             //for (int i = 0; i < DataHolder.SelectedPersonallitiesPerJaz.Count; i++)
             //{
             string jazId = v.Key;
-            string jazType = this.GetComponent<JazInformations>().GetJazType(jazId);
+            //string jazType = this.GetComponent<JazInformations>().GetJazType(jazId);
+            string jazType = MainDataHolder.GetPoi(jazId).JazType;
             GameObject g = Instantiate(ListItem, SelectedPoisListArea.transform);
             g.name = "item-" + jazId;
             Toggle jazToggle = g.transform.Find("Info/Toggle").GetComponent<Toggle>();
@@ -150,8 +151,8 @@ public class SaveCreatedRoute : MonoBehaviour
                 for (int k = 0; k < auxPers.Count; k++)
                 {
                     string personId = auxPers[k];
-                    string personName = this.GetComponent<JazInformations>().GetPersonalityName(jazId, personId);
-
+                    //string personName = this.GetComponent<JazInformations>().GetPersonalityName(jazId, personId);
+                    string personName = MainDataHolder.GetPersonality(jazId, personId).Name;
                     GameObject gPers = Instantiate(PersonalityListItem, g.transform.Find("Content").transform);
                     //gPers.name = "pers-" + personId;
                     gPers.name = "item-" + jazId + "-" + personId;
@@ -170,7 +171,7 @@ public class SaveCreatedRoute : MonoBehaviour
             else  /*Uma personalidade*/
             {
                 string personId = auxPers[0];
-                string personName = this.GetComponent<JazInformations>().GetPersonalityName(jazId, personId);
+                string personName = MainDataHolder.GetPersonality(jazId, personId).Name;
                 g.transform.Find("Info/PoiName").GetComponent<Text>().text = jazType + " " + jazId + ": " + personName;
                 g.name = "item-" + jazId + "-" + personId;
                 jazToggle.gameObject.SetActive(true);
@@ -279,23 +280,23 @@ public class SaveCreatedRoute : MonoBehaviour
             for (int i = 0; i < UnofficialRoutesList["routes"].Count; i++)
             {
                 Route route = new Route();
-                route.id = UnofficialRoutesList["routes"][i]["id"];
-                route.name = UnofficialRoutesList["routes"][i]["name"];
-                route.code = UnofficialRoutesList["routes"][i]["code"];
-                route.description = UnofficialRoutesList["routes"][i]["description"];
+                route.Id = UnofficialRoutesList["routes"][i]["id"];
+                route.Name = UnofficialRoutesList["routes"][i]["name"];
+                route.Code = UnofficialRoutesList["routes"][i]["code"];
+                route.Description = UnofficialRoutesList["routes"][i]["description"];
 
-                route.routeCategory = new List<string>();
+                route.RouteCategory = new List<string>();
 
                 for (int j = 0; j < UnofficialRoutesList["routes"][i]["routeCategory"].Count; j++)
                 {
-                    route.routeCategory.Add(UnofficialRoutesList["routes"][i]["routeCategory"][j]);
+                    route.RouteCategory.Add(UnofficialRoutesList["routes"][i]["routeCategory"][j]);
                 }
 
-                route.pois = new List<Poi>();
+                route.Pois = new List<Poi>();
                 for (int k = 0; k < UnofficialRoutesList["routes"][i]["pois"].Count; k++)
                 {
                     Poi p = new Poi();
-                    p.id = UnofficialRoutesList["routes"][i]["pois"][k]["id"];
+                    p.Id = UnofficialRoutesList["routes"][i]["pois"][k]["id"];
                     //p.latitude = AllRoutesList["routes"][i]["pois"][k]["latitude"];
                     //p.longitude = AllRoutesList["routes"][i]["pois"][k]["longitude"];
                     //p.tipoJaz = AllRoutesList["routes"][i]["pois"][k]["tipoJaz"];
@@ -309,7 +310,7 @@ public class SaveCreatedRoute : MonoBehaviour
                     //    p.personalidades.Add(AllRoutesList["routes"][i]["pois"][k]["personalidades"][y]);
                     //}
 
-                    route.pois.Add(p);
+                    route.Pois.Add(p);
                 }
                 UnofficialRoutesObjList.Add(route);
             }
@@ -338,24 +339,24 @@ public class SaveCreatedRoute : MonoBehaviour
         Route createdRoute = new Route();
         if (UnofficialRoutesObjList.Count == 0)
         {
-            createdRoute.id = UNOFFICIAL_ROUTE_ID + "1";
-            createdRoute.code = UNOFFICIAL_ROUTE + "1";
+            createdRoute.Id = UNOFFICIAL_ROUTE_ID + "1";
+            createdRoute.Code = UNOFFICIAL_ROUTE + "1";
 
         }
         else
         {
             int id = UnofficialRoutesObjList.Count + 1;
-            createdRoute.id = UNOFFICIAL_ROUTE_ID + id.ToString();
-            createdRoute.code = UNOFFICIAL_ROUTE + id.ToString();
+            createdRoute.Id = UNOFFICIAL_ROUTE_ID + id.ToString();
+            createdRoute.Code = UNOFFICIAL_ROUTE + id.ToString();
 
         }
-        createdRoute.name = this.routeName;
-        createdRoute.description = this.routeDescription;
+        createdRoute.Name = this.routeName;
+        createdRoute.Description = this.routeDescription;
 
-        createdRoute.routeCategory = new List<string>();
-        createdRoute.routeCategory.Add("Personalizado");
+        createdRoute.RouteCategory = new List<string>();
+        createdRoute.RouteCategory.Add("Personalizado");
 
-        createdRoute.pois = new List<Poi>();
+        createdRoute.Pois = new List<Poi>();
        
         for (int k = 0; k < finalChoicesPois.Count; k++)
         {
@@ -363,7 +364,7 @@ public class SaveCreatedRoute : MonoBehaviour
             //JSONNode poiJson = GetJaz(finalChoicesPois[k]);
             //string jazIdent = finalChoicesPois[k];
             print(k + " " + finalChoicesPois[k]);
-            p.id = finalChoicesPois[k];
+            p.Id = finalChoicesPois[k];
             //p.latitude = this.GetComponent<JazInformations>().GetJazLongitude(jazIdent);
             //p.longitude = this.GetComponent<JazInformations>().GetJazLongitude(jazIdent);
             //p.tipoJaz = this.GetComponent<JazInformations>().GetJazType(jazIdent);
@@ -377,15 +378,15 @@ public class SaveCreatedRoute : MonoBehaviour
             //    p.personalidades.Add(poiJson["personalidades"][y]["nome"]);
             //}
 
-            createdRoute.pois.Add(p);
+            createdRoute.Pois.Add(p);
         }
 
         //codes.Add(createdRoute.code);
-        print(" createdRoute.pois " + createdRoute.pois.Count);
+        print(" createdRoute.pois " + createdRoute.Pois.Count);
         UnofficialRoutesObjList.Add(createdRoute);
         print("After Add " + UnofficialRoutesObjList.Count);
         SaveRouteToJson();
-        this.GetComponent<SerializableDataElements>().SaveRouteCodeToJson(createdRoute.code);
+        this.GetComponent<SerializableDataElements>().SaveRouteCodeToJson(createdRoute.Code);
         StartCoroutine(ShowLoadingScreen());
     }
 

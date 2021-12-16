@@ -9,60 +9,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-[System.Serializable]
-public class FavoritesList
-{
-    public List<string> jazIdList = new List<string>();
-}
-
-[System.Serializable]
-public class FavoritesBD
-{
-    public Dictionary<string, HashSet<string>> FavoritePersonPerJaz = new Dictionary<string, HashSet<string>>();
-
-    public JSONNode Serialize()
-    {
-        var favoritesList = new JSONArray();
-
-        foreach (var v in FavoritePersonPerJaz)
-        {
-            var obj = new JSONObject();
-
-            var list = new JSONArray();
-            foreach (var pers in v.Value)
-            {
-                list.Add(pers);
-            }
-            obj["jazId"] = v.Key;
-            obj["personalities"] = list;
-
-            favoritesList.Add(obj);
-        }
-        return favoritesList;
-    }
-
-    public void Deserialize(JSONNode node)
-    {
-        FavoritePersonPerJaz = new Dictionary<string, HashSet<string>>();
-        var l = node.AsArray;
-        foreach (var elem in l)
-        {
-
-            HashSet<string> personList = new HashSet<string>();
-            string jazId = elem.Value["jazId"];
-            var list = elem.Value["personalities"].AsArray;
-
-            foreach (var personId in list)
-            {
-                personList.Add(personId.Value);
-
-            }
-            FavoritePersonPerJaz[elem.Key] = personList;
-
-        }
-    }
-}
-
 
 public class FavoritePoisMap : MonoBehaviour
 {
@@ -84,8 +30,8 @@ public class FavoritePoisMap : MonoBehaviour
     Button FavoriteListBtn;
     [SerializeField]
     Button ClearBtn;    
-    [SerializeField]
-    JazInformations jazInfo;
+    //[SerializeField]
+    //JazInformations jazInfo;
 
     private AbstractMap AbsMap;
     private JSONNode FavoritesListJSON;
@@ -189,7 +135,7 @@ public class FavoritePoisMap : MonoBehaviour
     {
         print("favoritePersonalities count: " + favoritePersonalities.Count);
 
-        FavoritesBD favorites = new FavoritesBD();
+        FavoritesDictionary favorites = new FavoritesDictionary();
         favorites.FavoritePersonPerJaz = favoritePersonalities;
         string jsonToWrite = favorites.Serialize().ToString(3);
         System.IO.File.WriteAllText(favoritesFilePath, jsonToWrite);
@@ -231,8 +177,8 @@ public class FavoritePoisMap : MonoBehaviour
     public void SetUpFavList()
     {
         SaveToJson();
-        TextAsset jsonPoisInMap = Resources.Load<TextAsset>("MapPopularPOI");
-        PoisJson = JSON.Parse(jsonPoisInMap.ToString());
+        //TextAsset jsonPoisInMap = Resources.Load<TextAsset>("MapPopularPOI");
+        //PoisJson = JSON.Parse(jsonPoisInMap.ToString());
         //favoritesFilePath = Application.persistentDataPath + "/FavoritesList.json";
         print(favoritesFilePath);
         //GetFromJson();
@@ -274,8 +220,9 @@ public class FavoritePoisMap : MonoBehaviour
                         g.SetActive(true);
                         g.name = "item-" + jazId + "-" + personId;
                         Text title = g.transform.Find("PoiId").GetComponent<Text>();
-                        
-                        string personName = jazInfo.GetPersonalityName(jazId, personId);
+                  
+                        //string personName = jazInfo.GetPersonalityName(jazId, personId);
+                        string personName = MainDataHolder.GetPersonality(jazId, personId).Name;
                         title.text = personName + "  " + " (Jazigo " + jazId + ")";
 
                         Button SeePoiInMapBtn = g.transform.Find("SeeOnMapBtn").gameObject.GetComponent<Button>();

@@ -1,4 +1,3 @@
-using SimpleJSON;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,7 +14,7 @@ public class FilterMap : MonoBehaviour
     GameObject FilterByRouteArea;
     [SerializeField]
     Button NrOfFilteredPois;
-    private JSONNode PoiList;
+    //private JSONNode PoiList;
     private POIMapSpecifications[] poisInMap;
     private HashSet<string> FilterByRouteTags;
     private bool hasRouteTags = false;
@@ -26,8 +25,8 @@ public class FilterMap : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        TextAsset json = Resources.Load<TextAsset>("MapPopularPOI");
-        PoiList = JSON.Parse(json.ToString());
+        //TextAsset json = Resources.Load<TextAsset>("MapPopularPOI");
+        //PoiList = JSON.Parse(json.ToString());
         poisInMap = GameObject.FindObjectsOfType<POIMapSpecifications>(true);
         FilterByRouteTags = new HashSet<string>();
         toggleRouteTagsList = new List<Toggle>();
@@ -86,11 +85,11 @@ public class FilterMap : MonoBehaviour
     //Encontrar todos as diferentes tags de percursos
     void GetRouteFilterTags()
     {
-        for (int i = 0; i < PoiList["pois"].Count; i++)
+        for (int i = 0; i < MainDataHolder.PopularPois.Count; i++)
         {
-            for (int j = 0; j < PoiList["pois"][i]["percursos"].Count; j++)
+            for (int j = 0; j < MainDataHolder.PopularPois[i].RoutesCategory.Count; j++)
             {
-                string tag = PoiList["pois"][i]["percursos"][j];
+                string tag = MainDataHolder.PopularPois[i].RoutesCategory[j];
                 FilterByRouteTags.Add(tag);
 
             }
@@ -182,18 +181,18 @@ public class FilterMap : MonoBehaviour
         List<string> matchedIds = new List<string>();
         bool found = false;
 
-        for (int i = 0; i < PoiList["pois"].Count; i++)
+        for (int i = 0; i < MainDataHolder.PopularPois.Count; i++)
         {
-            for (int j = 0; j < PoiList["pois"][i]["percursos"].Count; j++)
+            for (int j = 0; j < MainDataHolder.PopularPois[i].RoutesCategory.Count; j++)
             {
-                string poiPercursoTag = PoiList["pois"][i]["percursos"][j];
+                string poiPercursoTag = MainDataHolder.PopularPois[i].RoutesCategory[j];
 
                 foreach (string tag in selectedFilterTags)
                 {
                     //caso um POI pertenca a mais de um percurso, basta na mesma encontrar uma tag igual 
                     if (poiPercursoTag.Equals(tag))
                     {
-                        matchedIds.Add(PoiList["pois"][i]["ID"]);
+                        matchedIds.Add(MainDataHolder.PopularPois[i].Id);
                         found = true;
                         break; 
                     }

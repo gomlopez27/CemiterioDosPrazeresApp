@@ -1,7 +1,6 @@
 using Mapbox.Examples;
 using Mapbox.Unity.Map;
 using Mapbox.Unity.MeshGeneration.Factories;
-using SimpleJSON;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -31,16 +30,16 @@ public class PoiClickedController : MonoBehaviour
     private bool takeMeThreBtnClicked;
     private bool test;
     private string jazId;
-    private JSONNode FavoritesListJSON;
-    private JSONNode PoisInMap;
+    //private JSONNode FavoritesListJSON;
+    //private JSONNode PoisInMap;
     private List<GameObject> SpawnedPois;
     private GameObject CurrentPoi;
 
 
     private void Awake()
     {
-        TextAsset json = Resources.Load<TextAsset>("MapPopularPOI");
-        PoisInMap = JSON.Parse(json.ToString());
+        //TextAsset json = Resources.Load<TextAsset>("MapPopularPOI");
+        //PoisInMap = JSON.Parse(json.ToString());
         LoadGameObjects();
     }
 
@@ -134,31 +133,31 @@ public class PoiClickedController : MonoBehaviour
 
         DestroyPersonalitiesList();
 
-        for (int i = 0; i < PoisInMap["pois"].Count; i++)
+        for (int i = 0; i < MainDataHolder.PopularPois.Count; i++)
         {
-            string id = PoisInMap["pois"][i]["ID"].ToString();
+            string id = MainDataHolder.PopularPois[i].Id;
             if (id.Equals(jazId))
             {
-                TextId.text = PoisInMap["pois"][i]["tipoJaz"] + " " + jazId;
-                string imageUrl = PoisInMap["pois"][i]["jazImage"];
+                TextId.text = MainDataHolder.PopularPois[i].JazType + " " + jazId;
+                string imageUrl = MainDataHolder.PopularPois[i].JazImage;
                 Davinci.get().load(imageUrl).into(headerImage).start();
 
                 /*Multiplas Personalidades*/
-                if (PoisInMap["pois"][i]["personalidades"].Count > 1)
+                if (MainDataHolder.PopularPois[i].Personalities.Count > 1)
                 {
                     SinglePersonality.SetActive(false);
                     MultiplePersonalities.SetActive(true);
                     addToFavoritesBtn.gameObject.SetActive(false);
                     removeFromFavoritesBtn.gameObject.SetActive(false);
 
-                    SetMultiplePersonalitiesList(jazId, PoisInMap["pois"][i]["personalidades"]);
+                    SetMultiplePersonalitiesList(jazId, MainDataHolder.PopularPois[i].Personalities);
                 }
                 else  /*Uma personalidade*/
                 {
                     SinglePersonality.SetActive(true);
                     MultiplePersonalities.SetActive(false);
-                    SetSinglePersonality(jazId, PoisInMap["pois"][i]["personalidades"][0]);
-                    string personId = PoisInMap["pois"][i]["personalidades"][0]["uriId"];
+                    SetSinglePersonality(jazId, MainDataHolder.PopularPois[i].Personalities[0]);
+                    string personId = MainDataHolder.PopularPois[i].Personalities[0].UriId;
 
                     if(ButtonsController.GetComponent<FavoritePoisMap>().isFavorite(jazId, personId))
                     {
@@ -194,23 +193,23 @@ public class PoiClickedController : MonoBehaviour
 
  
 
-    void SetSinglePersonality(string jazId, JSONNode Personality)
+    void SetSinglePersonality(string jazId, Personality personality)
     {
 
         Image personalityImage = InfoPanel.transform.Find("SinglePersonality/PersonImage").GetComponent<Image>();
         Text personalityName = InfoPanel.transform.Find("SinglePersonality/PersonName").GetComponent<Text>();
         Text personalityBio = InfoPanel.transform.Find("SinglePersonality/BioText").GetComponent<Text>();
         Button SeeMoreBtn = InfoPanel.transform.Find("SinglePersonality/VerMaisBtn").GetComponent<Button>();
-        Davinci.get().load(Personality["imageURL"]).into(personalityImage).start();
-        personalityName.text = Personality["nome"];
-        personalityBio.text = Personality["description"];
+        Davinci.get().load(personality.ImageUrl).into(personalityImage).start();
+        personalityName.text = personality.Name;
+        personalityBio.text = personality.Description;
         SeeMoreBtn.onClick.AddListener(()=> {
             PersonInfoPanel.SetActive(true);
-            SetMoreInfoPersonality(jazId, Personality);
+            SetMoreInfoPersonality(jazId, personality);
         });
     }
 
-    void SetMultiplePersonalitiesList(string jazId, JSONNode PersonalitiesList)
+    void SetMultiplePersonalitiesList(string jazId, List<Personality> PersonalitiesList)
     {
         GameObject ListArea = MultiplePersonalities.transform.Find("ScrollArea/Content").gameObject;
         GameObject PersonalityItem = ListArea.transform.GetChild(0).gameObject;
@@ -219,8 +218,8 @@ public class PoiClickedController : MonoBehaviour
 
         for (int i = 0; i < PersonalitiesList.Count; i++)
         {
-            string personId = PersonalitiesList[i]["uriId"];
-            string personName = PersonalitiesList[i]["nome"];
+            string personId = PersonalitiesList[i].UriId;
+            string personName = PersonalitiesList[i].Name;
             GameObject g = Instantiate(PersonalityItem, ListArea.transform);
             g.name = "person-" + personId;
             g.transform.Find("MoreBtn/PersonName").GetComponent<Text>().text = personName;
@@ -252,13 +251,13 @@ public class PoiClickedController : MonoBehaviour
                 ButtonsController.GetComponent<FavoritePoisMap>().RemovePersonalityFromFav(jazId, personId);
 
             });
-            
-            JSONNode Personality = PersonalitiesList[i];
+
+            Personality personality = PersonalitiesList[i];
             SeeMore.onClick.AddListener(() => {
                 PersonInfoPanel.gameObject.SetActive(true);
-                print("on click" + Personality["nome"]);
+                print("on click" + personality.Name);
 
-                SetMoreInfoPersonality(jazId,Personality);
+                SetMoreInfoPersonality(jazId,personality);
             });
         }
         //Destroy(PersonalityItem);
@@ -279,15 +278,15 @@ public class PoiClickedController : MonoBehaviour
         }
     }
 
-    void SetMoreInfoPersonality(string jazId, JSONNode Personality)
+    void SetMoreInfoPersonality(string jazId, Personality personality)
     {
         Image personalityImage = PersonInfoPanel.transform.Find("Image").GetComponent<Image>();
         Text personalityName = PersonInfoPanel.transform.Find("PersonName").GetComponent<Text>();
         Text personalityBio = PersonInfoPanel.transform.Find("Scroll View/Viewport/Content").GetComponent<Text>();
-        Davinci.get().load(Personality["imageURL"]).into(personalityImage).start();
-        personalityName.text = Personality["nome"];
-        personalityBio.text = Personality["description"];
-        string personId = Personality["uriId"];
+        Davinci.get().load(personality.ImageUrl).into(personalityImage).start();
+        personalityName.text = personality.Name;
+        personalityBio.text = personality.Description;
+        string personId = personality.UriId;
 
         Button AddFav = PersonInfoPanel.transform.Find("Buttons/AddToFavsBtn").GetComponent<Button>();
         Button RemoveFav = PersonInfoPanel.transform.Find("Buttons/RemoveToFavsBtn").GetComponent<Button>();

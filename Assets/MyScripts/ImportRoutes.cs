@@ -31,14 +31,14 @@ public class ImportRoutes : MonoBehaviour
 
     void Start()
     {
-        RouteListGO.GetComponent<RoutesList>().enabled = false;
+        RouteListGO.GetComponent<RoutesListCOPY>().enabled = false;
         unofficialRoutesListFilePath = Application.persistentDataPath + "/UnofficialRoutesList.json";
         print(unofficialRoutesListFilePath);
         ConfirmPanel.SetActive(true);
         LoadingPanel.SetActive(false);
 
         print("From static class UnofficialRoutes.Count: " + MainDataHolder.UnofficialRoutes.Count);
-        print("From static class UnofficialRoutes 1ª rota: " + MainDataHolder.UnofficialRoutes[0].name);
+        print("From static class UnofficialRoutes 1ª rota: " + MainDataHolder.UnofficialRoutes[0].Name);
     }
 
     void Update()
@@ -68,25 +68,25 @@ public class ImportRoutes : MonoBehaviour
         for (int i = 0; i < jsonRoutesList["routes"].Count; i++)
         {
             Route route = new Route();
-            route.id = jsonRoutesList["routes"][i]["id"];
+            route.Id = jsonRoutesList["routes"][i]["id"];
             print(jsonRoutesList["routes"][i]["id"]);
-            route.name = jsonRoutesList["routes"][i]["name"];
-            route.code = jsonRoutesList["routes"][i]["code"];
-            route.description = jsonRoutesList["routes"][i]["description"];
+            route.Name = jsonRoutesList["routes"][i]["name"];
+            route.Code = jsonRoutesList["routes"][i]["code"];
+            route.Description = jsonRoutesList["routes"][i]["description"];
 
-            route.routeCategory = new List<string>();
+            route.RouteCategory = new List<string>();
 
             for (int j = 0; j < jsonRoutesList["routes"][i]["routeCategory"].Count; j++)
             {
-                route.routeCategory.Add(jsonRoutesList["routes"][i]["routeCategory"][j]);
+                route.RouteCategory.Add(jsonRoutesList["routes"][i]["routeCategory"][j]);
             }
 
-            route.pois = new List<Poi>();
+            route.Pois = new List<Poi>();
             for (int k = 0; k < jsonRoutesList["routes"][i]["pois"].Count; k++)
             {
                 Poi p = new Poi();
-                p.id = jsonRoutesList["routes"][i]["pois"][k]["id"];
-                route.pois.Add(p);
+                p.Id = jsonRoutesList["routes"][i]["pois"][k]["id"];
+                route.Pois.Add(p);
             }
 
             Routes.Add(route);
@@ -97,27 +97,27 @@ public class ImportRoutes : MonoBehaviour
     {
         print("AddFirstUnnoficialRoute");
         Route route = new Route();
-        route.id = r["id"];
+        route.Id = r["id"];
         print(r["id"]);
-        route.name = r["name"];
-        route.code = r["code"];
-        route.description = r["description"];
+        route.Name = r["name"];
+        route.Code = r["code"];
+        route.Description = r["description"];
 
-        route.routeCategory = new List<string>();
+        route.RouteCategory = new List<string>();
 
         for (int j = 0; j < r["routeCategory"].Count; j++)
         {
-            route.routeCategory.Add(r["routeCategory"][j]);
+            route.RouteCategory.Add(r["routeCategory"][j]);
         }
 
-        route.pois = new List<Poi>();
+        route.Pois = new List<Poi>();
         for (int k = 0; k < r["pois"].Count; k++)
         {
             Poi p = new Poi();
-            p.id = r["pois"][k]["id"];
+            p.Id = r["pois"][k]["id"];
 
 
-            route.pois.Add(p);
+            route.Pois.Add(p);
         }
         Routes.Add(route);
         //return route;
@@ -151,11 +151,11 @@ public class ImportRoutes : MonoBehaviour
                 AddFirstUnnoficialRoute(RouteNode);
             }
 
-            RouteListGO.GetComponent<RoutesList>().AddImportedRoute(RouteNode);
+            RouteListGO.GetComponent<RoutesListCOPY>().AddImportedRoute(RouteNode);
             print("List<Route> Routes: " + Routes.Count);
             foreach (Route r in Routes)
             {
-                print(r.name);
+                print(r.Name);
             }
             RoutesCollection rc = new RoutesCollection();
             rc.RoutesCol = Routes;

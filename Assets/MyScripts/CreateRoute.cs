@@ -24,7 +24,7 @@ public class CreateRoute : MonoBehaviour
     GameObject TopText;
 
     DataHolderRouteCreation DataHolder;
-    JSONNode AllPoiList;
+    //JSONNode AllPoiList;
     JSONNode FavPoiList;
     private string filePath;
     private HashSet<string> selectedPois;
@@ -39,8 +39,8 @@ public class CreateRoute : MonoBehaviour
     {
         filePath = Application.persistentDataPath + "/FavoritesList.json";
         print(filePath);
-        TextAsset jsonAllPoiList = Resources.Load<TextAsset>("MapPopularPOI");
-        AllPoiList = JSON.Parse(jsonAllPoiList.ToString());
+        //TextAsset jsonAllPoiList = Resources.Load<TextAsset>("MapPopularPOI");
+        //AllPoiList = JSON.Parse(jsonAllPoiList.ToString());
     }
 
     void Start()
@@ -80,16 +80,7 @@ public class CreateRoute : MonoBehaviour
             {
                 StartCoroutine(ShowToastMsg());
             }
-
-            
-           
         });
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     void SetUpPoisList()
@@ -97,10 +88,10 @@ public class CreateRoute : MonoBehaviour
         GameObject AllPoisListItem = AllPoisListArea.transform.GetChild(0).gameObject;
         TopText.SetActive(true);
 
-        for (int i = 0; i < AllPoiList["pois"].Count; i++)
+        for (int i = 0; i < MainDataHolder.PopularPois.Count; i++)
         {
-            string jazId = AllPoiList["pois"][i]["ID"];
-            string jazType = AllPoiList["pois"][i]["tipoJaz"];
+            string jazId = MainDataHolder.PopularPois[i].Id;
+            string jazType = MainDataHolder.PopularPois[i].JazType;
             GameObject g = Instantiate(AllPoisListItem, AllPoisListArea.transform);
             g.name = "item-" + jazId;
             Toggle jazToggle = g.transform.Find("Info/Toggle").GetComponent<Toggle>();
@@ -108,18 +99,18 @@ public class CreateRoute : MonoBehaviour
             GameObject PersonalityListItem = g.transform.Find("Content").transform.Find("Item").gameObject;
 
             /*Multiplas personalidades*/
-            if (AllPoiList["pois"][i]["personalidades"].Count > 1)
+            if (MainDataHolder.PopularPois[i].Personalities.Count > 1)
             {
                 g.transform.Find("Info/PoiName").GetComponent<Text>().text = jazType + " " + jazId + ": Múltiplas Personalidades";
                 jazToggle.gameObject.SetActive(false);
                 openBtn.gameObject.SetActive(true);
                 PersonalityListItem.SetActive(true);
 
-                for(int k = 0; k < AllPoiList["pois"][i]["personalidades"].Count; k++)
+                for(int k = 0; k < MainDataHolder.PopularPois[i].Personalities.Count; k++)
                 {
-                    string personName = AllPoiList["pois"][i]["personalidades"][k]["nome"];
+                    string personName = MainDataHolder.PopularPois[i].Personalities[k].Name;
 
-                    string personId = AllPoiList["pois"][i]["personalidades"][k]["uriId"];
+                    string personId = MainDataHolder.PopularPois[i].Personalities[k].UriId;
                     GameObject gPers = Instantiate(PersonalityListItem, g.transform.Find("Content").transform);
                     //gPers.name = "pers-" + personId;
                     gPers.name = "item-" + jazId + "-" + personId;
@@ -153,8 +144,8 @@ public class CreateRoute : MonoBehaviour
             }
             else  /*Uma personalidade*/
             {
-                string personName = AllPoiList["pois"][i]["personalidades"][0]["nome"];
-                string personId = AllPoiList["pois"][i]["personalidades"][0]["uriId"];
+                string personName = MainDataHolder.PopularPois[i].Personalities[0].Name;
+                string personId = MainDataHolder.PopularPois[i].Personalities[0].UriId;
                 g.transform.Find("Info/PoiName").GetComponent<Text>().text = jazType + " " + jazId + ": " + personName;
                 g.name = "item-" + jazId + "-" + personId;
                 jazToggle.gameObject.SetActive(true);
@@ -227,7 +218,8 @@ public class CreateRoute : MonoBehaviour
             for (int i = 0; i < FavPoiList.Count; i++)
             {
                 string jazId = FavPoiList[i]["jazId"];
-                string jazType = this.GetComponent<JazInformations>().GetJazType(jazId);
+                //string jazType = this.GetComponent<JazInformations>().GetJazType(jazId);
+                string jazType = MainDataHolder.GetPoi(jazId).JazType;
                 GameObject g = Instantiate(FavPoisListItem, FavPoisListArea.transform);
                 g.name = "item-" + jazId;
                 Toggle jazToggle = g.transform.Find("Info/Toggle").GetComponent<Toggle>();
@@ -245,7 +237,8 @@ public class CreateRoute : MonoBehaviour
                     for (int k = 0; k < FavPoiList[i]["personalities"].Count; k++)
                     {
                         string personId = FavPoiList[i]["personalities"][k];
-                        string personName = this.GetComponent<JazInformations>().GetPersonalityName(jazId, personId);
+                        //string personName = this.GetComponent<JazInformations>().GetPersonalityName(jazId, personId);
+                        string personName = MainDataHolder.GetPersonality(jazId, personId).Name;
                         GameObject gPers = Instantiate(PersonalityListItem, g.transform.Find("Content").transform);
                         //gPers.name = "pers-" + personId;
                         gPers.name = "item-" + jazId + "-" + personId;
@@ -284,7 +277,8 @@ public class CreateRoute : MonoBehaviour
                 else /*Uma personalidade*/
                 {
                     string personId = FavPoiList[i]["personalities"][0];
-                    string personName = this.GetComponent<JazInformations>().GetPersonalityName(jazId, personId);
+                    //string personName = this.GetComponent<JazInformations>().GetPersonalityName(jazId, personId);
+                    string personName = MainDataHolder.GetPersonality(jazId, personId).Name;
                     g.name = "item-" + jazId + "-" + personId;
 
                     g.transform.Find("Info/PoiName").GetComponent<Text>().text = jazType + " " + jazId + ": " + personName;
@@ -329,16 +323,12 @@ public class CreateRoute : MonoBehaviour
     {
         foreach (var p in PoiItems)
         {
-
-            foreach (string s in selectedFavItems)
+           foreach (string s in selectedFavItems)
             {
-               
-
                 if (p.Key.Equals(s))
                 {
                     p.Value.isOn = true;
                     print("parent: " + p.Value.gameObject.transform.parent.name);
-
                 }
             }
         }
@@ -435,6 +425,7 @@ public class CreateRoute : MonoBehaviour
         ToastMsg.SetActive(false);
 
     }
+   
     IEnumerator PoiChoicesAnd()
     {
         byte[] myData = System.Text.Encoding.UTF8.GetBytes("This is some test data");

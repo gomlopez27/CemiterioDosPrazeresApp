@@ -39,7 +39,7 @@ public class InitialAppLoad : MonoBehaviour
         if(myLoadedAssetBundle == null){
             //StartCoroutine(DownloadAsset(bundleUrl + "augmentations-Android"));
             //StartCoroutine(LoadAssetBundle(bundleUrl + "augmentations-Android"));
-                        StartCoroutine(LoadAssetBundleLocally());
+            StartCoroutine(LoadAssetBundleLocally());
 
         }
         //testAssetBundle("augmentations-Android");
@@ -47,10 +47,7 @@ public class InitialAppLoad : MonoBehaviour
         if (myLoadedAssetBundle == null)
         {
             print("UNITY_EDITOR");
-            //StartCoroutine(DownloadAsset(bundleUrl + "augmentations-Windows"));
             StartCoroutine(LoadAssetBundleLocally());
-            //StartCoroutine(LoadAssetBundle(bundleUrl + "augmentations-Windows"));
-            //testAssetBundle("augmentations-Windowss");
         }
 #endif        
         poisListFilePath = Application.persistentDataPath + "/PoiList.json";
@@ -105,6 +102,8 @@ public class InitialAppLoad : MonoBehaviour
             string jsonToWrite = www.downloadHandler.text;
             JSONNode PoisNode = JSON.Parse(jsonToWrite.ToString());
             List<Poi> PoisList = this.GetComponent<SerializableDataElements>().ConvertJsonToPoiList(PoisNode);
+            //List<Poi> PoisList = new PoiCollection().Deserialize(PoisNode);
+
             MainDataHolder.PopularPois = PoisList;
             print("MainDataHolder.PopularPois: " + MainDataHolder.PopularPois.Count);
             System.IO.File.WriteAllText(poisListFilePath, jsonToWrite);

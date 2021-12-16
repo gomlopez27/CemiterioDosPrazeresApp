@@ -51,8 +51,8 @@ public class RouteDirectionsAreaCOPY : MonoBehaviour
     Button ARButton;
     [SerializeField]
     GameObject ToastMsg;    
-    [SerializeField]
-    JazInformations JazInfo;
+    //[SerializeField]
+    //JazInformations JazInfo;
 
 
     private GameObject MapGO;
@@ -90,14 +90,14 @@ public class RouteDirectionsAreaCOPY : MonoBehaviour
         }
 
 
-        if (RouteDataHolder.currentRoute.code.Equals(OFFICIAL_ROUTE))
+        if (RouteDataHolder.currentRoute.Code.Equals(OFFICIAL_ROUTE))
         {
-            routePoisInMap = MapGO.GetComponent<SpawnRoutePOI>().RouteClicked(RouteDataHolder.currentRoute.id, RouteDataHolder.jsonRouteList);
+            routePoisInMap = MapGO.GetComponent<SpawnRoutePOI>().RouteClicked(RouteDataHolder.currentRoute.Id, RouteDataHolder.jsonRouteList);
 
         }
         else
         {
-            routePoisInMap = MapGO.GetComponent<SpawnRoutePOI>().RouteClicked(RouteDataHolder.currentRoute.id, RouteDataHolder.jsonUnofficialRoutesList);
+            routePoisInMap = MapGO.GetComponent<SpawnRoutePOI>().RouteClicked(RouteDataHolder.currentRoute.Id, RouteDataHolder.jsonUnofficialRoutesList);
         }
 
         //Estado Inicial
@@ -147,8 +147,8 @@ public class RouteDirectionsAreaCOPY : MonoBehaviour
                 if (routePoisReached.Count != routePoisInMap.Count)
                 {
                     int nextPoiOriginalIndex = routePoisInMap.IndexOf(RoutePoisLeft[0]);
-                    string PoiId = currentRoute.pois[nextPoiOriginalIndex].id;
-                    SetPoiInfo(JazInfo.GetJaz(PoiId), nextPoiOriginalIndex + 1);
+                    string PoiId = currentRoute.Pois[nextPoiOriginalIndex].Id;
+                    SetPoiInfo(MainDataHolder.GetPoi(PoiId), nextPoiOriginalIndex + 1);
                 }
                 else
                 {
@@ -164,8 +164,8 @@ public class RouteDirectionsAreaCOPY : MonoBehaviour
                 initialPoisInMap.AddRange(routePoisInMap);
                 RouteDataHolder.updatedRoutePoisInMap = initialPoisInMap;
                 routePoisReached = new List<string>();
-                string firstPoiId = currentRoute.pois[0].id;
-                SetPoiInfo(JazInfo.GetJaz(firstPoiId), 1);
+                string firstPoiId = currentRoute.Pois[0].Id;
+                SetPoiInfo(MainDataHolder.GetPoi(firstPoiId), 1);
             }
         }
         else//Quando se vem da pagina da Rota, ainda nao foi a cena rda RA
@@ -175,8 +175,8 @@ public class RouteDirectionsAreaCOPY : MonoBehaviour
             initialPoisInMap.AddRange(routePoisInMap);
             RouteDataHolder.updatedRoutePoisInMap = initialPoisInMap;
             routePoisReached = new List<string>();
-            string firstPoiId = currentRoute.pois[0].id;
-            SetPoiInfo(JazInfo.GetJaz(firstPoiId), 1);
+            string firstPoiId = currentRoute.Pois[0].Id;
+            SetPoiInfo(MainDataHolder.GetPoi(firstPoiId), 1);
         }
 
         ConfirmEndRouteBtn.onClick.AddListener(EndRoute);
@@ -274,7 +274,7 @@ public class RouteDirectionsAreaCOPY : MonoBehaviour
                     {
                         int nextPoiIndex = this.routePoisInMap.IndexOf(updatedPoisInMap[i]);
                         string nextPoiId = updatedPoisInMap[i].transform.parent.gameObject.GetComponent<POIMapSpecifications>().id;
-                        SetPoiInfo(JazInfo.GetJaz(nextPoiId), nextPoiIndex + 1);
+                        SetPoiInfo(MainDataHolder.GetPoi(nextPoiId), nextPoiIndex + 1);
                         UpdateRouteDirections(Player.transform, updatedPoisInMap);
                         PoiInfoPanel.SetActive(false);
                         EndRoutePanel.SetActive(false);
@@ -389,30 +389,31 @@ public class RouteDirectionsAreaCOPY : MonoBehaviour
         print("LATLONG: " + string.Format("{0}", AbsMap.CenterLatitudeLongitude));
 
     }
-    void SetPoiInfo(JSONNode poi, int poiNr)
+    void SetPoiInfo(Poi poi, int poiNr)
     {
         //Text jazId = this.transform.Find("PoiInfoPanel/ScrollArea/Content/PoiGO/POINrTxt-Value").gameObject.GetComponent<Text>();
         //Text personalities = this.transform.Find("PoiInfoPanel/ScrollArea/Content/PersonalityGO/PersonalityTxt-Value").gameObject.GetComponent<Text>();
 
-        currentJaz.text = poiNr + " - Jazigo " + poi["ID"];
+        //currentJaz.text = poiNr + " - Jazigo " + poi["ID"];
+        currentJaz.text = poiNr + " - Jazigo " + poi.Id;
 
         //print("poi[id] " + poi["id"]);
         string personalitiesString = "";
-        for (int j = 0; j < poi["personalidades"].Count; j++)
+        for (int j = 0; j < poi.Personalities.Count; j++)
         {
             if (j == 0)
             {
-                personalitiesString += poi["personalidades"][j]["nome"];
+                personalitiesString += poi.Personalities[j].Name;
 
             }
             else
             {
-                personalitiesString += ", " + poi["personalidades"][j]["nome"];
+                personalitiesString += ", " + poi.Personalities[j].Name;
 
             }
         }
         currentJazPersonalities.text = personalitiesString;
-        Davinci.get().load(poi["jazImage"]).into(currentJazPhoto).start();
+        Davinci.get().load(poi.JazImage).into(currentJazPhoto).start();
      }
 
     //public void SetInfoThatUpdates(double distanceToNextPoi, double durationToNextPoi, string instruction)

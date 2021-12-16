@@ -19080,6 +19080,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c90583e6b8a3ac14fafa5f5184c69bf5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Map: {fileID: 1094528993850011}
   inputField: {fileID: 775763490}
   SearchPanel: {fileID: 413403805}
   searchBtn: {fileID: 30187350}
@@ -19136,7 +19137,6 @@ MonoBehaviour:
   Map: {fileID: 1094528993850011}
   FavoriteListBtn: {fileID: 135678290}
   ClearBtn: {fileID: 2059149521}
-  jazInfo: {fileID: 1691508929}
 --- !u!114 &1691508929
 MonoBehaviour:
   m_ObjectHideFlags: 0

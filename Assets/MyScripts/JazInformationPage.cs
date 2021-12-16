@@ -10,7 +10,7 @@ public class JazInformationPage : MonoBehaviour
     [SerializeField] GameObject MultiplePersonalitiesPage;
     [SerializeField] GameObject OnePersonalityContent;
 
-    public void SetSinglePersonality(JSONNode Personality)
+    public void SetSinglePersonality(Personality personality)
     {
         OnePersonalityPage.SetActive(true);
         MultiplePersonalitiesPage.SetActive(false);
@@ -18,13 +18,13 @@ public class JazInformationPage : MonoBehaviour
         Text personalityName = OnePersonalityPage.transform.Find("Info/PersonName").GetComponent<Text>();
         //Text personalityBio = OnePersonalityContent.transform.Find("BioText").GetComponent<Text>();
         Text personalityBio = OnePersonalityContent.GetComponent<Text>();
-        Davinci.get().load(Personality["imageURL"]).setCached(true).into(personalityImage).start();
-        personalityName.text = Personality["nome"];
-        personalityBio.text = Personality["description"];
+        Davinci.get().load(personality.ImageUrl).setCached(true).into(personalityImage).start();
+        personalityName.text = personality.Name;
+        personalityBio.text = personality.Description;
 
     }
 
-    public void SetMultiplePersonalitiesList(string jazImageUrl, JSONNode PersonalitiesList)
+    public void SetMultiplePersonalitiesList(string jazImageUrl, List<Personality> PersonalitiesList)
     {
         MultiplePersonalitiesPage.SetActive(true);
         OnePersonalityPage.SetActive(false);
@@ -45,21 +45,21 @@ public class JazInformationPage : MonoBehaviour
         print("childCount " + ListArea.transform.childCount);
         for (int i = 0; i < PersonalitiesList.Count; i++)
         {
-            string personId = PersonalitiesList[i]["uriId"];
-            string personName = PersonalitiesList[i]["nome"];
+            string personId = PersonalitiesList[i].UriId;
+            string personName = PersonalitiesList[i].Name;
             GameObject g = Instantiate(PersonalityItem, ListArea.transform);
             g.name = "person-" + personId;
             g.transform.Find("PersonName").GetComponent<Text>().text = personName;
             //Button SeeMore = g.transform.Find("MoreBtn").GetComponent<Button>();
             Button BtnItem = g.transform.GetComponent<Button>();
             print("" + BtnItem.name);
-            JSONNode Personality = PersonalitiesList[i];
+            Personality personality = PersonalitiesList[i];
             BtnItem.onClick.AddListener(() =>
             {
 
-                print("on click" + Personality["nome"]);
+                print("on click" + personality.Name);
                 OnePersonalityPage.SetActive(true);
-                SetSinglePersonality(Personality);
+                SetSinglePersonality(personality);
             });
         }
         PersonalityItem.SetActive(false);

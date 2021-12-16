@@ -30,28 +30,31 @@ public class RuntimeObjectTracker : MonoBehaviour
     [SerializeField] GameObject OnePersonalityContent;
     [SerializeField] GameObject LoadingText;
 
-    private GameObject trackerObject;
-    private string onRecognizedObjName;
-    private JSONNode trackersListData;
+
     private AssetBundle myLoadedAssetBundle;
     private bool hasCreatedTrackers;
-    private bool hasDeactivatedTrackers;
-    private int trackerConter;
-    private bool MoreInfoBtnClicked;
-    private bool objTargetDestroyed;
-    private ObjectTarget CurrentObjTarget;
-    private GameObject currentAugmentation;
-    private ObjectTrackable currentObjectTrackable;
-    private bool dataLoaded;
-    private List<GameObject> createdObjTrackers;
-    private bool lauchDefaultAugmentation;
+    private ObjectTarget CurrentObjTarget; 
+    private List<GameObject> createdObjTrackers;    
+
+    //private JSONNode trackersListData;
+    //private GameObject trackerObject;
+    //private GameObject currentAugmentation;
+    //private ObjectTrackable currentObjectTrackable;    
+    //private string onRecognizedObjName;
+    //private int trackerConter;
+    //private bool hasDeactivatedTrackers;
+    //private bool MoreInfoBtnClicked;
+    //private bool objTargetDestroyed;
+    //private bool dataLoaded;
+    //private bool lauchDefaultAugmentation;
+
     private void Awake()
     {
 
       
-        TextAsset jsonTrackersData = Resources.Load<TextAsset>("TrackersData");
-        trackersListData = JSON.Parse(jsonTrackersData.ToString());
-        trackerConter = 0;
+        //TextAsset jsonTrackersData = Resources.Load<TextAsset>("TrackersData");
+        //trackersListData = JSON.Parse(jsonTrackersData.ToString());
+        //trackerConter = 0;
         createdObjTrackers = new List<GameObject>();
         //string url = Application.dataPath + "/AssetBundles/augmentations";
         //myLoadedAssetBundle = AssetBundle.LoadFromFile(url);
@@ -147,7 +150,7 @@ public class RuntimeObjectTracker : MonoBehaviour
         JSONNode ObjectTrackersList = JSON.Parse(json.ToString());
         for (int i = 0; i < ObjectTrackersList.Count; i++)
         {
-            trackerConter = i + 1;
+            //trackerConter = i + 1;
             //GameObject trackerObject = new GameObject("ObjectTracker-" + trackerConter);
             GameObject trackerObject = new GameObject(ObjectTrackersList[i]["wtoName"]);
             ObjectTracker objectTracker = trackerObject.AddComponent<ObjectTracker>();
@@ -268,16 +271,16 @@ public class RuntimeObjectTracker : MonoBehaviour
             createdObjTrackers[i].SetActive(false);
         }
 
-        hasDeactivatedTrackers = true;
+        //hasDeactivatedTrackers = true;
 
     }
 
     //TODO: mudar isto para variavel global, acho que funciona na mesma
-    public void OnObjectRecognized(ObjectTarget o)
-    {
-        onRecognizedObjName = o.Name;
-        //MoreInfoButton.SetActive(true);
-    }
+    //public void OnObjectRecognized(ObjectTarget o)
+    //{
+    //    onRecognizedObjName = o.Name;
+    //    //MoreInfoButton.SetActive(true);
+    //}
 
     IEnumerator LoadAssetBundle(string url)
     {
@@ -324,18 +327,19 @@ public class RuntimeObjectTracker : MonoBehaviour
 
     public /*IEnumerator*/ void DefaultAugmentationCreation(string targetName)
     {
-        JSONNode jaz = this.GetComponent<JazInformations>().GetJaz(targetName);
-        //JSONNode jaz = this.GetComponent<JazInformations>().GetJaz("2271");
-        int personCout = jaz["personalidades"].Count;
+        //JSONNode jaz = this.GetComponent<JazInformations>().GetJaz(targetName);
+        Poi jaz = MainDataHolder.GetPoi(targetName);
+        //int personCount = jaz["personalidades"].Count;
+        int personCount = jaz.Personalities.Count;
 
-        
-        if (personCout > 1)
+
+        if (personCount > 1)
         {
             //defaultAugmentationImage.sprite = imageUI.sprite;
-            defaultAugmentationText.text = "Este jazigo tem " + personCout + " personalidades";
-            for(int i = 0; i < personCout; i++)
+            defaultAugmentationText.text = "Este jazigo tem " + personCount + " personalidades";
+            for(int i = 0; i < personCount; i++)
             {
-                string personImageUrl = jaz["personalidades"][i]["imageURL"];
+                string personImageUrl = jaz.Personalities[i].ImageUrl;
                 Davinci.get().load(personImageUrl).setCached(true).into(defaultAugmentationImage).start();
                 //yield return new WaitForSeconds(1.5f);
                 //defaultAugmentationPanel.SetActive(true);
@@ -343,12 +347,13 @@ public class RuntimeObjectTracker : MonoBehaviour
         }
         else
         {
-            string personImageUrl = jaz["personalidades"][0]["imageURL"];
+            //string personImageUrl = jaz["personalidades"][0]["imageURL"];
+            string personImageUrl = jaz.Personalities[0].ImageUrl;
             Davinci.get().load(personImageUrl).setCached(true).into(defaultAugmentationImage).start();
             //yield return new WaitForSeconds(1);
            // defaultAugmentationPanel.SetActive(true);
 
-            defaultAugmentationText.text = jaz["personalidades"][0]["nome"];
+            defaultAugmentationText.text = jaz.Personalities[0].Name;
         }
 
 
@@ -361,25 +366,27 @@ public class RuntimeObjectTracker : MonoBehaviour
         StopAugmentation();
         string targetName = CurrentObjTarget.Name;
         print(targetName);
-        JSONNode jaz = this.GetComponent<JazInformations>().GetJaz(targetName); //TODO: change back
+        Poi jaz = MainDataHolder.GetPoi(targetName);
+        //JSONNode jaz = this.GetComponent<JazInformations>().GetJaz(targetName); //TODO: change back
         //JSONNode jaz = this.GetComponent<JazInformations>().GetJaz("1500");
         ARCanvas.SetActive(false);
         InfoCanvas.SetActive(true);
-        TargetTitle.text = jaz["tipoJaz"] + " " + targetName;
+        //TargetTitle.text = jaz["tipoJaz"] + " " + targetName;
+        TargetTitle.text = jaz.JazType + " " + targetName;
 
-        if (jaz["personalidades"].Count > 1)
+        if (jaz.Personalities.Count > 1)
         {
            //MultiplePersonalitiesPage.SetActive(true);
-            this.GetComponent<JazInformationPage>().SetMultiplePersonalitiesList(jaz["jazImage"], jaz["personalidades"]);
+            this.GetComponent<JazInformationPage>().SetMultiplePersonalitiesList(jaz.JazImage, jaz.Personalities);
         }
         else
         {
             //OnePersonalityPage.SetActive(true);
             //MultiplePersonalitiesPage.SetActive(false);
-            this.GetComponent<JazInformationPage>().SetSinglePersonality(jaz["personalidades"][0]);
+            this.GetComponent<JazInformationPage>().SetSinglePersonality(jaz.Personalities[0]);
             
         }
-        dataLoaded = true;
+        //dataLoaded = true;
      
     }
 

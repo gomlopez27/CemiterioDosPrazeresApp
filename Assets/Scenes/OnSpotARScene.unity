@@ -5991,17 +5991,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   topLeft:
-    latitude: 38.7157566728494
-    longitude: -9.1733239635746
+    latitude: 38.7157566728
+    longitude: -9.1733239635
   topRight:
-    latitude: 38.7157566728494
-    longitude: -9.16910908791951
+    latitude: 38.7157566728
+    longitude: -9.1691090879
   bottomLeft:
-    latitude: 38.7111113202255
-    longitude: -9.1733239635746
+    latitude: 38.7111113202
+    longitude: -9.1733239635
   bottomRight:
-    latitude: 38.7111113202255
-    longitude: -9.16910908791951
+    latitude: 38.7111113202
+    longitude: -9.1691090879
   horizontalSlots: 8
   verticalSlots: 15
   ActiveTracker: {fileID: 285567547}

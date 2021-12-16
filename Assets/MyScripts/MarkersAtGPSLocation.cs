@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
-using SimpleJSON;
+//using SimpleJSON;
 using ARLocation;
 using UnityEngine.Networking;
 using System;
@@ -37,7 +37,7 @@ public class MarkersAtGPSLocation : MonoBehaviour
     private Text nomeJaz;
     private Text distanciaJaz;
     private Image fotoPOI; 
-    private JSONNode PoiListData;
+    //private JSONNode PoiListData;
     private int countPhotos;
     private bool loadedPhotos;
     private bool poiCreated;
@@ -54,8 +54,8 @@ public class MarkersAtGPSLocation : MonoBehaviour
     private void Awake()
     {
         //TextAsset json = Resources.Load<TextAsset>("POIData");
-        TextAsset json = Resources.Load<TextAsset>("MapPopularPOI");
-        PoiListData = JSON.Parse(json.ToString());
+        //TextAsset json = Resources.Load<TextAsset>("MapPopularPOI");
+        //PoiListData = JSON.Parse(json.ToString());
         //POIPhotosArray = new Sprite[PoiListData["pois"].Count];
         //LoadPOIPhotos();
     }
@@ -115,19 +115,19 @@ public class MarkersAtGPSLocation : MonoBehaviour
 
     public void CreatePOIAtLocation()
     {
-        for (int i = 0; i < PoiListData["pois"].Count; i++)
+        for (int i = 0; i < MainDataHolder.PopularPois.Count; i++)
         {
-            string jazId = PoiListData["pois"][i]["ID"];
+            string jazId = MainDataHolder.PopularPois[i].Id;
             //GameObject POIObject = new GameObject("GPSStageObject-"+ PoiListData["pois"][i]["ID"]);
-            GameObject POIObject = new GameObject(PoiListData["pois"][i]["ID"]); //TODO: mudar para id completo
+            GameObject POIObject = new GameObject(jazId); //TODO: mudar para id completo
            
             var loc = new Location()
             {
                 //Latitude = PoiListData["pois"][i]["gpsPosition"]["latitude"],
                 //Longitude = PoiListData["pois"][i]["gpsPosition"]["longitude"],
 
-                Latitude = PoiListData["pois"][i]["latitude"],
-                Longitude = PoiListData["pois"][i]["longitude"],
+                Latitude = double.Parse(MainDataHolder.PopularPois[i].Latitude, System.Globalization.CultureInfo.InvariantCulture),
+                Longitude = double.Parse(MainDataHolder.PopularPois[i].Longitude, System.Globalization.CultureInfo.InvariantCulture),
                 Altitude = 2,
                 AltitudeMode = AltitudeMode.GroundRelative
             };
@@ -152,23 +152,23 @@ public class MarkersAtGPSLocation : MonoBehaviour
             fotoPOI = thisPOI.transform.Find("Canvas/Panel/ContentPanel/TopContentPanel/photo").GetComponent<Image>();
 
             //Change the text
-            jazID.text = PoiListData["pois"][i]["ID"];
-            jazLoc.text = PoiListData["pois"][i]["jazLocation"];
+            jazID.text = MainDataHolder.PopularPois[i].Id;
+            jazLoc.text = MainDataHolder.PopularPois[i].JazLocation;
             //Davinci.get().load(PoiListData["pois"][i]["jazImage"]).setCached(true).into(fotoPOI).start();
 
-            print(PoiListData["pois"][i]["ID"] + "; number of ppl: " + PoiListData["pois"][i]["personalidades"].Count);
-            print("person: " + PoiListData["pois"][i]["personalidades"][0]["nome"]);
+            print(MainDataHolder.PopularPois[i].Id + "; number of ppl: " + MainDataHolder.PopularPois[i].Personalities.Count);
+            print("person: " + MainDataHolder.PopularPois[i].Personalities[0].Name);
 
-            if (PoiListData["pois"][i]["personalidades"].Count > 1)
+            if (MainDataHolder.PopularPois[i].Personalities.Count > 1)
             {
                 nomeJaz.text = "Múltiplas pessoas encontram-se sepultadas neste jazigo.";
-                Davinci.get().load(PoiListData["pois"][i]["imageIconPlaceholder"]).setCached(true).into(fotoPOI).start();
+                Davinci.get().load(MainDataHolder.PopularPois[i].JazImagePlaceholder).setCached(true).into(fotoPOI).start();
 
             }
             else
             {
-                nomeJaz.text = PoiListData["pois"][i]["personalidades"][0]["nome"];
-                Davinci.get().load(PoiListData["pois"][i]["personalidades"][0]["imageURL"]).setCached(true).into(fotoPOI).start();
+                nomeJaz.text = MainDataHolder.PopularPois[i].Personalities[0].Name;
+                Davinci.get().load(MainDataHolder.PopularPois[i].Personalities[0].ImageUrl).setCached(true).into(fotoPOI).start();
 
             }
 
@@ -180,34 +180,34 @@ public class MarkersAtGPSLocation : MonoBehaviour
         poiCreated = true;
     }
 
-    void SetupMarkerWithData(GameObject thisPOI, int i)
-    {
-        //Find the correct text to change
-        jazID = thisPOI.transform.Find("Canvas/Panel/ContentPanel/TitleContentPanel/jazigoText").GetComponent<Text>();
-        jazLoc = thisPOI.transform.Find("Canvas/Panel/ContentPanel/BottomContentPanel/LocalText").GetComponent<Text>();
-        //nomeJaz = thisPOI.transform.Find("Canvas/Panel/ContentPanel/BottomContentPanel/NomePessoa").GetComponent<Text>();
-        distanciaJaz = thisPOI.transform.Find("Canvas/Panel/ContentPanel/BottomContentPanel/Distancia").GetComponent<Text>();
-        fotoPOI = thisPOI.transform.Find("Canvas/Top/ImageBackground/photo").GetComponent<Image>();
+    //void SetupMarkerWithData(GameObject thisPOI, int i)
+    //{
+    //    //Find the correct text to change
+    //    jazID = thisPOI.transform.Find("Canvas/Panel/ContentPanel/TitleContentPanel/jazigoText").GetComponent<Text>();
+    //    jazLoc = thisPOI.transform.Find("Canvas/Panel/ContentPanel/BottomContentPanel/LocalText").GetComponent<Text>();
+    //    //nomeJaz = thisPOI.transform.Find("Canvas/Panel/ContentPanel/BottomContentPanel/NomePessoa").GetComponent<Text>();
+    //    distanciaJaz = thisPOI.transform.Find("Canvas/Panel/ContentPanel/BottomContentPanel/Distancia").GetComponent<Text>();
+    //    fotoPOI = thisPOI.transform.Find("Canvas/Top/ImageBackground/photo").GetComponent<Image>();
 
-        Davinci.get().load(PoiListData["pois"][i]["jazImage"]).setCached(true).into(fotoPOI).start();
+    //    Davinci.get().load(PoiListData["pois"][i]["jazImage"]).setCached(true).into(fotoPOI).start();
 
-        //Change the text
-        string jazType = PoiListData["pois"][i]["tipoJaz"];
-        string jazId = PoiListData["pois"][i]["ID"];
+    //    //Change the text
+    //    string jazType = PoiListData["pois"][i]["tipoJaz"];
+    //    string jazId = PoiListData["pois"][i]["ID"];
 
-        if (PoiListData["pois"][i]["personalidades"].Count > 1)
-        {
-            jazID.text = jazType + " " + jazId + ": " + "Múltiplas Personalidades";
-        }
-        else
-        {
-            string personName = PoiListData["pois"][i]["personalidades"][0]["nome"];
-            jazID.text = jazType + " " + jazId + ": " + personName;
-        }
+    //    if (PoiListData["pois"][i]["personalidades"].Count > 1)
+    //    {
+    //        jazID.text = jazType + " " + jazId + ": " + "Múltiplas Personalidades";
+    //    }
+    //    else
+    //    {
+    //        string personName = PoiListData["pois"][i]["personalidades"][0]["nome"];
+    //        jazID.text = jazType + " " + jazId + ": " + personName;
+    //    }
 
-        jazLoc.text = PoiListData["pois"][i]["jazLocation"];
-        print(jazID.text);
-    }
+    //    jazLoc.text = PoiListData["pois"][i]["jazLocation"];
+    //    print(jazID.text);
+    //}
 
     public void AddListenersToPois()
     {
@@ -232,17 +232,17 @@ public class MarkersAtGPSLocation : MonoBehaviour
 
     }
 
-    public void LoadPOIPhotos()
-    {
-        for (int i = 0; i < PoiListData["pois"].Count; i++)
-        {
-            StartCoroutine(GetTexture(PoiListData["pois"][i]["PoiListData"], i));
-            countPhotos = i;
-        }
+    //public void LoadPOIPhotos()
+    //{
+    //    for (int i = 0; i < PoiListData["pois"].Count; i++)
+    //    {
+    //        StartCoroutine(GetTexture(PoiListData["pois"][i]["PoiListData"], i));
+    //        countPhotos = i;
+    //    }
 
-        if (countPhotos == PoiListData["pois"].Count - 1)
-            loadedPhotos = true;
-    }
+    //    if (countPhotos == PoiListData["pois"].Count - 1)
+    //        loadedPhotos = true;
+    //}
 
     IEnumerator GetTexture(string url, int index)
     {
@@ -378,21 +378,22 @@ public class MarkersAtGPSLocation : MonoBehaviour
         MoreInfoPanel.SetActive(true);
         ArSession.SetActive(false);
         ArSessionOrigin.SetActive(false);
-        JSONNode jaz = this.GetComponent<JazInformations>().GetJaz(jazIdClicked); //TODO: change back
-
+        //JSONNode jaz = this.GetComponent<JazInformations>().GetJaz(jazIdClicked); //TODO: change back
+        Poi jaz = MainDataHolder.GetPoi(jazIdClicked);
        
         //JSONNode jaz = this.GetComponent<JazInformations>().GetJaz("1500");
 
 
-        JazClickedTitle.text = jaz["tipoJaz"] + " " + jazIdClicked;
+        //JazClickedTitle.text = jaz["tipoJaz"] + " " + jazIdClicked;
+        JazClickedTitle.text = jaz.JazType + " " + jazIdClicked;
 
-        if (jaz["personalidades"].Count > 1)
+        if (jaz.Personalities.Count > 1)
         {
-            this.GetComponent<JazInformationPage>().SetMultiplePersonalitiesList(jaz["jazImage"], jaz["personalidades"]);
+            this.GetComponent<JazInformationPage>().SetMultiplePersonalitiesList(jaz.JazImage, jaz.Personalities);
         }
         else
         {
-            this.GetComponent<JazInformationPage>().SetSinglePersonality(jaz["personalidades"][0]);
+            this.GetComponent<JazInformationPage>().SetSinglePersonality(jaz.Personalities[0]);
         }
         //dataLoaded = true;
 
