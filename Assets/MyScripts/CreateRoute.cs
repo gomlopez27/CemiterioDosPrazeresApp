@@ -45,6 +45,7 @@ public class CreateRoute : MonoBehaviour
 
     void Start()
     {
+
         DataHolder = this.GetComponent<DataHolderRouteCreation>();
         selectedPois = new HashSet<string>();
         //selectedPersonallities = new HashSet<string>();
@@ -426,23 +427,7 @@ public class CreateRoute : MonoBehaviour
 
     }
    
-    IEnumerator PoiChoicesAnd()
-    {
-        byte[] myData = System.Text.Encoding.UTF8.GetBytes("This is some test data");
-        using (UnityWebRequest www = UnityWebRequest.Put("https://www.my-server.com/upload", myData))
-        {
-            yield return www.SendWebRequest();
-
-            if (www.result != UnityWebRequest.Result.Success)
-            {
-                Debug.Log(www.error);
-            }
-            else
-            {
-                Debug.Log("Upload complete!");
-            }
-        }
-    }
+   
 
   
 }

@@ -64,6 +64,7 @@ public class RuntimeObjectTracker : MonoBehaviour
     private void Start()
     {
         MoreInfoButton.onClick.AddListener(LoadMoreInfo);
+        defaultAugmentationPanel.GetComponent<Button>().onClick.AddListener(LoadMoreInfo);
 
         myLoadedAssetBundle = MainDataHolder.myAssetBundle;
 

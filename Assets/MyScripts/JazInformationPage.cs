@@ -20,7 +20,7 @@ public class JazInformationPage : MonoBehaviour
         Text personalityBio = OnePersonalityContent.GetComponent<Text>();
         Davinci.get().load(personality.ImageUrl).setCached(true).into(personalityImage).start();
         personalityName.text = personality.Name;
-        personalityBio.text = personality.Description;
+        personalityBio.text = personality.Biography;
 
     }
 

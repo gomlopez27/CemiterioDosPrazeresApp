@@ -162,7 +162,7 @@ public class MarkersAtGPSLocation : MonoBehaviour
             if (MainDataHolder.PopularPois[i].Personalities.Count > 1)
             {
                 nomeJaz.text = "Múltiplas pessoas encontram-se sepultadas neste jazigo.";
-                Davinci.get().load(MainDataHolder.PopularPois[i].JazImagePlaceholder).setCached(true).into(fotoPOI).start();
+                Davinci.get().load("https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png").setCached(true).into(fotoPOI).start();
 
             }
             else

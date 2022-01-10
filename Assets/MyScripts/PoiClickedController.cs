@@ -202,7 +202,7 @@ public class PoiClickedController : MonoBehaviour
         Button SeeMoreBtn = InfoPanel.transform.Find("SinglePersonality/VerMaisBtn").GetComponent<Button>();
         Davinci.get().load(personality.ImageUrl).into(personalityImage).start();
         personalityName.text = personality.Name;
-        personalityBio.text = personality.Description;
+        personalityBio.text = personality.Biography;
         SeeMoreBtn.onClick.AddListener(()=> {
             PersonInfoPanel.SetActive(true);
             SetMoreInfoPersonality(jazId, personality);
@@ -285,7 +285,7 @@ public class PoiClickedController : MonoBehaviour
         Text personalityBio = PersonInfoPanel.transform.Find("Scroll View/Viewport/Content").GetComponent<Text>();
         Davinci.get().load(personality.ImageUrl).into(personalityImage).start();
         personalityName.text = personality.Name;
-        personalityBio.text = personality.Description;
+        personalityBio.text = personality.Biography;
         string personId = personality.UriId;
 
         Button AddFav = PersonInfoPanel.transform.Find("Buttons/AddToFavsBtn").GetComponent<Button>();

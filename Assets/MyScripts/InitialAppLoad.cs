@@ -8,10 +8,11 @@ using UnityEngine.UI;
 
 public class InitialAppLoad : MonoBehaviour
 {
-    private const string URL = "https://616d4c4337f997001745d96a.mockapi.io/";
-    private const string POIS_RESOURCE = "PointsOfInterest";
-    private const string OF_ROUTES_RESOURCE = "OfficialRoutes";
-    private const string UN_ROUTES_RESOURCE = "UnofficialRoutes";
+    private const string URL_API = "http://192.168.0.17/api/";
+    private const string URL_MOCK_API = "https://616d4c4337f997001745d96a.mockapi.io/";
+    private const string POIS_MOCK_RESOURCE = "PointsOfInterest";
+    private const string OF_ROUTES_MOCK_RESOURCE = "OfficialRoutes";
+    private const string UN_ROUTES_MOCK_RESOURCE = "UnofficialRoutes";
 
     [SerializeField]
     Slider slider;
@@ -28,6 +29,7 @@ public class InitialAppLoad : MonoBehaviour
     bool unRoutesListCreated;
     bool codesListCreated;
     float process;
+    private List<string> codeList;
 
     // Start is called before the first frame update
     void Start()
@@ -53,16 +55,29 @@ public class InitialAppLoad : MonoBehaviour
         poisListFilePath = Application.persistentDataPath + "/PoiList.json";
         officialRoutesListFilePath = Application.persistentDataPath + "/OfficialRoutesList.json";
         unofficialRoutesListFilePath = Application.persistentDataPath + "/UnofficialRoutesList.json";
-        codesRoutesListFilePath = Application.persistentDataPath + "/RoutesCodesList.json";
+        //codesRoutesListFilePath = Application.persistentDataPath + "/RoutesCodesList.json";
 
-        StartCoroutine(GetInitialPoiList());
-        StartCoroutine(GetInitialOfficialRoutesLists());
+        //if (System.IO.File.Exists(codesRoutesListFilePath))
+        //{
+        //    string jsonCodesRoutesList = File.ReadAllText(codesRoutesListFilePath);
+        //    JSONNode CodesList = JSON.Parse(jsonCodesRoutesList.ToString());
 
-        if (!System.IO.File.Exists(unofficialRoutesListFilePath))
-        {
-            StartCoroutine(GetInitialUnofficialRoutesLists());
+        //    codeList = new List<string>();
+        //    for (int i = 0; i < CodesList.Count; i++)
+        //    {
+        //        codeList.Add(CodesList[i]);
+        //    }
+        //}
 
-        }
+        StartCoroutine(this.GetComponent<LoadFromAPI>().GetInitialPoiList());
+        StartCoroutine(this.GetComponent<LoadFromAPI>().GetInitialOfficialRoutesLists());
+        StartCoroutine(this.GetComponent<LoadFromAPI>().GetInitialUnofficialRoutesLists());
+
+        //if (!System.IO.File.Exists(unofficialRoutesListFilePath))
+        //{
+        //    StartCoroutine(GetInitialUnofficialRoutesLists());
+
+        //}
 
         this.GetComponent<SerializableDataElements>().CreateRoutesCodeListFromJson(codesRoutesListFilePath);
         GetRoutesToImport();
@@ -70,11 +85,6 @@ public class InitialAppLoad : MonoBehaviour
 
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     void GetRoutesToImport()
     {
@@ -87,81 +97,154 @@ public class InitialAppLoad : MonoBehaviour
 
     }
 
-    public IEnumerator GetInitialPoiList()
+    //public IEnumerator GetInitialPoiList()
+    //{
+    //    UnityWebRequest www = UnityWebRequest.Get(URL_MOCK_API + POIS_MOCK_RESOURCE);
+    //    //StartCoroutine(ShowDownloadProgress(POIS_RESOURCE, www));
+
+    //    yield return www.SendWebRequest();
+    //    if (www.result != UnityWebRequest.Result.Success)
+    //    {
+    //        Debug.Log(www.error);
+    //    }
+    //    else
+    //    {
+    //        string jsonToWrite = www.downloadHandler.text;
+    //        JSONNode PoisNode = JSON.Parse(jsonToWrite.ToString());
+    //        List<Poi> PoisList = this.GetComponent<SerializableDataElements>().ConvertJsonToPoiList(PoisNode);
+    //        //List<Poi> PoisList = new PoiCollection().Deserialize(PoisNode);
+
+    //        MainDataHolder.PopularPois = PoisList;
+    //        print("MainDataHolder.PopularPois: " + MainDataHolder.PopularPois.Count);
+    //        //System.IO.File.WriteAllText(poisListFilePath, jsonToWrite);
+    //    }
+    //}
+
+    //public IEnumerator GetInitialOfficialRoutesLists()
+    //{
+    //    UnityWebRequest www = UnityWebRequest.Get(URL_MOCK_API + OF_ROUTES_MOCK_RESOURCE);
+    //    //StartCoroutine(ShowDownloadProgress(OF_ROUTES_RESOURCE,www));
+
+    //    yield return www.SendWebRequest();
+    //    if (www.result != UnityWebRequest.Result.Success)
+    //    {
+    //        Debug.Log(www.error);
+    //    }
+    //    else
+    //    {
+    //        string jsonToWrite = www.downloadHandler.text;
+    //        JSONNode OfficialRoutesJson = JSON.Parse(jsonToWrite.ToString());
+    //        List<Route> OfficialRoutes = this.GetComponent<SerializableDataElements>().ConvertJsonToRouteList(OfficialRoutesJson);
+    //        MainDataHolder.OfficialRoutes = OfficialRoutes;
+    //        print("MainDataHolder.OfficialRoutes: " + MainDataHolder.OfficialRoutes.Count);
+
+    //        //System.IO.File.WriteAllText(officialRoutesListFilePath, jsonToWrite);
+
+    //    }
+    //}
+
+
+    //public IEnumerator GetInitialUnofficialRoutesLists()
+    //{
+    //    //string codesURL = BuildCodesUrl();
+    //    UnityWebRequest www = UnityWebRequest.Get(URL_MOCK_API + UN_ROUTES_MOCK_RESOURCE);
+    //    //StartCoroutine(ShowDownloadProgress(UN_ROUTES_RESOURCE, www));
+
+    //    yield return www.SendWebRequest();
+    //    if (www.result != UnityWebRequest.Result.Success)
+    //    {
+    //        Debug.Log(www.error);
+    //    }
+    //    else
+    //    {
+    //        string jsonToWrite = www.downloadHandler.text;
+    //        JSONNode UnofficialRoutesJson = JSON.Parse(jsonToWrite.ToString());
+    //        List<Route> UnofficialRoutes = this.GetComponent<SerializableDataElements>().ConvertJsonToRouteList(UnofficialRoutesJson);
+    //        MainDataHolder.AllUnofficialRoutes = UnofficialRoutes;
+    //        //MainDataHolder.MyUnofficialRoutes = UnofficialRoutes; //UNCOMMENT when USING the SI
+    //        FilterUnofficialRoutes(UnofficialRoutes); //UNCOMMENT when NOT  using the SI
+    //        print("MainDataHolder.UnofficialRoutes: " + MainDataHolder.MyUnofficialRoutes.Count);
+
+    //    }
+    //}
+
+    //private string BuildCodesUrl()
+    //{
+    //    /*http://localhost:8080/api/routes?codes=uiiid1,uuid2 */
+
+    //    string codesUrl = "?codes=";
+    //    if (codeList != null)
+    //    {
+    //        for (int i = 0; i < codeList.Count; i++)
+    //        {
+    //            if (i == codeList.Count - 1)
+    //            {
+    //                codesUrl += codeList[i];
+    //            }
+    //            else
+    //            {
+    //                codesUrl += codeList[i] + ",";
+    //            }
+    //        }
+    //    }
+
+    //    return codesUrl;
+    //}
+
+    //private void FilterUnofficialRoutes(List<Route> UnofficialRoutes)
+    //{
+    //    List<Route> auxUnofficialRoutes = new List<Route>();
+    //    foreach (Route r in UnofficialRoutes)
+    //    {
+    //        if (codeList!= null && codeList.Contains(r.Code))
+    //        {
+    //            auxUnofficialRoutes.Add(r);
+    //        }
+    //     }
+
+    //    MainDataHolder.MyUnofficialRoutes = auxUnofficialRoutes;
+
+    //}
+
+
+    IEnumerator LoadAssetBundleLocally()
     {
-        UnityWebRequest www = UnityWebRequest.Get(URL + POIS_RESOURCE);
-        //StartCoroutine(ShowDownloadProgress(POIS_RESOURCE, www));
-
-        yield return www.SendWebRequest();
-        if (www.result != UnityWebRequest.Result.Success)
+        var bundleLoadRequest = AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, "augmentationsprefabs"));
+        while (!bundleLoadRequest.isDone)
         {
-            Debug.Log(www.error);
+            string s = (string.Format("{0:0%}", bundleLoadRequest.progress));
+            loadedPercentage.text = s;
+            slider.value = bundleLoadRequest.progress;
+            yield return null;
         }
-        else
-        {
-            string jsonToWrite = www.downloadHandler.text;
-            JSONNode PoisNode = JSON.Parse(jsonToWrite.ToString());
-            List<Poi> PoisList = this.GetComponent<SerializableDataElements>().ConvertJsonToPoiList(PoisNode);
-            //List<Poi> PoisList = new PoiCollection().Deserialize(PoisNode);
+        yield return bundleLoadRequest;
 
-            MainDataHolder.PopularPois = PoisList;
-            print("MainDataHolder.PopularPois: " + MainDataHolder.PopularPois.Count);
-            System.IO.File.WriteAllText(poisListFilePath, jsonToWrite);
+        AssetBundle myLoadedAssetBundle = bundleLoadRequest.assetBundle;
+        if (myLoadedAssetBundle == null)
+        {
+            Debug.Log("Failed to load AssetBundle!");
+            yield break;
         }
+
+        MainDataHolder.myAssetBundle = myLoadedAssetBundle;
+        print("Asset bundle loaded!");
+
+        GameObject[] assetsLoadRequest = myLoadedAssetBundle.LoadAllAssets<GameObject>();
+        yield return assetsLoadRequest;
+        MainDataHolder.augmentationsGO = assetsLoadRequest;
+        myLoadedAssetBundle.Unload(false);
+        this.GetComponent<LoadScenes>().LoadHomeScene();
+
+
     }
 
-    public IEnumerator GetInitialOfficialRoutesLists()
-    {
-        UnityWebRequest www = UnityWebRequest.Get(URL + OF_ROUTES_RESOURCE);
-        //StartCoroutine(ShowDownloadProgress(OF_ROUTES_RESOURCE,www));
-
-        yield return www.SendWebRequest();
-        if (www.result != UnityWebRequest.Result.Success)
-        {
-            Debug.Log(www.error);
-        }
-        else
-        {
-            string jsonToWrite = www.downloadHandler.text;
-            JSONNode OfficialRoutesJson = JSON.Parse(jsonToWrite.ToString());
-            List<Route> OfficialRoutes = this.GetComponent<SerializableDataElements>().ConvertJsonToRouteList(OfficialRoutesJson);
-            MainDataHolder.OfficialRoutes = OfficialRoutes;
-            print("MainDataHolder.OfficialRoutes: " + MainDataHolder.OfficialRoutes.Count);
-
-            System.IO.File.WriteAllText(officialRoutesListFilePath, jsonToWrite);
-
-        }
-    }
-
-    public IEnumerator GetInitialUnofficialRoutesLists()
-    {
-        UnityWebRequest www = UnityWebRequest.Get(URL + UN_ROUTES_RESOURCE);
-        //StartCoroutine(ShowDownloadProgress(UN_ROUTES_RESOURCE, www));
-
-        yield return www.SendWebRequest();
-        if (www.result != UnityWebRequest.Result.Success)
-        {
-            Debug.Log(www.error);
-        }
-        else
-        {
-            string jsonToWrite = www.downloadHandler.text;
-            JSONNode UnofficialRoutesJson = JSON.Parse(jsonToWrite.ToString());
-            List<Route> UnofficialRoutes = this.GetComponent<SerializableDataElements>().ConvertJsonToRouteList(UnofficialRoutesJson);
-            MainDataHolder.UnofficialRoutes = UnofficialRoutes; 
-            System.IO.File.WriteAllText(unofficialRoutesListFilePath, jsonToWrite);
-            print("MainDataHolder.UnofficialRoutes: " + MainDataHolder.UnofficialRoutes.Count);
-
-        }
-    }
-  
 
     IEnumerator LoadAssetBundle(string url)
     {
         UnityWebRequest request = UnityWebRequestAssetBundle.GetAssetBundle(url);
         yield return request.SendWebRequest();
-       // print("request progress: " + request.downloadProgress);
-        
+        // print("request progress: " + request.downloadProgress);
+
         //StartCoroutine(ShowDownloadProgress("Asset bundle loading: ", request));
 
         if (request.result != UnityWebRequest.Result.Success)
@@ -191,27 +274,6 @@ public class InitialAppLoad : MonoBehaviour
     }
 
 
-    bool AllLoaded()
-    {
-        //print("PopularPois: " + MainDataHolder.PopularPois.Count);
-        //print("OfficialRoutes: " + MainDataHolder.OfficialRoutes.Count);
-        //print("UnofficialRoutes: " + MainDataHolder.UnofficialRoutes.Count);
-        //if (MainDataHolder.myAssetBundle != null 
-        //    && MainDataHolder.PopularPois != null
-        //    && MainDataHolder.OfficialRoutes != null
-        //    && MainDataHolder.UnofficialRoutes != null)
-        //{
-        if (process == 100)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-        
-    }
-
     IEnumerator DownloadAssetFromServer(string url)
     {
 
@@ -237,35 +299,5 @@ public class InitialAppLoad : MonoBehaviour
             this.GetComponent<LoadScenes>().LoadHomeScene();
         }
     }
-     
-    
-    IEnumerator LoadAssetBundleLocally()
-    {
-        var bundleLoadRequest = AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, "augmentationsprefabs"));
-        while (!bundleLoadRequest.isDone)
-        {
-            string s = (string.Format("{0:0%}", bundleLoadRequest.progress));
-            loadedPercentage.text = s;
-            slider.value = bundleLoadRequest.progress;
-            yield return null;
-        }
-        yield return bundleLoadRequest;
 
-        AssetBundle myLoadedAssetBundle = bundleLoadRequest.assetBundle;
-        if (myLoadedAssetBundle == null)
-        {
-            Debug.Log("Failed to load AssetBundle!");
-            yield break;
-        }
-
-        MainDataHolder.myAssetBundle = myLoadedAssetBundle;
-        print("Asset bundle loaded!");
-
-        GameObject[] assetsLoadRequest = myLoadedAssetBundle.LoadAllAssets<GameObject>();
-        yield return assetsLoadRequest;
-        MainDataHolder.augmentationsGO = assetsLoadRequest;
-        myLoadedAssetBundle.Unload(false);
-        this.GetComponent<LoadScenes>().LoadHomeScene();
-
-    }
 }

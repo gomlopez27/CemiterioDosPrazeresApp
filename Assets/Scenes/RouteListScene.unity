@@ -2213,6 +2213,7 @@ GameObject:
   - component: {fileID: 1087652099}
   - component: {fileID: 1087652098}
   - component: {fileID: 1087652100}
+  - component: {fileID: 1087652101}
   - component: {fileID: 1087652097}
   m_Layer: 5
   m_Name: RoutesList
@@ -2249,7 +2250,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1087652095}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2d9df818e25e3b346a2ea13b25277bfc, type: 3}
   m_Name: 
@@ -2306,6 +2307,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 0
   m_VerticalFit: 2
+--- !u!114 &1087652101
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1087652095}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 562e7378a278a444b9443464e4c0716b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MainCamera: {fileID: 281469276}
+  RouteListCanvas: {fileID: 2084121519}
+  RouteListItem: {fileID: 1387261632}
+  EmptyRouteListItem: {fileID: 1942884521}
 --- !u!1 &1130011380
 GameObject:
   m_ObjectHideFlags: 0

@@ -8037,9 +8037,10 @@ GameObject:
   - component: {fileID: 751727359}
   - component: {fileID: 751727358}
   - component: {fileID: 751727357}
-  - component: {fileID: 751727360}
   - component: {fileID: 751727361}
   - component: {fileID: 751727362}
+  - component: {fileID: 751727363}
+  - component: {fileID: 751727360}
   m_Layer: 0
   m_Name: Controller
   m_TagString: Untagged
@@ -8158,6 +8159,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0401151b4317c7a48a388f3f640dd3db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &751727363
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 751727354}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e61957753279d141b9b04d4a7a2afaa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &752180187
@@ -19638,11 +19651,11 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 2120386012}
+  m_TargetGraphic: {fileID: 1283543818}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1289386065}
+      - m_Target: {fileID: 1854389688}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
         m_Mode: 6

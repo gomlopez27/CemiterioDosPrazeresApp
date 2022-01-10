@@ -7586,7 +7586,6 @@ MonoBehaviour:
   _map: {fileID: 1291984219}
   _spawnScale: 4
   _markerPrefab: {fileID: 4753205444817493986, guid: 2e8dfe60f2387f746ae40c5989ccf7eb, type: 3}
-  JazInfo: {fileID: 1184738200}
 --- !u!114 &1291984221
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10026,6 +10025,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1799445568}
   - component: {fileID: 1799445570}
+  - component: {fileID: 1799445571}
   - component: {fileID: 1799445569}
   m_Layer: 5
   m_Name: RouteDirectionsArea
@@ -10076,7 +10076,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1799445567}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0866e67d225780b4080cec510f0995da, type: 3}
   m_Name: 
@@ -10098,7 +10098,6 @@ MonoBehaviour:
   ConfirmEndRoutePanel: {fileID: 80918709}
   ARButton: {fileID: 658207447}
   ToastMsg: {fileID: 1856610167}
-  JazInfo: {fileID: 1184738200}
 --- !u!222 &1799445570
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -10107,6 +10106,35 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1799445567}
   m_CullTransparentMesh: 1
+--- !u!114 &1799445571
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1799445567}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5330e07f1c0cc9642a648f4280d789b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _referenceCamera: {fileID: 281469276}
+  RouteDirectionsCanvas: {fileID: 1182564885}
+  LocationBasedGame: {fileID: 1019967411}
+  Directions: {fileID: 670634373}
+  currentJazDuration: {fileID: 1892287546}
+  currentJazDistance: {fileID: 1381276214}
+  currentJaz: {fileID: 1743531463}
+  currentJazPersonalities: {fileID: 1164244745}
+  currentJazPhoto: {fileID: 613017611}
+  instructionsText: {fileID: 1479532441}
+  ConfirmEndRouteBtn: {fileID: 459221240}
+  ReachedPoiInfoPanel: {fileID: 18851126}
+  PoiInfoPanel: {fileID: 1219252722}
+  EndRoutePanel: {fileID: 959845691}
+  ConfirmEndRoutePanel: {fileID: 80918709}
+  ARButton: {fileID: 658207447}
+  ToastMsg: {fileID: 1856610167}
 --- !u!1 &1799897253
 GameObject:
   m_ObjectHideFlags: 0

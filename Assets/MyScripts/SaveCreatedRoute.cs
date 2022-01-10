@@ -5,10 +5,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.UI;
 
 public class SaveCreatedRoute : MonoBehaviour
 {
+    private const string URL_POST_ROUTE = "http://localhost/api/routes/create-route";
+
     public const string UNOFFICIAL_ROUTE_ID = "ur";
     public const string UNOFFICIAL_ROUTE = "unofficial";
 
@@ -40,19 +43,12 @@ public class SaveCreatedRoute : MonoBehaviour
     string unofficialRoutesListFilePath;
 
 
-    private void Awake()
-    {
-        //TextAsset jsonAllPoiList = Resources.Load<TextAsset>("MapPopularPOI");
-        //AllPoiList = JSON.Parse(jsonAllPoiList.ToString());
+   
 
-        //jsonAllRoutesList = Resources.Load<TextAsset>("RoutesList");
-        //AllRoutesList = JSON.Parse(jsonAllRoutesList.ToString());
-
-      
-    }
     // Start is called before the first frame update
     void Start()
     {
+
         LoadingPanel.SetActive(false);
         unofficialRoutesListFilePath = Application.persistentDataPath + "/UnofficialRoutesList.json";
 
@@ -79,13 +75,21 @@ public class SaveCreatedRoute : MonoBehaviour
         print("SelectedSugestions (dictionary) " + DataHolder.SelectedSugestions.Count);
         print("finalChoicesPois " + finalChoicesPois.Count);
         print("SelectedPersonallitiesPerJaz " + DataHolder.SelectedPersonallitiesPerJaz.Count);
-        SetUpList();
 
+     
+        SetUpList();
+   
         //rc = new RoutesCollection();
         UnofficialRoutesObjList = new List<Route>();
-        GetRouteListFromJson();
+        UnofficialRoutesObjList = MainDataHolder.MyUnofficialRoutes;
+        //GetRouteListFromJson();
         //GetRoutesCodeListFromJson();
-        CreatedBtn.onClick.AddListener(SaveRoute);
+        //CreatedBtn.onClick.AddListener(SaveRoute);
+
+        CreatedBtn.onClick.AddListener(delegate
+        {
+            StartCoroutine(this.GetComponent<LoadFromAPI>().PostRoute(SerializeChoosenPersonalities().ToString()));
+        });
     }
 
 
@@ -124,10 +128,7 @@ public class SaveCreatedRoute : MonoBehaviour
 
         foreach (var v in DataHolder.SelectedPersonallitiesPerJaz)
         {
-            //for (int i = 0; i < DataHolder.SelectedPersonallitiesPerJaz.Count; i++)
-            //{
             string jazId = v.Key;
-            //string jazType = this.GetComponent<JazInformations>().GetJazType(jazId);
             string jazType = MainDataHolder.GetPoi(jazId).JazType;
             GameObject g = Instantiate(ListItem, SelectedPoisListArea.transform);
             g.name = "item-" + jazId;
@@ -138,6 +139,7 @@ public class SaveCreatedRoute : MonoBehaviour
             HashSet<string> personalities = v.Value;
             List<string> auxPers = new List<string>();
             auxPers.AddRange(personalities);
+            finalChoicesPersonalities.AddRange(personalities);
 
             /*Multiplas personalidades*/
             if (auxPers.Count > 1)
@@ -162,7 +164,7 @@ public class SaveCreatedRoute : MonoBehaviour
 
                     persToggle.onValueChanged.AddListener(delegate
                     {
-                        ToggleValueChanged(persToggle, jazId, gPers);
+                        ToggleValueChanged(persToggle, jazId, personId, gPers);
 
                     });
                 }
@@ -179,11 +181,9 @@ public class SaveCreatedRoute : MonoBehaviour
                 PersonalityListItem.SetActive(false);
                 jazToggle.isOn = true;
 
-
                 jazToggle.onValueChanged.AddListener(delegate
                 {
-                    ToggleValueChanged(jazToggle, jazId, g);
-
+                    ToggleValueChanged(jazToggle, jazId, personId, g);
                 });
 
             }
@@ -191,9 +191,18 @@ public class SaveCreatedRoute : MonoBehaviour
         //FavPoisListArea.SetActive(false);
         Destroy(ListItem);
     }
-
-    void ToggleValueChanged(Toggle toggle, string jazId, GameObject listItem)
+    
+    void ToggleValueChanged(Toggle toggle, string jazId, string personId, GameObject listItem)
     {
+        //var personValue = finalChoicesPois.Find(item => item == personId);
+        //finalChoicesPersonalities.Remove(personValue);
+
+        //foreach (string s in finalChoicesPersonalities)
+        //{
+        //    print("person id: " + s);
+        //}
+
+        print("listItem.transform.parent.name: " + listItem.transform.parent.name);
         if (!toggle.isOn && finalChoicesPois.Count > 2)
         {
             //Se o pai é a lista principal, entao e um jaz com uma unica person
@@ -202,22 +211,35 @@ public class SaveCreatedRoute : MonoBehaviour
                 Destroy(listItem);
                 var value = finalChoicesPois.Find(item => item == jazId);
                 finalChoicesPois.Remove(value);
+                print("finalChoicesPersonalities before " + finalChoicesPersonalities.Count);
+                var personValue = finalChoicesPersonalities.Find(item => item == personId);
+                finalChoicesPersonalities.Remove(personValue);
+                print("finalChoicesPersonalities after " + finalChoicesPersonalities.Count);
+
             }
-            else
+            else //Se o pai nao e' a lista principal, entao e um jaz com multiplas person
             {
-                //print(listItem.transform.parent.name + ": " + listItem.transform.parent.childCount);
                 GameObject firstListItem = listItem.transform.parent.transform.GetChild(0).gameObject;
 
+                //O childCount==2 corresponde a 1 personalidade + o item GO inativo
                 if (listItem.transform.parent.transform.childCount == 2 && firstListItem.name.Equals("Item"))
                 {
                     Destroy(listItem);
                     Destroy(listItem.transform.parent.parent.gameObject);
                     var value = finalChoicesPois.Find(item => item == jazId);
                     finalChoicesPois.Remove(value);
+                    print("finalChoicesPersonalities before " + finalChoicesPersonalities.Count);
+                    var personValue = finalChoicesPersonalities.Find(item => item == personId);
+                    finalChoicesPersonalities.Remove(personValue);
+                    print("finalChoicesPersonalities after " + finalChoicesPersonalities.Count);
                 }
                 else
                 {
                     Destroy(listItem);
+                    print("finalChoicesPersonalities before " + finalChoicesPersonalities.Count);
+                    var personValue = finalChoicesPersonalities.Find(item => item == personId);
+                    finalChoicesPersonalities.Remove(personValue);
+                    print("finalChoicesPersonalities after " + finalChoicesPersonalities.Count);
                 }
             }
         }
@@ -230,6 +252,10 @@ public class SaveCreatedRoute : MonoBehaviour
                 && listItem.transform.parent.childCount > 2)
             {
                 Destroy(listItem);
+                print("finalChoicesPersonalities before " + finalChoicesPersonalities.Count);
+                var personValue = finalChoicesPersonalities.Find(item => item == personId);
+                finalChoicesPersonalities.Remove(personValue);
+                print("finalChoicesPersonalities after " + finalChoicesPersonalities.Count);
             }
             else
             {
@@ -237,8 +263,6 @@ public class SaveCreatedRoute : MonoBehaviour
                 print("Não pode remover todos os pontos");
                 StartCoroutine(ShowToastMsg());
             }
-
-
         }
 
     }
@@ -270,68 +294,68 @@ public class SaveCreatedRoute : MonoBehaviour
         this.routeDescription = descr;
     }
     
-    void GetRouteListFromJson()
-    {
-        if (System.IO.File.Exists(unofficialRoutesListFilePath))
-        {
-            string json = File.ReadAllText(unofficialRoutesListFilePath);
-            UnofficialRoutesList = JSON.Parse(json.ToString());
+    //void GetRouteListFromJson()
+    //{
+    //    if (System.IO.File.Exists(unofficialRoutesListFilePath))
+    //    {
+    //        string json = File.ReadAllText(unofficialRoutesListFilePath);
+    //        UnofficialRoutesList = JSON.Parse(json.ToString());
             
-            for (int i = 0; i < UnofficialRoutesList["routes"].Count; i++)
-            {
-                Route route = new Route();
-                route.Id = UnofficialRoutesList["routes"][i]["id"];
-                route.Name = UnofficialRoutesList["routes"][i]["name"];
-                route.Code = UnofficialRoutesList["routes"][i]["code"];
-                route.Description = UnofficialRoutesList["routes"][i]["description"];
+    //        for (int i = 0; i < UnofficialRoutesList["routes"].Count; i++)
+    //        {
+    //            Route route = new Route();
+    //            route.Id = UnofficialRoutesList["routes"][i]["id"];
+    //            route.Name = UnofficialRoutesList["routes"][i]["name"];
+    //            route.Code = UnofficialRoutesList["routes"][i]["code"];
+    //            route.Description = UnofficialRoutesList["routes"][i]["description"];
 
-                route.RouteCategory = new List<string>();
+    //            route.RouteCategory = new List<string>();
 
-                for (int j = 0; j < UnofficialRoutesList["routes"][i]["routeCategory"].Count; j++)
-                {
-                    route.RouteCategory.Add(UnofficialRoutesList["routes"][i]["routeCategory"][j]);
-                }
+    //            for (int j = 0; j < UnofficialRoutesList["routes"][i]["routeCategory"].Count; j++)
+    //            {
+    //                route.RouteCategory.Add(UnofficialRoutesList["routes"][i]["routeCategory"][j]);
+    //            }
 
-                route.Pois = new List<Poi>();
-                for (int k = 0; k < UnofficialRoutesList["routes"][i]["pois"].Count; k++)
-                {
-                    Poi p = new Poi();
-                    p.Id = UnofficialRoutesList["routes"][i]["pois"][k]["id"];
-                    //p.latitude = AllRoutesList["routes"][i]["pois"][k]["latitude"];
-                    //p.longitude = AllRoutesList["routes"][i]["pois"][k]["longitude"];
-                    //p.tipoJaz = AllRoutesList["routes"][i]["pois"][k]["tipoJaz"];
-                    //p.jazImage = AllRoutesList["routes"][i]["pois"][k]["jazImage"];
-                    //p.description = AllRoutesList["routes"][i]["pois"][k]["description"];
+    //            route.Pois = new List<Poi>();
+    //            for (int k = 0; k < UnofficialRoutesList["routes"][i]["pois"].Count; k++)
+    //            {
+    //                Poi p = new Poi();
+    //                p.Id = UnofficialRoutesList["routes"][i]["pois"][k]["id"];
+    //                //p.latitude = AllRoutesList["routes"][i]["pois"][k]["latitude"];
+    //                //p.longitude = AllRoutesList["routes"][i]["pois"][k]["longitude"];
+    //                //p.tipoJaz = AllRoutesList["routes"][i]["pois"][k]["tipoJaz"];
+    //                //p.jazImage = AllRoutesList["routes"][i]["pois"][k]["jazImage"];
+    //                //p.description = AllRoutesList["routes"][i]["pois"][k]["description"];
 
-                    //p.personalidades = new List<string>();
+    //                //p.personalidades = new List<string>();
 
-                    //for (int y = 0; y < AllRoutesList["routes"][i]["pois"][k]["personalidades"].Count; y++)
-                    //{
-                    //    p.personalidades.Add(AllRoutesList["routes"][i]["pois"][k]["personalidades"][y]);
-                    //}
+    //                //for (int y = 0; y < AllRoutesList["routes"][i]["pois"][k]["personalidades"].Count; y++)
+    //                //{
+    //                //    p.personalidades.Add(AllRoutesList["routes"][i]["pois"][k]["personalidades"][y]);
+    //                //}
 
-                    route.Pois.Add(p);
-                }
-                UnofficialRoutesObjList.Add(route);
-            }
-            print("Routes list count JSON: " + UnofficialRoutesList["routes"].Count);
-            print("Routes list count " + UnofficialRoutesObjList.Count);
+    //                route.Pois.Add(p);
+    //            }
+    //            UnofficialRoutesObjList.Add(route);
+    //        }
+    //        print("Routes list count JSON: " + UnofficialRoutesList["routes"].Count);
+    //        print("Routes list count " + UnofficialRoutesObjList.Count);
 
 
-        }
+    //    }
 
-    }
+    //}
 
-    public void SaveRouteToJson()
-    {
-        RoutesCollection rc = new RoutesCollection();
-        print("After SAVE Routes" + UnofficialRoutesObjList.Count);
-        rc.RoutesCol = UnofficialRoutesObjList;
-        print("RoutesCol" + rc.RoutesCol.Count);
+    //public void SaveRouteToJson()
+    //{
+    //    RoutesCollection rc = new RoutesCollection();
+    //    print("After SAVE Routes" + UnofficialRoutesObjList.Count);
+    //    rc.RoutesCol = UnofficialRoutesObjList;
+    //    print("RoutesCol" + rc.RoutesCol.Count);
 
-        string jsonToWrite = rc.Serialize().ToString(3);
-        System.IO.File.WriteAllText(unofficialRoutesListFilePath, jsonToWrite);
-    }
+    //    string jsonToWrite = rc.Serialize().ToString(3);
+    //    System.IO.File.WriteAllText(unofficialRoutesListFilePath, jsonToWrite);
+    //}
 
     public void SaveRoute()
     {
@@ -385,10 +409,60 @@ public class SaveCreatedRoute : MonoBehaviour
         print(" createdRoute.pois " + createdRoute.Pois.Count);
         UnofficialRoutesObjList.Add(createdRoute);
         print("After Add " + UnofficialRoutesObjList.Count);
-        SaveRouteToJson();
+        //SaveRouteToJson();
+        MainDataHolder.MyUnofficialRoutes = UnofficialRoutesObjList;
+
         this.GetComponent<SerializableDataElements>().SaveRouteCodeToJson(createdRoute.Code);
         StartCoroutine(ShowLoadingScreen());
     }
 
+    public IEnumerator PostRoute()
+    {
+        string json = SerializeChoosenPersonalities().ToString();
+        //print(json);
+        //UnityWebRequest uwr = UnityWebRequest.Post(URL_POST_ROUTE, json);
+        var uwr = new UnityWebRequest(URL_POST_ROUTE, "POST");
+        byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(json);
+        uwr.uploadHandler = (UploadHandler)new UploadHandlerRaw(jsonToSend);
+        uwr.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
+        uwr.SetRequestHeader("Content-Type", "application/json");
+        yield return uwr.SendWebRequest();
+       
+        if (uwr.result != UnityWebRequest.Result.Success)
+        {
+            Debug.Log(uwr.error);
+            string jsonToWrite = uwr.downloadHandler.text;
+
+            Debug.Log(jsonToWrite);
+        }
+        else
+        {
+            Debug.Log("SUCCESS");
+
+            string jsonToWrite = uwr.downloadHandler.text;
+
+            Debug.Log(jsonToWrite);
+        }
+    }
+
+    JSONNode SerializeChoosenPersonalities()
+    {   
+        var route = new JSONObject();
+        route["designation"] = this.routeName;
+        route["description"] = this.routeDescription;
+
+        var iriList = new JSONArray();
+
+        foreach (string s in finalChoicesPersonalities)
+        {
+            var personalityObj = new JSONObject();
+            personalityObj["iri"] = s;
+            iriList.Add(personalityObj);
+        }
+        route["personalities"] = iriList;
+
+        return route;
+
+    }
 
 }

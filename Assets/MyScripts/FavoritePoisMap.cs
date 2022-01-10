@@ -353,11 +353,19 @@ public class FavoritePoisMap : MonoBehaviour
         }
     }
 
-    void OnApplicationQuit()
-    {
-        Debug.Log("Application ending after " + Time.time + " seconds");
-        SaveToJson();
-    }
+    //void OnApplicationQuit()
+    //{
+    //    Debug.Log("Application ending after " + Time.time + " seconds");
+    //    SaveToJson();
+    //}
 
+    void OnApplicationFocus(bool hasFocus)
+    {
+        if (!hasFocus)
+        {
+            print("Lost focus, saved favorites");
+            SaveToJson();
+        }
+    }
 }
 

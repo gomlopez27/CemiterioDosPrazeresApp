@@ -11,15 +11,14 @@ public class RoutesCollection
 
     public JSONNode Serialize()
     {
-        var Routes = new JSONObject();
-
         var RoutesList = new JSONArray();
 
         foreach (Route r in RoutesCol)
         {
             var routeObj = new JSONObject();
             routeObj["id"] = r.Id;
-            routeObj["name"] = r.Name;
+            routeObj["designation"] = r.Name;
+            routeObj["description"] = r.Description;
             routeObj["code"] = r.Code;
 
             var routeCategoryList = new JSONArray();
@@ -29,33 +28,42 @@ public class RoutesCollection
             }
 
             routeObj["routeCategory"] = routeCategoryList;
-            routeObj["description"] = r.Description;
 
-            var poisList = new JSONArray();
-            foreach (Poi p in r.Pois)
+            var personalitiesList = new JSONArray();
+            foreach (Personality person in r.Personalities)
             {
-                var poiObj = new JSONObject();
-                poiObj["id"] = p.Id;
-                //poiObj["latitude"] = p.latitude;
-                //poiObj["longitude"] = p.longitude;
-                //poiObj["tipoJaz"] = p.tipoJaz;
-                //var personalitiesList = new JSONArray();
-                //foreach (string s in p.personalidades)
-                //{
-                //    personalitiesList.Add(s);
-                //}
-                //poiObj["personalidades"] = personalitiesList;
-                //poiObj["description"] = p.description;
-                //poiObj["imageURL"] = p.jazImage;
+                var personObj = new JSONObject();
+                personObj["iri"] = person.UriId;
+                personObj["artistic_name"] = person.Name;
+                var birthDate = new JSONArray();
+                foreach (int date in person.BirthDate)
+                {
+                    birthDate.Add(date);
+                }
+                personObj["birth_date"] = birthDate;
+                var deathDate = new JSONArray();
+                foreach (int date in person.DeathDate)
+                {
+                    deathDate.Add(date);
+                }
+                personObj["death_date"] = deathDate;
+                personObj["description"] = person.Description;
+                personObj["biography"] = person.Biography;
+                personObj["imageURL"] = person.ImageUrl;
 
-                poisList.Add(poiObj);
+                var PoiObj = new JSONObject();
+                PoiObj["cf_id"] = person.Poi.Id;
+                PoiObj["construction_type"] = person.Poi.JazType;
+
+                personObj["funeral_construction"] = PoiObj;
+
+                personalitiesList.Add(personObj);
             }
-            routeObj["pois"] = poisList;
+            routeObj["personalities"] = personalitiesList;
 
             RoutesList.Add(routeObj);
         }
-        Routes["routes"] = RoutesList;
-        return Routes;
+        return RoutesList;
     }
 }
 
@@ -64,16 +72,19 @@ public class Route
 {
     public string Id { get; set; }
     public string Name { get; set; }
+    public string Description { get; set; }
     public string Code { get; set; }
     public List<string> RouteCategory { get; set; }
-    public string Description { get; set; }
+    public List<Personality> Personalities { get; set; }
+
+    /*Values not retrieved directly from json file*/
+    public HashSet<string> PoisIdList { get; set; }
     public List<Poi> Pois { get; set; }
 
-    //public static Route CreateFromJSON(string jsonString)
-    //{
-    //    return JsonUtility.FromJson<Route>(jsonString);
-    //}
+
+
 }
+
 
 [System.Serializable]
 public class PoiCollection
@@ -90,30 +101,43 @@ public class PoiCollection
         foreach (Poi p in PoiCol)
         {
             var poiObj = new JSONObject();
-            poiObj["ID"] = p.Id;
+            poiObj["cf_id"] = p.Id;
             poiObj["latitude"] = p.Latitude;
             poiObj["longitude"] = p.Longitude;
-            poiObj["jazLocation"] = p.JazLocation;
-            poiObj["tipoJaz"] = p.JazType;
-            poiObj["jazImage"] = p.JazImage;
-            poiObj["imageIconPlaceholder"] = p.JazImagePlaceholder;
+            poiObj["road"] = p.JazLocation;
+            poiObj["construction_type"] = p.JazType;
+            poiObj["imageURL"] = p.JazImage; //http://localhost:8080/api/resources/image/JP%3696
 
-            var routesList = new JSONArray();
+            var routesCategories = new JSONArray();
             foreach (string s in p.RoutesCategory)
             {
-                routesList.Add(s);
+                routesCategories.Add(s);
             }
 
-            poiObj["percursos"] = routesList;
+            poiObj["percursos"] = routesCategories;
 
             var personList = new JSONArray();
             foreach (Personality person in p.Personalities)
             {
                 var personObj = new JSONObject();
-                personObj["uriId"] = person.UriId;
-                personObj["nome"] = person.Name;
+                personObj["iri"] = person.UriId;
+                personObj["artistic_name"] = person.Name;
+                var birthDate = new JSONArray();
+                foreach (int date in person.BirthDate)
+                {
+                    birthDate.Add(date);
+                }
+                personObj["birth_date"] = birthDate;
+                var deathDate = new JSONArray();
+                foreach (int date in person.DeathDate)
+                {
+                    deathDate.Add(date);
+                }
+                personObj["death_date"] = deathDate;
                 personObj["description"] = person.Description;
+                personObj["biography"] = person.Biography;
                 personObj["imageURL"] = person.ImageUrl;
+                personObj["funeral_construction"] = null;
 
                 personList.Add(personObj);
             }
@@ -181,7 +205,6 @@ public class Poi
     public string JazLocation { get; set; }
     public string JazType { get; set; }
     public string JazImage { get; set; }
-    public string JazImagePlaceholder { get; set; }
     public string Description { get; set; }
     //public string imageIconPlaceholder;
     public List<string> RoutesCategory { get; set; }
@@ -194,8 +217,13 @@ public class Personality
 {
     public string UriId { get; set; }
     public string Name { get; set; }
+    public List<int> BirthDate { get; set; } //year, month, day
+    public List<int> DeathDate { get; set; } //year, month, day
+    public string Biography { get; set; }
     public string Description { get; set; }
     public string ImageUrl { get; set; }
+    public Poi Poi { get; set; }
+
 
 }
 
@@ -317,6 +345,9 @@ public class ObjectTargetData
     public string Augmentation { get; set; }
 
 }
+
+
+
 public class SerializableDataElements : MonoBehaviour
 {
     public const string UNOFFICIAL_ROUTE = "ur";
@@ -348,42 +379,61 @@ public class SerializableDataElements : MonoBehaviour
     {
         List<Poi> PoiAux = new List<Poi>();
 
-        // print("jsonRoutesList.Count " + jsonRoutesList["routes"].Count);
-        JSONNode poisNode = jsonPoiList["pois"];
-        for (int i = 0; i < poisNode.Count; i++)
+        for (int i = 0; i < jsonPoiList.Count; i++)
         {
             Poi p = new Poi();
             //string auxId = poisNode[i]["ID"];
             //string auxType = poisNode[i]["tipoJaz"];
             //p.id = auxType + auxId;
-            p.Id = poisNode[i]["ID"];
-            p.Latitude = poisNode[i]["latitude"];
-            p.Longitude = poisNode[i]["longitude"];
-            p.JazLocation = poisNode[i]["jazLocation"];
-            p.JazType = poisNode[i]["tipoJaz"];
-            p.JazImage = poisNode[i]["jazImage"];
-            p.JazImagePlaceholder = poisNode[i]["imageIconPlaceholder"];
+            p.Id = jsonPoiList[i]["cf_id"];
+            p.Latitude = jsonPoiList[i]["latitude"];
+            p.Longitude = jsonPoiList[i]["longitude"];
+            p.JazLocation = jsonPoiList[i]["road"];
+            p.JazType = jsonPoiList[i]["construction_type"];
+            p.JazImage = MainDataHolder.URL_API + "resources/image/" + jsonPoiList[i]["imageURL"];
             p.RoutesCategory = new List<string>();
 
-            for (int j = 0; j < poisNode[i]["percursos"].Count; j++)
+            for (int j = 0; j < jsonPoiList[i]["construction_date"].Count; j++)
             {
-                p.RoutesCategory.Add(poisNode[i]["percursos"][j]);
+                p.RoutesCategory.Add(jsonPoiList[i]["construction_date"][j]);
             }
 
             p.Personalities = new List<Personality>();
 
-            for (int j = 0; j < poisNode[i]["personalidades"].Count; j++)
+            for (int j = 0; j < jsonPoiList[i]["personalities"].Count; j++)
             {
-                JSONNode personNode = poisNode[i]["personalidades"][j];
+                JSONNode personNode = jsonPoiList[i]["personalities"][j];
                 Personality person = new Personality();
-                person.UriId = personNode["uriId"];
-                person.Name = personNode["nome"];
+                person.UriId = personNode["iri"];
+                person.Name = personNode["artistic_name"];
+                person.BirthDate = new List<int>();
+                person.DeathDate = new List<int>();
+                for (int k = 0; k < personNode["birth_date"].Count; k++)
+                {
+                    person.BirthDate.Add(personNode["birth_date"][k]);
+                }
+                for (int k = 0; k < personNode["death_date"].Count; k++)
+                {
+                    person.DeathDate.Add(personNode["death_date"][k]);
+                }
+                person.Biography = personNode["biography"];
                 person.Description = personNode["description"];
-                person.ImageUrl = personNode["imageURL"];
+                if (personNode["path_profile_picture"] != null)
+                {
+                    person.ImageUrl = personNode["path_profile_picture"];
+                }
+                else
+                {
+                    person.ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png";
+
+                }
+                person.Poi = null;
                 p.Personalities.Add(person);
             }
 
             PoiAux.Add(p);
+
+            print(p.Id + " image url: " + p.JazImage);
         }
         return PoiAux;
     }
@@ -393,81 +443,84 @@ public class SerializableDataElements : MonoBehaviour
         List<Route> RoutesAux = new List<Route>();
 
         // print("jsonRoutesList.Count " + jsonRoutesList["routes"].Count);
-        for (int i = 0; i < jsonRoutesList["routes"].Count; i++)
+        for (int i = 0; i < jsonRoutesList.Count; i++)
         {
-            Route route = new Route();
-            route.Id = jsonRoutesList["routes"][i]["id"];
-            //print(jsonRoutesList["routes"][i]["id"]);
-            route.Name = jsonRoutesList["routes"][i]["name"];
-            route.Code = jsonRoutesList["routes"][i]["code"];
-            route.Description = jsonRoutesList["routes"][i]["description"];
-
-            route.RouteCategory = new List<string>();
-
-            for (int j = 0; j < jsonRoutesList["routes"][i]["routeCategory"].Count; j++)
-            {
-                route.RouteCategory.Add(jsonRoutesList["routes"][i]["routeCategory"][j]);
-            }
-
-            route.Pois = new List<Poi>();
-            for (int k = 0; k < jsonRoutesList["routes"][i]["pois"].Count; k++)
-            {
-                Poi p = new Poi();
-                p.Id = jsonRoutesList["routes"][i]["pois"][k]["id"];
-                p.JazType = jsonRoutesList["routes"][i]["pois"][k]["tipoJaz"];
-                route.Pois.Add(p);
-            }
-
+            JSONNode r = jsonRoutesList[i];
+            Route route = ConvertJsonToRoute(r);
             RoutesAux.Add(route);
         }
 
         return RoutesAux;
     }
 
-    //public bool CreatePoiListFromJson(string filePath)
-    //{
-    //    if (System.IO.File.Exists(filePath))
-    //    {
-    //        string poisJsonString = File.ReadAllText(filePath);
-    //        JSONNode PoisNode = JSON.Parse(poisJsonString.ToString());
-    //        List<Poi> PoisList = ConvertJsonToPoiList(PoisNode);
-    //        MainDataHolder.PopularPois = PoisList;
-    //        print("MainDataHolder.PopularPois: " + MainDataHolder.PopularPois.Count);
-    //        return true;
+    public Route ConvertJsonToRoute(JSONNode r)
+    {
+        Route route = new Route();
+        route.Id = r["id"];
+        route.Name = r["designation"];
+        route.Code = r["code"];
+        route.Description = r["description"];
 
-    //    }
-    //    print("poisListFilePath not found");
-    //    return false;
-    //}
+        route.RouteCategory = new List<string>();
 
-    //public bool CreateOfficialRouteListFromJson(string filePath)
-    //{
-    //    if (System.IO.File.Exists(filePath))
-    //    {
-    //        string jsonOffiRoutes = File.ReadAllText(filePath);
-    //        JSONNode OfficialRoutesJson = JSON.Parse(jsonOffiRoutes.ToString());
-    //        List<Route> OfficialRoutes = ConvertJsonToRouteList(OfficialRoutesJson);
-    //        MainDataHolder.OfficialRoutes = OfficialRoutes;
-    //        return true;
-    //    }
+        for (int j = 0; j < r["creation_date"].Count; j++)
+        {
+            route.RouteCategory.Add(r["creation_date"][j]);
+        }
 
-    //    print("officialRoutesListFilePath not found");
-    //    return false;
-    //}
+        route.Personalities = new List<Personality>();
+        route.Pois = new List<Poi>();
+        route.PoisIdList = new HashSet<string>();
 
-    //public bool CreateUnofficialRouteListFromJson(string filePath)
-    //{
-    //    if (System.IO.File.Exists(filePath))
-    //    {
-    //        string jsonUnoRoutes = File.ReadAllText(filePath);
-    //        JSONNode UnofficialRoutesJson = JSON.Parse(jsonUnoRoutes.ToString());
-    //        List<Route> UnofficialRoutes = ConvertJsonToRouteList(UnofficialRoutesJson);
-    //        MainDataHolder.UnofficialRoutes = UnofficialRoutes;
-    //        return true;
-    //    }
-    //    print("unofficialRoutesListFilePath not found");
-    //    return false;
-    //}
+        for (int j = 0; j < r["personalities"].Count; j++)
+        {
+            JSONNode personNode = r["personalities"][j];
+            Personality person = new Personality();
+            person.UriId = personNode["iri"];
+            person.Name = personNode["artistic_name"];
+            person.BirthDate = new List<int>();
+            person.DeathDate = new List<int>();
+            for (int k = 0; k < personNode["birth_date"].Count; k++)
+            {
+                person.BirthDate.Add(personNode["birth_date"][k]);
+            }
+            for (int k = 0; k < personNode["death_date"].Count; k++)
+            {
+                person.DeathDate.Add(personNode["death_date"][k]);
+            }
+            person.Biography = personNode["biography"];
+            person.Description = personNode["description"];
+            if (personNode["path_profile_picture"] != null)
+            {
+                person.ImageUrl = personNode["path_profile_picture"];
+            }
+            else
+            {
+                person.ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png";
+
+            }
+
+            Poi poiOfPerson = new Poi();
+            poiOfPerson.Id = personNode["funeral_construction"]["cf_id"];
+            poiOfPerson.JazType = personNode["funeral_construction"]["construction_type"];
+            person.Poi = poiOfPerson;
+
+            if (route.PoisIdList.Add(poiOfPerson.Id))//hashset apenas adiciona valores unicos
+            {
+                Poi p = new Poi();
+                p.Id = poiOfPerson.Id;
+                p.JazType = poiOfPerson.JazType;
+                route.Pois.Add(p); // criar lista com os pois unicos para obter os locais fisicos da rota
+            }
+                                      
+            route.Personalities.Add(person);
+        }
+
+        //print("FROM SERIALIZABLE route.Personalities:  " + route.Personalities.Count);
+        //print("FROM SERIALIZABLE route.PoisIdList:  " + route.PoisIdList.Count);
+        //print("FROM SERIALIZABLE route.Pois:  " + route.Pois.Count);
+        return route;
+    }
 
     public void CreateRoutesCodeListFromJson(string filePath)
     {
@@ -507,6 +560,31 @@ public class SerializableDataElements : MonoBehaviour
         System.IO.File.WriteAllText(codesRoutesListFilePath, jsonToWrite);
     }
 
+
+    //public void SaveUpdatedPoiList(List<Poi> updatedList)
+    //{
+    //    PoiCollection pc = new PoiCollection();
+    //    pc.PoiCol = updatedList;
+    //    string jsonToWrite = pc.Serialize().ToString(3);
+    //    System.IO.File.WriteAllText(poisListFilePath, jsonToWrite);
+    //}
+
+    //public void SaveUpdatedRoutesList(List<Route> updatedList, string routeType)
+    //{
+    //    RoutesCollection rc = new RoutesCollection();
+    //    rc.RoutesCol = updatedList;
+    //    string jsonToWrite = rc.Serialize().ToString(3);
+    //    if (routeType.Equals(OFFICIAL_ROUTE))
+    //    {
+    //        System.IO.File.WriteAllText(officialRoutesListFilePath, jsonToWrite);
+
+    //    }
+    //    else
+    //    {
+    //        System.IO.File.WriteAllText(unofficialRoutesListFilePath, jsonToWrite);
+
+    //    }
+    //}
     public void SaveUpdatedRouteCodeList(List<string> updatedList)
     {
         RoutesCodesCollection rc = new RoutesCodesCollection();
@@ -514,30 +592,8 @@ public class SerializableDataElements : MonoBehaviour
         string jsonToWrite = rc.Serialize().ToString(3);
         System.IO.File.WriteAllText(codesRoutesListFilePath, jsonToWrite);
     }
-    
-    public void SaveUpdatedPoiList(List<Poi> updatedList)
-    {
-        PoiCollection pc = new PoiCollection();
-        pc.PoiCol = updatedList;
-        string jsonToWrite = pc.Serialize().ToString(3);
-        System.IO.File.WriteAllText(poisListFilePath, jsonToWrite);
-    }
 
-    public void SaveUpdatedRoutesList(List<Route> updatedList, string routeType)
-    {
-        RoutesCollection rc = new RoutesCollection();
-        rc.RoutesCol = updatedList;
-        string jsonToWrite = rc.Serialize().ToString(3);
-        if (routeType.Equals(OFFICIAL_ROUTE))
-        {
-            System.IO.File.WriteAllText(officialRoutesListFilePath, jsonToWrite);
+   
 
-        }
-        else
-        {
-            System.IO.File.WriteAllText(unofficialRoutesListFilePath, jsonToWrite);
-
-        }
-    }
 
 }

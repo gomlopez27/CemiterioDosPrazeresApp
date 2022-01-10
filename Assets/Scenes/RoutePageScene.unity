@@ -3814,8 +3814,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2116812541}
-        m_TargetAssemblyTypeName: RoutePageAreaCOPY, Assembly-CSharp
+      - m_Target: {fileID: 2116812543}
+        m_TargetAssemblyTypeName: RoutePageArea, Assembly-CSharp
         m_MethodName: BackToRoutesList
         m_Mode: 1
         m_Arguments:
@@ -4281,7 +4281,6 @@ MonoBehaviour:
   _map: {fileID: 1291984219}
   _spawnScale: 4
   _markerPrefab: {fileID: 4753205444817493986, guid: 2e8dfe60f2387f746ae40c5989ccf7eb, type: 3}
-  JazInfo: {fileID: 1184738200}
 --- !u!114 &1291984221
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6831,6 +6830,7 @@ GameObject:
   - component: {fileID: 2116812540}
   - component: {fileID: 2116812542}
   - component: {fileID: 2116812541}
+  - component: {fileID: 2116812543}
   m_Layer: 5
   m_Name: GeneralInfoArea
   m_TagString: Untagged
@@ -6869,7 +6869,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2116812539}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e2febb48aff569246988e922c73691e7, type: 3}
   m_Name: 
@@ -6883,7 +6883,6 @@ MonoBehaviour:
   RouteDurationTxt: {fileID: 712040460}
   RouteDistanceTxt: {fileID: 237119007}
   RouteTitle: {fileID: 2101902372}
-  JazInfo: {fileID: 1184738200}
 --- !u!222 &2116812542
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6892,6 +6891,27 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2116812539}
   m_CullTransparentMesh: 1
+--- !u!114 &2116812543
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2116812539}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a89983da5f6daae40b6555f15fdb18a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MainCamera: {fileID: 281469276}
+  RouteGeneralCanvas: {fileID: 1858795095}
+  LocationBasedGame: {fileID: 1019967411}
+  Directions: {fileID: 670634373}
+  PoisRouteListArea: {fileID: 721340157}
+  StartRouteBtn: {fileID: 1247242725}
+  RouteDurationTxt: {fileID: 712040460}
+  RouteDistanceTxt: {fileID: 237119007}
+  RouteTitle: {fileID: 2101902372}
 --- !u!1 &2117546347
 GameObject:
   m_ObjectHideFlags: 0

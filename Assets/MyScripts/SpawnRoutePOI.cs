@@ -172,7 +172,104 @@ public class SpawnRoutePOI : MonoBehaviour
         return _spawnedObjects;
     }
 
+    //public List<GameObject> RouteClicked(string routeId)
+    //{
+    //    Route route = RouteDataHolder.GetRoute(RouteDataHolder.currentRouteId);
+    //    _spawnedObjects = new List<GameObject>();
 
+    //    List<string> auxPoisIdList = new List<string>(route.PoisId);
+
+    //    int POIsCount = auxPoisIdList.Count;
+
+    //    //numberOfPoi = RouteArea.transform.Find("RouteInfoPanel/ScrollArea/Content/PoiGO/POINrTxt-Value").gameObject.GetComponent<Text>();
+    //    //numberOfPoi.text = POIsCount.ToString();
+
+    //    currentRoutePois = new string[POIsCount];
+    //    _locations = new Vector2d[POIsCount];
+
+    //    for (int i = 0; i < POIsCount; i++)
+    //    {
+
+    //        string poiId = auxPoisIdList[i];
+    //        //string lat = rList["routes"][i]["pois"][j]["latitude"];
+    //        //string lng = rList["routes"][i]["pois"][j]["longitude"];
+    //        Poi poi = MainDataHolder.GetPoi(poiId);
+    //        string lat = poi.Latitude.ToString();
+    //        string lng = poi.Longitude.ToString();
+    //        string location = lat + "," + lng;
+    //        print(poiId + " " + location);
+
+    //        _locations[i] = Conversions.StringToLatLon(location);
+    //        currentRoutePois[i] = poiId;
+    //        GameObject POILocation = new GameObject("Poi-" + poiId);
+    //        POIMapSpecifications specifications = POILocation.AddComponent<POIMapSpecifications>();
+    //        specifications.SetVariables(poiId, lat, lng);
+
+
+    //        TextMesh poiNumber = _markerPrefab.transform.GetChild(0).gameObject.GetComponent<TextMesh>();
+    //        poiNumber.text = (i + 1).ToString();
+    //        GameObject thisPOI = Instantiate(_markerPrefab, POILocation.transform);
+
+    //        thisPOI.transform.localPosition = _map.GeoToWorldPosition(_locations[i], true);
+    //        thisPOI.transform.localPosition = new Vector3(thisPOI.transform.localPosition.x, 1,
+    //            thisPOI.transform.localPosition.z);
+
+    //        thisPOI.transform.localScale = new Vector3(_spawnScale, _spawnScale, _spawnScale);
+    //        _spawnedObjects.Add(thisPOI);
+    //        //aux.Add(thisPOI);
+
+    //    }
+
+    //    return _spawnedObjects;
+    //}
+
+    public List<GameObject> RouteClicked(string routeId)
+    {
+        Route route = RouteDataHolder.GetRoute(RouteDataHolder.currentRouteId);
+        _spawnedObjects = new List<GameObject>();
+
+        int POIsCount = route.Pois.Count;
+
+        //numberOfPoi = RouteArea.transform.Find("RouteInfoPanel/ScrollArea/Content/PoiGO/POINrTxt-Value").gameObject.GetComponent<Text>();
+        //numberOfPoi.text = POIsCount.ToString();
+
+        currentRoutePois = new string[POIsCount];
+        _locations = new Vector2d[POIsCount];
+
+        for (int i = 0; i < POIsCount; i++)
+        {
+            string poiId = route.Pois[i].Id;
+            //string lat = rList["routes"][i]["pois"][j]["latitude"];
+            //string lng = rList["routes"][i]["pois"][j]["longitude"];
+            Poi poi = MainDataHolder.GetPoi(poiId);
+            string lat = poi.Latitude.ToString();
+            string lng = poi.Longitude.ToString();
+            string location = lat + "," + lng;
+            print(poiId + " " + location);
+
+            _locations[i] = Conversions.StringToLatLon(location);
+            currentRoutePois[i] = poiId;
+            GameObject POILocation = new GameObject("Poi-" + poiId);
+            POIMapSpecifications specifications = POILocation.AddComponent<POIMapSpecifications>();
+            specifications.SetVariables(poiId, lat, lng);
+
+
+            TextMesh poiNumber = _markerPrefab.transform.GetChild(0).gameObject.GetComponent<TextMesh>();
+            poiNumber.text = (i + 1).ToString();
+            GameObject thisPOI = Instantiate(_markerPrefab, POILocation.transform);
+
+            thisPOI.transform.localPosition = _map.GeoToWorldPosition(_locations[i], true);
+            thisPOI.transform.localPosition = new Vector3(thisPOI.transform.localPosition.x, 1,
+                thisPOI.transform.localPosition.z);
+
+            thisPOI.transform.localScale = new Vector3(_spawnScale, _spawnScale, _spawnScale);
+            _spawnedObjects.Add(thisPOI);
+            //aux.Add(thisPOI);
+
+        }
+
+        return _spawnedObjects;
+    }
 
     //public List<GameObject> GetSpawnedPois(JSONNode rList, string routeId)
     //{
@@ -227,5 +324,5 @@ public class SpawnRoutePOI : MonoBehaviour
     //    }
     //    return aux;
     //}
-   
+
 }

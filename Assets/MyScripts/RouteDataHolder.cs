@@ -27,6 +27,14 @@ public static class RouteDataHolder
     public static List<GameObject> updatedRoutePoisInMap;
     public static List<string> savedPoisReached;
 
+    public static List<Route> AllRoutes;
+    public static string currentRouteId;
+
+    public static Route GetRoute(string routeId)
+    {
+        Route r = AllRoutes.Find(x => x.Id == routeId);
+        return r;
+    }
 
 
     //public Transform InitialCameraTransform
