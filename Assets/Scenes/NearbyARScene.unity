@@ -442,7 +442,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97f4881fb5411d24e9c1292592c963c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  POIPrefab: {fileID: 1437419762960108, guid: dc3e257ad8b1d5747aa30de073e2af36, type: 3}
+  POIPrefab: {fileID: 8613544016033989764, guid: 78f57ab71a068a24cb21542e060a4376, type: 3}
   InitialPanel: {fileID: 1440225395}
   MoreInfoPanel: {fileID: 1414626853}
   RadarPanel: {fileID: 1239747148}

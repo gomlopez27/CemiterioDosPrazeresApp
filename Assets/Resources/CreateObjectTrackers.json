@@ -1,160 +1,210 @@
 [
    {
-	"wtoUrl": "https://pasev.di.fct.unl.pt/contentFiles/Giovanna/TargetCollections/Zona29.wto",
-	"wtoName": "Zona29",
-	"targets":[
-		{"targetName": "JP2870",
-                 "augmentation": "default"}
-		  ]
+      "wtoUrl":"https://pasev.di.fct.unl.pt/contentFiles/Giovanna/TargetCollections/Zona29.wto",
+      "wtoName":"Zona29",
+      "targets":[
+         {
+            "targetName":"JP2870",
+            "augmentation":"default"
+         }
+      ]
    },
    {
-	"wtoUrl": "https://pasev.di.fct.unl.pt/contentFiles/Giovanna/TargetCollections/Zona58.wto",
-	"wtoName": "Zona58",
-	"targets":[
-		{"targetName": "JP4153",
-                 "augmentation": "default"}
-		  ]
+      "wtoUrl":"https://pasev.di.fct.unl.pt/contentFiles/Giovanna/TargetCollections/Zona58.wto",
+      "wtoName":"Zona58",
+      "targets":[
+         {
+            "targetName":"JP4153",
+            "augmentation":"default"
+         }
+      ]
    },
    {
-	"wtoUrl": "https://pasev.di.fct.unl.pt/contentFiles/Giovanna/TargetCollections/Zona17.wto",
-	"wtoName": "Zona17",
-	"targets":[
-		{"targetName": "JP1803",
-                 "augmentation": "default"},
-		{"targetName": "JP2271",
-                 "augmentation": "JazCesarioVerdeAugmentation"},
-		{"targetName": "JM35A",
-                 "augmentation": "default"},
-		  ]
-   }, 
-   {
-	"wtoUrl": "https://pasev.di.fct.unl.pt/contentFiles/Giovanna/TargetCollections/Zona18.wto",
-	"wtoName": "Zona18",
-	"targets":[
-		{"targetName": "JP1803",
-                 "augmentation": "default"}
-		  ]
-   }, 
-   {
-	"wtoUrl": "https://pasev.di.fct.unl.pt/contentFiles/Giovanna/TargetCollections/Zona28.wto",
-	"wtoName": "Zona28",
-	"targets":[
-		{"targetName": "JP1431",
-                 "augmentation": "JazHerminiaSilva"},
-		{"targetName": "JP1439",
-                 "augmentation": "JazCesarioVerdeAugmentation"},
-		{"targetName": "JP1500",
-                 "augmentation": "JazCarolinaBeatriz"},
-		{"targetName": "JP1803",
-                 "augmentation": "default"},
-		  ]
+      "wtoUrl":"https://pasev.di.fct.unl.pt/contentFiles/Giovanna/TargetCollections/Zona17.wto",
+      "wtoName":"Zona17",
+      "targets":[
+         {
+            "targetName":"JP1803",
+            "augmentation":"default"
+         },
+         {
+            "targetName":"JP2271",
+            "augmentation":"JazCesarioVerdeAugmentation"
+         },
+         {
+            "targetName":"JM35A",
+            "augmentation":"default"
+         }
+      ]
    },
    {
-	"wtoUrl": "https://pasev.di.fct.unl.pt/contentFiles/Giovanna/TargetCollections/Zona24.wto",
-	"wtoName": "Zona24",
-	"targets":[
-		{"targetName": "JP6640",
-                 "augmentation": "default"}
-		  ]
-   }, 
-   {
-	"wtoUrl": "https://pasev.di.fct.unl.pt/contentFiles/Giovanna/TargetCollections/Zona23.wto",
-	"wtoName": "Zona23",
-	"targets":[
-		{"targetName": "JP6640",
-                 "augmentation": "default"}
-		  ]
-   }, 
-   {
-	"wtoUrl": "https://pasev.di.fct.unl.pt/contentFiles/Giovanna/TargetCollections/Zona04.wto",
-	"wtoName": "Zona04",
-	"targets":[
-		{"targetName": "JP6399",
-                 "augmentation": "default"},
-		{"targetName": "JM1204",
-                 "augmentation": "default"}
-		  ]
-   }, 
-   {
-	"wtoUrl": "https://pasev.di.fct.unl.pt/contentFiles/Giovanna/TargetCollections/Zona46.wto",
-	"wtoName": "Zona46",
-	"targets":[
-		{"targetName": "JP3820",
-                 "augmentation": "default"}
-		  ]
-   }, 
-   {
-	"wtoUrl": "https://pasev.di.fct.unl.pt/contentFiles/Giovanna/TargetCollections/Zona67.wto",
-	"wtoName": "Zona67",
-	"targets":[
-		{"targetName": "JP2227",
-                 "augmentation": "default"}
-		  ]
-   }, 
-   {
-	"wtoUrl": "https://pasev.di.fct.unl.pt/contentFiles/Giovanna/TargetCollections/Zona513.wto",
-	"wtoName": "Zona513",
-	"targets":[
-		{"targetName": "JP475",
-                 "augmentation": "default"}
-		  ]
-   }, 
-   {
-	"wtoUrl": "https://pasev.di.fct.unl.pt/contentFiles/Giovanna/TargetCollections/Zona56.wto",
-	"wtoName": "Zona56",
-	"targets":[
-		{"targetName": "JP3696",
-                 "augmentation": "default"}
-		  ]
-   },     
-   {
-	"wtoUrl": "https://pasev.di.fct.unl.pt/contentFiles/Giovanna/TargetCollections/Zona39.wto",
-	"wtoName": "Zona39",
-	"targets":[
-		{"targetName": "JP1580",
-                 "augmentation": "default"},
-		{"targetName": "JP2870",
-                 "augmentation": "default"}
-		  ]
-   },  
-   {
-	"wtoUrl": "https://pasev.di.fct.unl.pt/contentFiles/Giovanna/TargetCollections/Zona32.wto",
-	"wtoName": "Zona32",
-	"targets":[
-		{"targetName": "JP6906",
-                 "augmentation": "JazCarolinaBeatriz"}
-		  ]
-   },  
-   {
-	"wtoUrl": "https://pasev.di.fct.unl.pt/contentFiles/Giovanna/TargetCollections/Zona69.wto",
-	"wtoName": "Zona69",
-	"targets":[
-		{"targetName": "JP6009",
-                 "augmentation": "JazHerminiaSilva"}
-		  ]
-   }, 
-   {
-	"wtoUrl": "https://pasev.di.fct.unl.pt/contentFiles/Giovanna/TargetCollections/Zona610.wto",
-	"wtoName": "Zona610",
-	"targets":[
-		{"targetName": "JP6009",
-                 "augmentation": "JazHerminiaSilva"}
-		  ]
-   }, 
-   {
-	"wtoUrl": "https://pasev.di.fct.unl.pt/contentFiles/Giovanna/TargetCollections/Zona514.wto",
-	"wtoName": "Zona514",
-	"targets":[
-		{"targetName": "OM1172",
-                 "augmentation": "default"}
-		  ]
+      "wtoUrl":"https://pasev.di.fct.unl.pt/contentFiles/Giovanna/TargetCollections/Zona18.wto",
+      "wtoName":"Zona18",
+      "targets":[
+         {
+            "targetName":"JP1803",
+            "augmentation":"default"
+         }
+      ]
    },
    {
-	"wtoUrl": "https://pasev.di.fct.unl.pt/contentFiles/Giovanna/TargetCollections/Zona79.wto",
-	"wtoName": "Zona79",
-	"targets":[
-		{"targetName": "SP11",
-                 "augmentation": "default"}
-		  ]
+      "wtoUrl":"https://pasev.di.fct.unl.pt/contentFiles/Giovanna/TargetCollections/Zona28.wto",
+      "wtoName":"Zona28",
+      "targets":[
+         {
+            "targetName":"JP1431",
+            "augmentation":"JazHerminiaSilva"
+         },
+         {
+            "targetName":"JP1439",
+            "augmentation":"JazCesarioVerdeAugmentation"
+         },
+         {
+            "targetName":"JP1500",
+            "augmentation":"JazCarolinaBeatriz"
+         },
+         {
+            "targetName":"JP1803",
+            "augmentation":"default"
+         }
+      ]
+   },
+   {
+      "wtoUrl":"https://pasev.di.fct.unl.pt/contentFiles/Giovanna/TargetCollections/Zona24.wto",
+      "wtoName":"Zona24",
+      "targets":[
+         {
+            "targetName":"JP6640",
+            "augmentation":"default"
+         }
+      ]
+   },
+   {
+      "wtoUrl":"https://pasev.di.fct.unl.pt/contentFiles/Giovanna/TargetCollections/Zona23.wto",
+      "wtoName":"Zona23",
+      "targets":[
+         {
+            "targetName":"JP6640",
+            "augmentation":"default"
+         }
+      ]
+   },
+   {
+      "wtoUrl":"https://pasev.di.fct.unl.pt/contentFiles/Giovanna/TargetCollections/Zona04.wto",
+      "wtoName":"Zona04",
+      "targets":[
+         {
+            "targetName":"JP6399",
+            "augmentation":"default"
+         },
+         {
+            "targetName":"JM1204",
+            "augmentation":"default"
+         }
+      ]
+   },
+   {
+      "wtoUrl":"https://pasev.di.fct.unl.pt/contentFiles/Giovanna/TargetCollections/Zona46.wto",
+      "wtoName":"Zona46",
+      "targets":[
+         {
+            "targetName":"JP3820",
+            "augmentation":"default"
+         }
+      ]
+   },
+   {
+      "wtoUrl":"https://pasev.di.fct.unl.pt/contentFiles/Giovanna/TargetCollections/Zona67.wto",
+      "wtoName":"Zona67",
+      "targets":[
+         {
+            "targetName":"JP2227",
+            "augmentation":"default"
+         }
+      ]
+   },
+   {
+      "wtoUrl":"https://pasev.di.fct.unl.pt/contentFiles/Giovanna/TargetCollections/Zona513.wto",
+      "wtoName":"Zona513",
+      "targets":[
+         {
+            "targetName":"JP475",
+            "augmentation":"default"
+         }
+      ]
+   },
+   {
+      "wtoUrl":"https://pasev.di.fct.unl.pt/contentFiles/Giovanna/TargetCollections/Zona56.wto",
+      "wtoName":"Zona56",
+      "targets":[
+         {
+            "targetName":"JP3696",
+            "augmentation":"default"
+         }
+      ]
+   },
+   {
+      "wtoUrl":"https://pasev.di.fct.unl.pt/contentFiles/Giovanna/TargetCollections/Zona39.wto",
+      "wtoName":"Zona39",
+      "targets":[
+         {
+            "targetName":"JP1580",
+            "augmentation":"default"
+         },
+         {
+            "targetName":"JP2870",
+            "augmentation":"default"
+         }
+      ]
+   },
+   {
+      "wtoUrl":"https://pasev.di.fct.unl.pt/contentFiles/Giovanna/TargetCollections/Zona32.wto",
+      "wtoName":"Zona32",
+      "targets":[
+         {
+            "targetName":"JP6906",
+            "augmentation":"JazCarolinaBeatriz"
+         }
+      ]
+   },
+   {
+      "wtoUrl":"https://pasev.di.fct.unl.pt/contentFiles/Giovanna/TargetCollections/Zona69.wto",
+      "wtoName":"Zona69",
+      "targets":[
+         {
+            "targetName":"JP6009",
+            "augmentation":"JazHerminiaSilva"
+         }
+      ]
+   },
+   {
+      "wtoUrl":"https://pasev.di.fct.unl.pt/contentFiles/Giovanna/TargetCollections/Zona610.wto",
+      "wtoName":"Zona610",
+      "targets":[
+         {
+            "targetName":"JP6009",
+            "augmentation":"JazHerminiaSilva"
+         }
+      ]
+   },
+   {
+      "wtoUrl":"https://pasev.di.fct.unl.pt/contentFiles/Giovanna/TargetCollections/Zona514.wto",
+      "wtoName":"Zona514",
+      "targets":[
+         {
+            "targetName":"OM1172",
+            "augmentation":"default"
+         }
+      ]
+   },
+   {
+      "wtoUrl":"https://pasev.di.fct.unl.pt/contentFiles/Giovanna/TargetCollections/Zona79.wto",
+      "wtoName":"Zona79",
+      "targets":[
+         {
+            "targetName":"SP11",
+            "augmentation":"default"
+         }
+      ]
    }
 ]

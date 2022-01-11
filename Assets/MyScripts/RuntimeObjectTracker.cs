@@ -145,14 +145,11 @@ public class RuntimeObjectTracker : MonoBehaviour
 
     public void CreateObjectTrackers()
     {
-        TextAsset json = Resources.Load<TextAsset>("CreateObjectTrackersOld"); //TODO: change back
-        //TextAsset json = Resources.Load<TextAsset>("targetNamesPerTracker");
+        TextAsset json = Resources.Load<TextAsset>("CreateObjectTrackers"); 
 
         JSONNode ObjectTrackersList = JSON.Parse(json.ToString());
         for (int i = 0; i < ObjectTrackersList.Count; i++)
         {
-            //trackerConter = i + 1;
-            //GameObject trackerObject = new GameObject("ObjectTracker-" + trackerConter);
             GameObject trackerObject = new GameObject(ObjectTrackersList[i]["wtoName"]);
             ObjectTracker objectTracker = trackerObject.AddComponent<ObjectTracker>();
 
@@ -329,7 +326,7 @@ public class RuntimeObjectTracker : MonoBehaviour
     public /*IEnumerator*/ void DefaultAugmentationCreation(string targetName)
     {
         //JSONNode jaz = this.GetComponent<JazInformations>().GetJaz(targetName);
-        Poi jaz = MainDataHolder.GetPoi(targetName);
+        Poi jaz = MainDataHolder.GetPoiByFullId(targetName);
         //int personCount = jaz["personalidades"].Count;
         int personCount = jaz.Personalities.Count;
 
@@ -367,13 +364,13 @@ public class RuntimeObjectTracker : MonoBehaviour
         StopAugmentation();
         string targetName = CurrentObjTarget.Name;
         print(targetName);
-        Poi jaz = MainDataHolder.GetPoi(targetName);
+        Poi jaz = MainDataHolder.GetPoiByFullId(targetName);
         //JSONNode jaz = this.GetComponent<JazInformations>().GetJaz(targetName); //TODO: change back
         //JSONNode jaz = this.GetComponent<JazInformations>().GetJaz("1500");
         ARCanvas.SetActive(false);
         InfoCanvas.SetActive(true);
         //TargetTitle.text = jaz["tipoJaz"] + " " + targetName;
-        TargetTitle.text = jaz.JazType + " " + targetName;
+        TargetTitle.text = jaz.JazType + " " + jaz.Id;
 
         if (jaz.Personalities.Count > 1)
         {

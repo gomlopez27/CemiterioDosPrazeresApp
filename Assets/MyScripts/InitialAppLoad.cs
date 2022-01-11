@@ -55,7 +55,7 @@ public class InitialAppLoad : MonoBehaviour
         poisListFilePath = Application.persistentDataPath + "/PoiList.json";
         officialRoutesListFilePath = Application.persistentDataPath + "/OfficialRoutesList.json";
         unofficialRoutesListFilePath = Application.persistentDataPath + "/UnofficialRoutesList.json";
-        //codesRoutesListFilePath = Application.persistentDataPath + "/RoutesCodesList.json";
+        codesRoutesListFilePath = Application.persistentDataPath + "/RoutesCodesList.json";
 
         //if (System.IO.File.Exists(codesRoutesListFilePath))
         //{
@@ -80,7 +80,7 @@ public class InitialAppLoad : MonoBehaviour
         //}
 
         this.GetComponent<SerializableDataElements>().CreateRoutesCodeListFromJson(codesRoutesListFilePath);
-        GetRoutesToImport();
+        //GetRoutesToImport();
 
 
     }

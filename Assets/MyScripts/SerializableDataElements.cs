@@ -81,6 +81,7 @@ public class Route
     public HashSet<string> PoisIdList { get; set; }
     public List<Poi> Pois { get; set; }
 
+    public bool isOfficial { get; set; }
 
 
 }
@@ -199,7 +200,6 @@ public class PoiCollection
 public class Poi
 {
     public string Id { get; set; }
-    //public string id;
     public string Latitude { get; set; }
     public string Longitude { get; set; }
     public string JazLocation { get; set; }
@@ -209,7 +209,10 @@ public class Poi
     //public string imageIconPlaceholder;
     public List<string> RoutesCategory { get; set; }
     public List<Personality> Personalities { get; set; }
-    //public List<string> personalidades;
+
+    /*Values not retrieved directly from json file*/
+    public string FullId { get; set; }
+
 }
 
 [System.Serializable]
@@ -382,14 +385,14 @@ public class SerializableDataElements : MonoBehaviour
         for (int i = 0; i < jsonPoiList.Count; i++)
         {
             Poi p = new Poi();
-            //string auxId = poisNode[i]["ID"];
-            //string auxType = poisNode[i]["tipoJaz"];
-            //p.id = auxType + auxId;
-            p.Id = jsonPoiList[i]["cf_id"];
+            string auxId = jsonPoiList[i]["cf_id"];
+            string auxType = jsonPoiList[i]["construction_type"];
+            p.Id = auxId;
+            p.JazType = auxType;
+            p.FullId = auxType + auxId;
             p.Latitude = jsonPoiList[i]["latitude"];
             p.Longitude = jsonPoiList[i]["longitude"];
             p.JazLocation = jsonPoiList[i]["road"];
-            p.JazType = jsonPoiList[i]["construction_type"];
             p.JazImage = MainDataHolder.URL_API + "resources/image/" + jsonPoiList[i]["imageURL"];
             p.RoutesCategory = new List<string>();
 
@@ -459,10 +462,10 @@ public class SerializableDataElements : MonoBehaviour
         route.Id = r["id"];
         route.Name = r["designation"];
         route.Code = r["code"];
+        route.isOfficial = r["is_official"];
         route.Description = r["description"];
 
         route.RouteCategory = new List<string>();
-
         for (int j = 0; j < r["creation_date"].Count; j++)
         {
             route.RouteCategory.Add(r["creation_date"][j]);
@@ -540,8 +543,27 @@ public class SerializableDataElements : MonoBehaviour
         }
     }
 
-    /*Old method, depois apagar e trocar pelo debaixo*/
     public void SaveRouteCodeToJson(string code)
+    {
+        routeCodes = new List<string>();
+        if (System.IO.File.Exists(codesRoutesListFilePath))
+        {
+            string json = File.ReadAllText(codesRoutesListFilePath);
+            JSONNode CodesList = JSON.Parse(json.ToString());
+
+            for (int i = 0; i < CodesList.Count; i++)
+            {
+                routeCodes.Add(CodesList[i]);
+            }
+        }
+        routeCodes.Add(code);
+        RoutesCodesCollection rc = new RoutesCodesCollection();
+        rc.RoutesCodes = routeCodes;
+        string jsonToWrite = rc.Serialize().ToString(3);
+        System.IO.File.WriteAllText(codesRoutesListFilePath, jsonToWrite);
+    }
+
+    public void SaveRouteCodeToJson2(string code)
     {
         if (System.IO.File.Exists(codesRoutesListFilePath))
         {
@@ -560,6 +582,13 @@ public class SerializableDataElements : MonoBehaviour
         System.IO.File.WriteAllText(codesRoutesListFilePath, jsonToWrite);
     }
 
+    public void SaveUpdatedRouteCodeList(List<string> updatedList)
+    {
+        RoutesCodesCollection rc = new RoutesCodesCollection();
+        rc.RoutesCodes = updatedList;
+        string jsonToWrite = rc.Serialize().ToString(3);
+        System.IO.File.WriteAllText(codesRoutesListFilePath, jsonToWrite);
+    }
 
     //public void SaveUpdatedPoiList(List<Poi> updatedList)
     //{
@@ -585,15 +614,9 @@ public class SerializableDataElements : MonoBehaviour
 
     //    }
     //}
-    public void SaveUpdatedRouteCodeList(List<string> updatedList)
-    {
-        RoutesCodesCollection rc = new RoutesCodesCollection();
-        rc.RoutesCodes = updatedList;
-        string jsonToWrite = rc.Serialize().ToString(3);
-        System.IO.File.WriteAllText(codesRoutesListFilePath, jsonToWrite);
-    }
 
-   
+
+
 
 
 }

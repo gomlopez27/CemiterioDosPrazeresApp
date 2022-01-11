@@ -88,7 +88,7 @@ public class SaveCreatedRoute : MonoBehaviour
 
         CreatedBtn.onClick.AddListener(delegate
         {
-            StartCoroutine(this.GetComponent<LoadFromAPI>().PostRoute(SerializeChoosenPersonalities().ToString()));
+            StartCoroutine(this.GetComponent<LoadFromAPI>().PostRoute(SerializeChoosenPersonalities().ToString(), LoadingPanel, Scenes));
         });
     }
 

@@ -16,13 +16,42 @@ public class JazInformationPage : MonoBehaviour
         MultiplePersonalitiesPage.SetActive(false);
         Image personalityImage = OnePersonalityPage.transform.Find("Info/PersonImage").GetComponent<Image>();
         Text personalityName = OnePersonalityPage.transform.Find("Info/PersonName").GetComponent<Text>();
+        Text birthDate = OnePersonalityPage.transform.Find("Info/Dates/dataNascValue").GetComponent<Text>();
+        Text deathDate = OnePersonalityPage.transform.Find("Info/Dates/DataObitoValue").GetComponent<Text>();
         //Text personalityBio = OnePersonalityContent.transform.Find("BioText").GetComponent<Text>();
         Text personalityBio = OnePersonalityContent.GetComponent<Text>();
         Davinci.get().load(personality.ImageUrl).setCached(true).into(personalityImage).start();
         personalityName.text = personality.Name;
         personalityBio.text = personality.Biography;
+        birthDate.text = PrintDateInText(personality.BirthDate);
+        deathDate.text = PrintDateInText(personality.DeathDate);
 
     }
+
+    private string PrintDateInText(List<int> date)
+    {
+        string fullDate, y, m, d = "";
+        int year = date[0];
+        int month = date[1];
+        int day = date[2];
+
+        y = year.ToString();
+        if (month < 10 || day < 10)
+        {
+            m = "0" + month.ToString();
+            d = "0" + day.ToString();
+        }
+        else
+        {
+            m = month.ToString();
+            d = day.ToString();
+        }
+
+        fullDate = d + "/" + m + "/" + y;
+
+        return fullDate;
+    }
+
 
     public void SetMultiplePersonalitiesList(string jazImageUrl, List<Personality> PersonalitiesList)
     {

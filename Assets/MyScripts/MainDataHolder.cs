@@ -7,11 +7,12 @@ using UnityEngine;
 public static class MainDataHolder 
 {
     public const string URL_API = "http://192.168.0.17/api/";
+    //public const string URL_API = "http://localhost/api/";
 
     public static List<Poi> PopularPois;
     public static List<Route> OfficialRoutes;
     public static List<Route> MyUnofficialRoutes;
-    public static List<Route> AllUnofficialRoutes;
+    //public static List<Route> AllUnofficialRoutes;
     public static List<string> RouteCodes;
     public static AssetBundle myAssetBundle;
     public static GameObject[] augmentationsGO;
@@ -33,6 +34,12 @@ public static class MainDataHolder
     public static Poi GetPoi(string jazId)
     {
         Poi p = PopularPois.Find(x => x.Id == jazId);
+        return p;
+    }
+
+    public static Poi GetPoiByFullId(string jazFullId)
+    {
+        Poi p = PopularPois.Find(x => x.FullId == jazFullId);
         return p;
     }
 

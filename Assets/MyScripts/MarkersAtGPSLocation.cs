@@ -145,11 +145,16 @@ public class MarkersAtGPSLocation : MonoBehaviour
             GameObject thisPOI = Instantiate(POIPrefab, POIObject.transform);
             //SetupMarkerWithData(thisPOI, i);
             //Find the correct text to change
-            jazID = thisPOI.transform.Find("Canvas/Panel/ContentPanel/TopContentPanel/TitleContentPanel/jazigoTextId").GetComponent<Text>();
-            jazLoc = thisPOI.transform.Find("Canvas/Panel/ContentPanel/TopContentPanel/TitleContentPanel/LocalText").GetComponent<Text>();
-            nomeJaz = thisPOI.transform.Find("Canvas/Panel/ContentPanel/BottomContentPanel/NomePessoa").GetComponent<Text>();
-            distanciaJaz = thisPOI.transform.Find("Canvas/Panel/ContentPanel/BottomContentPanel/Distancia").GetComponent<Text>();
-            fotoPOI = thisPOI.transform.Find("Canvas/Panel/ContentPanel/TopContentPanel/photo").GetComponent<Image>();
+            //jazID = thisPOI.transform.Find("Canvas/Panel/ContentPanel/TopContentPanel/TitleContentPanel/jazigoTextId").GetComponent<Text>();
+            //jazLoc = thisPOI.transform.Find("Canvas/Panel/ContentPanel/TopContentPanel/TitleContentPanel/LocalText").GetComponent<Text>();
+            //nomeJaz = thisPOI.transform.Find("Canvas/Panel/ContentPanel/BottomContentPanel/NomePessoa").GetComponent<Text>();
+            //distanciaJaz = thisPOI.transform.Find("Canvas/Panel/ContentPanel/BottomContentPanel/Distancia").GetComponent<Text>();
+            //fotoPOI = thisPOI.transform.Find("Canvas/Panel/ContentPanel/TopContentPanel/photo").GetComponent<Image>();
+
+            jazID = thisPOI.transform.Find("Canvas/Panel/TopBar/Title").GetComponent<Text>();
+            jazLoc = thisPOI.transform.Find("Canvas/Panel/InfoArea/LocalValue").GetComponent<Text>();
+            nomeJaz = thisPOI.transform.Find("Canvas/Panel/InfoArea/PersonValue").GetComponent<Text>();
+            fotoPOI = thisPOI.transform.Find("Canvas/Panel/ImageArea/Image").GetComponent<Image>();
 
             //Change the text
             jazID.text = MainDataHolder.PopularPois[i].Id;
@@ -336,20 +341,22 @@ public class MarkersAtGPSLocation : MonoBehaviour
     public void DistanceFromPOI(PlaceAtLocation poi)
     {
         GameObject poiPrefab = poi.gameObject.transform.GetChild(0).gameObject;
-        Text distanteToPoi = poiPrefab.transform.Find("Canvas/Panel/ContentPanel/BottomContentPanel/Distancia").GetComponent<Text>();
+        //distanciaJaz = poiPrefab.transform.Find("Canvas/Panel/ContentPanel/BottomContentPanel/Distancia").GetComponent<Text>();
+        distanciaJaz = poiPrefab.transform.Find("Canvas/Panel/InfoArea/DistanceValue").GetComponent<Text>();
+
         double distance = poi.SceneDistance;
 
         if(distance <= 10)
         {
-            distanteToPoi.text = NEAR;
+            distanciaJaz.text = NEAR;
         }
         else if(distance > 10 && distance < 21)
         {
-            distanteToPoi.text = CLOSE;
+            distanciaJaz.text = CLOSE;
         }
         else
         {
-            distanteToPoi.text = FAR;
+            distanciaJaz.text = FAR;
 
         }
 

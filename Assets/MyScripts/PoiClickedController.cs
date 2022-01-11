@@ -191,24 +191,28 @@ public class PoiClickedController : MonoBehaviour
         }
     }
 
- 
-
+    /*Info panel for POI with only one personality */
     void SetSinglePersonality(string jazId, Personality personality)
     {
-
-        Image personalityImage = InfoPanel.transform.Find("SinglePersonality/PersonImage").GetComponent<Image>();
-        Text personalityName = InfoPanel.transform.Find("SinglePersonality/PersonName").GetComponent<Text>();
-        Text personalityBio = InfoPanel.transform.Find("SinglePersonality/BioText").GetComponent<Text>();
-        Button SeeMoreBtn = InfoPanel.transform.Find("SinglePersonality/VerMaisBtn").GetComponent<Button>();
+        Image personalityImage = SinglePersonality.transform.Find("PersonImage").GetComponent<Image>();
+        Text personalityName = SinglePersonality.transform.Find("PersonName").GetComponent<Text>();
+        Text personalityBio = SinglePersonality.transform.Find("BioText").GetComponent<Text>();
+        Button SeeMoreBtn = InfoPanel.transform.Find("ButtonBackground/VerMaisBtn").GetComponent<Button>();
+        Text birthDate = SinglePersonality.transform.Find("Dates/birthDateValue").GetComponent<Text>();
+        Text deathDate = SinglePersonality.transform.Find("Dates/deathDateValue").GetComponent<Text>();
         Davinci.get().load(personality.ImageUrl).into(personalityImage).start();
         personalityName.text = personality.Name;
+        birthDate.text = PrintDateInText(personality.BirthDate);
+        deathDate.text = PrintDateInText(personality.DeathDate);
         personalityBio.text = personality.Biography;
+
         SeeMoreBtn.onClick.AddListener(()=> {
             PersonInfoPanel.SetActive(true);
             SetMoreInfoPersonality(jazId, personality);
         });
     }
 
+    /*Info panel for POI with multiple personalities */
     void SetMultiplePersonalitiesList(string jazId, List<Personality> PersonalitiesList)
     {
         GameObject ListArea = MultiplePersonalities.transform.Find("ScrollArea/Content").gameObject;
@@ -278,18 +282,23 @@ public class PoiClickedController : MonoBehaviour
         }
     }
 
+    /*More info panel of one personality, after clicking in a button */
     void SetMoreInfoPersonality(string jazId, Personality personality)
     {
-        Image personalityImage = PersonInfoPanel.transform.Find("Image").GetComponent<Image>();
-        Text personalityName = PersonInfoPanel.transform.Find("PersonName").GetComponent<Text>();
-        Text personalityBio = PersonInfoPanel.transform.Find("Scroll View/Viewport/Content").GetComponent<Text>();
+        Text personalityName = PersonInfoPanel.transform.Find("TopBar/PersonName").GetComponent<Text>();
+        Image personalityImage = PersonInfoPanel.transform.Find("InfoArea/Image").GetComponent<Image>();
+        Text birthDate = PersonInfoPanel.transform.Find("InfoArea/Dates/birthDateValue").GetComponent<Text>();
+        Text deathDate = PersonInfoPanel.transform.Find("InfoArea/Dates/deathDateValue").GetComponent<Text>();
+        Button AddFav = PersonInfoPanel.transform.Find("InfoArea/Buttons/AddToFavsBtn").GetComponent<Button>();
+        Button RemoveFav = PersonInfoPanel.transform.Find("InfoArea/Buttons/RemoveToFavsBtn").GetComponent<Button>();
+        Text personalityBio = PersonInfoPanel.transform.Find("TextArea/Scroll View/Viewport/Content").GetComponent<Text>();
+
         Davinci.get().load(personality.ImageUrl).into(personalityImage).start();
         personalityName.text = personality.Name;
+        birthDate.text = PrintDateInText(personality.BirthDate);
+        deathDate.text = PrintDateInText(personality.DeathDate);
         personalityBio.text = personality.Biography;
         string personId = personality.UriId;
-
-        Button AddFav = PersonInfoPanel.transform.Find("Buttons/AddToFavsBtn").GetComponent<Button>();
-        Button RemoveFav = PersonInfoPanel.transform.Find("Buttons/RemoveToFavsBtn").GetComponent<Button>();
 
         if (ButtonsController.GetComponent<FavoritePoisMap>().isFavorite(jazId, personId))
         {
@@ -315,6 +324,30 @@ public class PoiClickedController : MonoBehaviour
             ButtonsController.GetComponent<FavoritePoisMap>().RemovePersonalityFromFav(jazId, personId);
 
         });
+    }
+
+    private string PrintDateInText(List<int> date)
+    {
+        string fullDate, y, m, d = "";
+        int year = date[0];
+        int month = date[1];
+        int day = date[2];
+
+        y = year.ToString();
+        if(month < 10 || day < 10)
+        {
+            m = "0" + month.ToString();
+            d = "0" + day.ToString();
+        }
+        else
+        {
+            m = month.ToString();
+            d = day.ToString();
+        }
+
+        fullDate = d + "/" + m + "/" + y;
+
+        return fullDate;
     }
    
     public void TakeMeThere()
@@ -367,9 +400,6 @@ public class PoiClickedController : MonoBehaviour
 
 
     }
-
-
-
 
     void LoadGameObjects()
     {
