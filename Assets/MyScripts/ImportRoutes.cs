@@ -71,7 +71,7 @@ public class ImportRoutes : MonoBehaviour
         if (www.result != UnityWebRequest.Result.Success)
         {
             Debug.Log(www.error);
-
+            LoadingPanel.SetActive(false);
             print("Código Não existe");
             ToastMsgWrongCode.SetActive(true);
             yield return new WaitForSeconds(1.5f);
@@ -81,7 +81,6 @@ public class ImportRoutes : MonoBehaviour
         }
         else
         {
-            LoadingPanel.SetActive(true);
 
             string jsonToWrite = www.downloadHandler.text;
             JSONNode jsonImportedRoute = JSON.Parse(jsonToWrite.ToString());
@@ -99,12 +98,14 @@ public class ImportRoutes : MonoBehaviour
             {
                 auxCodes = MainDataHolder.RouteCodes;
             }
-            auxCodes.Add(code);
+            auxCodes.Add(importedRoute.Code);
             MainDataHolder.RouteCodes = auxCodes;
             this.GetComponent<SerializableDataElements>().SaveUpdatedRouteCodeList(MainDataHolder.RouteCodes);
 
             print("MainDataHolder.UnofficialRoutes: " + MainDataHolder.MyUnofficialRoutes.Count);
             print("MainDataHolder.RouteCodes: " + MainDataHolder.RouteCodes.Count);
+            LoadingPanel.SetActive(false);
+
             this.GetComponent<LoadScenes>().LoadRouteListScene();
 
         }

@@ -14,7 +14,12 @@ public class HomePageItems : MonoBehaviour
     GameObject InitialPageRouteList;
     [SerializeField]
     GameObject RouteListItem;
-
+    [SerializeField]
+    GameObject Canvas;
+    [SerializeField]
+    GameObject InfoCanvas;
+    [SerializeField]
+    Text JazTitle;
     //private JSONNode PoisList;
     private JSONNode ThemedRoutesList;
 
@@ -66,7 +71,7 @@ public class HomePageItems : MonoBehaviour
             Image jazImg = g.transform.Find("ImageBackground/JazImage").GetComponent<Image>();
             Text personNameTxt = g.transform.Find("ImageBackground/SeeMoreBtn/PersonName").GetComponent<Text>();
             Button seeMore = g.transform.Find("ImageBackground/SeeMoreBtn").GetComponent<Button>();
-
+            JazTitle.text = MainDataHolder.PopularPois[indexPoi].JazType + " " + MainDataHolder.PopularPois[indexPoi].Id;
             //print("count personalities " + PoisList["pois"][indexPoi]["personalidades"].Count);
             int indexPerson = Random.Range(0, MainDataHolder.PopularPois[indexPoi].Personalities.Count);
             string personName = MainDataHolder.PopularPois[indexPoi].Personalities[indexPerson].Name;
@@ -81,15 +86,24 @@ public class HomePageItems : MonoBehaviour
             personNameTxt.text = personName;
             //PoisList["pois"][indexPoi]["personalidades"].Count;
 
-            //g.GetComponent<Button>().onClick.AddListener(delegate ()
-            //{
-            //    ItemClicked(routeId, routeName, routeCode);
-            //});
+            g.GetComponent<Button>().onClick.AddListener(()=>
+            {
+                Canvas.SetActive(false);
+                InfoCanvas.SetActive(true);
+                this.GetComponent<JazInformationPage>().SetSinglePersonality(MainDataHolder.PopularPois[indexPoi].Personalities[indexPerson]);
+            });
             ////g.GetComponent<Button>().AddEventListener(routeId, ItemClicked);
         }
 
         PoiListItem.SetActive(false);
 
+    }
+
+  
+    public void BackButton()
+    {
+        Canvas.SetActive(true);
+        InfoCanvas.SetActive(false);
     }
     void SetupInitialPageThemedRoutes()
     {

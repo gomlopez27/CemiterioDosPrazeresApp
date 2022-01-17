@@ -9,9 +9,11 @@ using System;
 public class MarkersAtGPSLocation : MonoBehaviour
 {
     //Constants
-    public const string NEAR = "Já deve conseguir ver este jazigo!"; //inferior a 10 m
+    public const string NEAR = "Encontra-se a menos de 5 m deste jazigo, já o deve ver!";//"Já deve conseguir ver este jazigo!"; //inferior a 10 m
     public const string CLOSE = "Encontra-se perto deste jazigo, mas não o suficiente para o ver!"; //entre 10 e 20m
     public const string FAR = "Encontra-se demasiado longe deste jazigo para o conseguir ver!"; //maior que 20
+    public const string DISTANCE_TO_JAZ = "Encontra-se a "; 
+    public const string DISTANCE_TO_JAZ2 = " metros deste jazigo."; 
     
     [SerializeField] GameObject POIPrefab;
     [SerializeField] GameObject InitialPanel;
@@ -31,10 +33,12 @@ public class MarkersAtGPSLocation : MonoBehaviour
     [SerializeField] GameObject OnePersonalityPage;
     [SerializeField] GameObject MultiplePersonalitiesPage;
     [SerializeField] GameObject Loading;
+
+
     //Private Variables
     private Text jazID;
     private Text jazLoc;
-    private Text nomeJaz;
+    private Text personName;
     private Text distanciaJaz;
     private Image fotoPOI; 
     //private JSONNode PoiListData;
@@ -119,7 +123,7 @@ public class MarkersAtGPSLocation : MonoBehaviour
         {
             string jazId = MainDataHolder.PopularPois[i].Id;
             //GameObject POIObject = new GameObject("GPSStageObject-"+ PoiListData["pois"][i]["ID"]);
-            GameObject POIObject = new GameObject(jazId); //TODO: mudar para id completo
+            GameObject POIObject = new GameObject(jazId);
            
             var loc = new Location()
             {
@@ -145,42 +149,61 @@ public class MarkersAtGPSLocation : MonoBehaviour
             GameObject thisPOI = Instantiate(POIPrefab, POIObject.transform);
             //SetupMarkerWithData(thisPOI, i);
             //Find the correct text to change
-            //jazID = thisPOI.transform.Find("Canvas/Panel/ContentPanel/TopContentPanel/TitleContentPanel/jazigoTextId").GetComponent<Text>();
-            //jazLoc = thisPOI.transform.Find("Canvas/Panel/ContentPanel/TopContentPanel/TitleContentPanel/LocalText").GetComponent<Text>();
-            //nomeJaz = thisPOI.transform.Find("Canvas/Panel/ContentPanel/BottomContentPanel/NomePessoa").GetComponent<Text>();
-            //distanciaJaz = thisPOI.transform.Find("Canvas/Panel/ContentPanel/BottomContentPanel/Distancia").GetComponent<Text>();
-            //fotoPOI = thisPOI.transform.Find("Canvas/Panel/ContentPanel/TopContentPanel/photo").GetComponent<Image>();
+            jazID = thisPOI.transform.Find("Canvas/Panel/ContentPanel/TopContentPanel/TitleContentPanel/jazigoTextId").GetComponent<Text>();
+            jazLoc = thisPOI.transform.Find("Canvas/Panel/ContentPanel/TopContentPanel/TitleContentPanel/LocalText").GetComponent<Text>();
+            personName = thisPOI.transform.Find("Canvas/Panel/ContentPanel/BottomContentPanel/NomePessoa").GetComponent<Text>();
+            distanciaJaz = thisPOI.transform.Find("Canvas/Panel/ContentPanel/BottomContentPanel/Distancia").GetComponent<Text>();
+            fotoPOI = thisPOI.transform.Find("Canvas/Panel/ContentPanel/TopContentPanel/photo").GetComponent<Image>();
 
-            jazID = thisPOI.transform.Find("Canvas/Panel/TopBar/Title").GetComponent<Text>();
-            jazLoc = thisPOI.transform.Find("Canvas/Panel/InfoArea/LocalValue").GetComponent<Text>();
-            nomeJaz = thisPOI.transform.Find("Canvas/Panel/InfoArea/PersonValue").GetComponent<Text>();
-            fotoPOI = thisPOI.transform.Find("Canvas/Panel/ImageArea/Image").GetComponent<Image>();
+            //jazID = thisPOI.transform.Find("Canvas/Panel/TopBar/Title").GetComponent<Text>();
+            //jazLoc = thisPOI.transform.Find("Canvas/Panel/InfoArea/LocalValue").GetComponent<Text>();
+            //personName = thisPOI.transform.Find("Canvas/Panel/InfoArea/PersonValue").GetComponent<Text>();
+            //fotoPOI = thisPOI.transform.Find("Canvas/Panel/ImageArea/Image").GetComponent<Image>();
 
-            //Change the text
+            //Set the variables
+            //jazID.text = "Jazigo nº" + MainDataHolder.PopularPois[i].Id;
             jazID.text = MainDataHolder.PopularPois[i].Id;
-            jazLoc.text = MainDataHolder.PopularPois[i].JazLocation;
-            //Davinci.get().load(PoiListData["pois"][i]["jazImage"]).setCached(true).into(fotoPOI).start();
+            jazLoc.text = "Rua " + MainDataHolder.PopularPois[i].JazLocation;
+            //Davinci.get().load(MainDataHolder.PopularPois[i].JazImage).setCached(true).into(fotoPOI).start();
 
             print(MainDataHolder.PopularPois[i].Id + "; number of ppl: " + MainDataHolder.PopularPois[i].Personalities.Count);
             print("person: " + MainDataHolder.PopularPois[i].Personalities[0].Name);
 
+
             if (MainDataHolder.PopularPois[i].Personalities.Count > 1)
             {
-                nomeJaz.text = "Múltiplas pessoas encontram-se sepultadas neste jazigo.";
+                personName.text = "Múltiplas pessoas encontram-se sepultadas neste jazigo.";
                 Davinci.get().load("https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png").setCached(true).into(fotoPOI).start();
-
             }
             else
             {
-                nomeJaz.text = MainDataHolder.PopularPois[i].Personalities[0].Name;
+                personName.text = MainDataHolder.PopularPois[i].Personalities[0].Name;
                 Davinci.get().load(MainDataHolder.PopularPois[i].Personalities[0].ImageUrl).setCached(true).into(fotoPOI).start();
-
+                print(MainDataHolder.PopularPois[i].Personalities[0].ImageUrl);
             }
 
             //percursoJaz.text = PoiListData["pois"][i]["route"];
 
+            //string jazId = poiPrefab.transform.Find("Canvas/Panel/ContentPanel/TopContentPanel/TitleContentPanel/jazigoTextId").GetComponent<Text>().text;
+            //print(poi.gameObject.name);
 
-        }
+            // GameObject POIPanel = thisPOI.transform.Find("Canvas/Panel").gameObject;
+            // Button moreInfo = POIPanel.AddComponent<Button>();
+            //// Button moreInfo = thisPOI.transform.Find("Canvas/Panel/MoreInfoBtn").GetComponent<Button>();
+            // moreInfo.onClick.AddListener(() =>
+            // {
+            //     //clickedId = poi.gameObject.name;
+            //     // clickedId = jazId;
+            //     LoadMoreInfo(MainDataHolder.PopularPois[i].Id);
+            // });
+
+
+            //GameObject poiPrefab = poi.gameObject.transform.GetChild(0).gameObject;
+            GameObject POIPanel = thisPOI.transform.Find("Canvas/Panel").gameObject;
+            //string jazId = poiPrefab.transform.Find("Canvas/Panel/ContentPanel/TopContentPanel/TitleContentPanel/jazigoTextId").GetComponent<Text>().text;
+            //print(poi.gameObject.name);
+
+    }
 
         poiCreated = true;
     }
@@ -226,7 +249,6 @@ public class MarkersAtGPSLocation : MonoBehaviour
 
             moreInfo.onClick.AddListener(() => {
                 clickedId = poi.gameObject.name;
-
                 // clickedId = jazId;
                 LoadMoreInfo(clickedId);
             });
@@ -249,26 +271,6 @@ public class MarkersAtGPSLocation : MonoBehaviour
     //        loadedPhotos = true;
     //}
 
-    IEnumerator GetTexture(string url, int index)
-    {
-        UnityWebRequest www = UnityWebRequestTexture.GetTexture(url);
-        yield return www.SendWebRequest();
-
-        if (www.result != UnityWebRequest.Result.Success)
-        {
-            Debug.Log(www.error);
-        }
-        else
-        {
-            var myTexture = ((DownloadHandlerTexture)www.downloadHandler).texture;
-            Sprite sprite = Sprite.Create(myTexture,
-            new Rect(0, 0, myTexture.width, myTexture.height), Vector2.zero);
-
-            //if(index != downloadFlag)
-                //POIPhotosArray[index] = sprite;
-
-        }
-    }
 
     //public void LoadData()
     //{
@@ -341,24 +343,35 @@ public class MarkersAtGPSLocation : MonoBehaviour
     public void DistanceFromPOI(PlaceAtLocation poi)
     {
         GameObject poiPrefab = poi.gameObject.transform.GetChild(0).gameObject;
-        //distanciaJaz = poiPrefab.transform.Find("Canvas/Panel/ContentPanel/BottomContentPanel/Distancia").GetComponent<Text>();
-        distanciaJaz = poiPrefab.transform.Find("Canvas/Panel/InfoArea/DistanceValue").GetComponent<Text>();
+        distanciaJaz = poiPrefab.transform.Find("Canvas/Panel/ContentPanel/BottomContentPanel/Distancia").GetComponent<Text>();
+        //distanciaJaz = poiPrefab.transform.Find("Canvas/Panel/InfoArea/DistanceValue").GetComponent<Text>();
+       
+        //double distance = poi.SceneDistance;
+        double distance = Math.Round(poi.SceneDistance, MidpointRounding.AwayFromZero);
 
-        double distance = poi.SceneDistance;
-
-        if(distance <= 10)
+        if (distance <= 5)
         {
             distanciaJaz.text = NEAR;
         }
-        else if(distance > 10 && distance < 21)
-        {
-            distanciaJaz.text = CLOSE;
-        }
         else
         {
-            distanciaJaz.text = FAR;
+            distanciaJaz.text = DISTANCE_TO_JAZ + distance + DISTANCE_TO_JAZ2;
 
         }
+
+        //if(distance <= 10)
+        //{
+        //    distanciaJaz.text = NEAR;
+        //}
+        //else if(distance > 10 && distance < 21)
+        //{
+        //    distanciaJaz.text = CLOSE;
+        //}
+        //else
+        //{
+        //    distanciaJaz.text = FAR;
+
+        //}
 
         //percurso.text = poi.SceneDistance.ToString("0.00") + "metros";
     }
@@ -387,12 +400,15 @@ public class MarkersAtGPSLocation : MonoBehaviour
         ArSessionOrigin.SetActive(false);
         //JSONNode jaz = this.GetComponent<JazInformations>().GetJaz(jazIdClicked); //TODO: change back
         Poi jaz = MainDataHolder.GetPoi(jazIdClicked);
-       
-        //JSONNode jaz = this.GetComponent<JazInformations>().GetJaz("1500");
-
-
+        //for (int i = 0; i < MainDataHolder.PopularPois.Count; i++)
+        //{
+        //    string jazId = MainDataHolder.PopularPois[i].Id;
+        //    if (jazId.Equals(jazIdClicked))
+        //    {
+        //        Poi jaz = MainDataHolder.PopularPois[i];
         //JazClickedTitle.text = jaz["tipoJaz"] + " " + jazIdClicked;
         JazClickedTitle.text = jaz.JazType + " " + jazIdClicked;
+        print(jaz.Personalities[0].UriId);
 
         if (jaz.Personalities.Count > 1)
         {
@@ -400,8 +416,12 @@ public class MarkersAtGPSLocation : MonoBehaviour
         }
         else
         {
+
             this.GetComponent<JazInformationPage>().SetSinglePersonality(jaz.Personalities[0]);
         }
+        //        break;
+        //    }
+        //}
         //dataLoaded = true;
 
     }

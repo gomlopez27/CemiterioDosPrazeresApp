@@ -3133,7 +3133,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
   m_AnchoredPosition: {x: -20, y: 0}
-  m_SizeDelta: {x: 80, y: 20}
+  m_SizeDelta: {x: 80, y: 30}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!1 &600757684
 GameObject:
@@ -3873,8 +3873,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 198.81003}
-  m_SizeDelta: {x: 0, y: -417.62006}
+  m_AnchoredPosition: {x: 0, y: 203.81003}
+  m_SizeDelta: {x: 0, y: -407.62006}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &660460412
 CanvasRenderer:
@@ -4141,7 +4141,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607845, g: 0.19607845, b: 0.19607845, a: 1}
+  m_Color: {r: 0.85098046, g: 0.5294118, b: 0.043137256, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -5351,7 +5351,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
   m_AnchoredPosition: {x: -20, y: 0}
-  m_SizeDelta: {x: 80, y: 20}
+  m_SizeDelta: {x: 80, y: 30}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!114 &871380666
 MonoBehaviour:
@@ -7772,7 +7772,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607845, g: 0.19607845, b: 0.19607845, a: 1}
+  m_Color: {r: 0.85098046, g: 0.5294118, b: 0.043137256, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -9571,7 +9571,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1729307917
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10081,23 +10081,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0866e67d225780b4080cec510f0995da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _referenceCamera: {fileID: 281469276}
-  RouteDirectionsCanvas: {fileID: 1182564885}
-  LocationBasedGame: {fileID: 1019967411}
-  Directions: {fileID: 670634373}
-  currentJazDuration: {fileID: 1892287546}
-  currentJazDistance: {fileID: 1381276214}
-  currentJaz: {fileID: 1743531463}
-  currentJazPersonalities: {fileID: 1164244745}
-  currentJazPhoto: {fileID: 613017611}
-  instructionsText: {fileID: 1479532441}
-  ConfirmEndRouteBtn: {fileID: 459221240}
-  ReachedPoiInfoPanel: {fileID: 18851126}
-  PoiInfoPanel: {fileID: 1219252722}
-  EndRoutePanel: {fileID: 959845691}
-  ConfirmEndRoutePanel: {fileID: 80918709}
-  ARButton: {fileID: 658207447}
-  ToastMsg: {fileID: 1856610167}
 --- !u!222 &1799445570
 CanvasRenderer:
   m_ObjectHideFlags: 0

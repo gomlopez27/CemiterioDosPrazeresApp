@@ -83,11 +83,13 @@ public class RouteDirectionsArea : MonoBehaviour
         {
             _locationProvider = LocationProviderFactory.Instance.DefaultLocationProvider as AbstractLocationProvider;
         }
-        routePoisInMap = MapGO.GetComponent<SpawnRoutePOI>().RouteClicked(RouteDataHolder.currentRouteId);
+
+        //routePoisInMap = MapGO.GetComponent<SpawnRoutePOI>().RouteClicked(RouteDataHolder.currentRouteCode);
+        routePoisInMap = MapGO.GetComponent<SpawnRoutePOI>().RouteClicked(RouteDataHolder.currentRoutePois);
     
 
         //Estado Inicial
-        currentRoute = RouteDataHolder.GetRoute(RouteDataHolder.currentRouteId);
+        currentRoute = RouteDataHolder.GetRoute(RouteDataHolder.currentRouteCode);
 
 
         print("PreviousScene "+ SceneHistory.PreviousScene);
@@ -129,7 +131,8 @@ public class RouteDirectionsArea : MonoBehaviour
                 if (routePoisReached.Count != routePoisInMap.Count)
                 {
                     int nextPoiOriginalIndex = routePoisInMap.IndexOf(RoutePoisLeft[0]);
-                    string PoiId = currentRoute.Pois[nextPoiOriginalIndex].Id;
+                    //string PoiId = currentRoute.Pois[nextPoiOriginalIndex].Id;
+                    string PoiId = RouteDataHolder.currentRoutePois[nextPoiOriginalIndex].Id;
                     SetPoiInfo(MainDataHolder.GetPoi(PoiId), nextPoiOriginalIndex + 1);
                 }
                 else
@@ -146,7 +149,8 @@ public class RouteDirectionsArea : MonoBehaviour
                 initialPoisInMap.AddRange(routePoisInMap);
                 RouteDataHolder.updatedRoutePoisInMap = initialPoisInMap;
                 routePoisReached = new List<string>();
-                string firstPoiId = currentRoute.Pois[0].Id;
+                //string firstPoiId = currentRoute.Pois[0].Id;
+                string firstPoiId = RouteDataHolder.currentRoutePois[0].Id;
                 SetPoiInfo(MainDataHolder.GetPoi(firstPoiId), 1);
             }
         }
@@ -157,7 +161,7 @@ public class RouteDirectionsArea : MonoBehaviour
             initialPoisInMap.AddRange(routePoisInMap);
             RouteDataHolder.updatedRoutePoisInMap = initialPoisInMap;
             routePoisReached = new List<string>();
-            string firstPoiId = currentRoute.Pois[0].Id;
+            string firstPoiId = RouteDataHolder.currentRoutePois[0].Id;
             SetPoiInfo(MainDataHolder.GetPoi(firstPoiId), 1);
         }
 

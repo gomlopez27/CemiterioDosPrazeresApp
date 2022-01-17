@@ -188,18 +188,21 @@ public class FavoritePoisMap : MonoBehaviour
 
         if (!System.IO.File.Exists(favoritesFilePath))
         {
-
             EmptyListItem.SetActive(true);
             FavoritesListItem.SetActive(false);
-
         }
         else
         {
+
             string json = File.ReadAllText(favoritesFilePath);
             FavoritesListJSONTest = JSON.Parse(json.ToString());
 
+            print("json-> " + json);
+            print("FavoritesListJSONTest->  " + FavoritesListJSONTest.ToString());
+
             if (FavoritesListJSONTest.Count <= 0)
             {
+                print("FavoritesListJSONTest.Count <= 0");
                 EmptyListItem.SetActive(true);
                 FavoritesListItem.SetActive(false);
             }
@@ -207,6 +210,8 @@ public class FavoritePoisMap : MonoBehaviour
             {
                 EmptyListItem.SetActive(false);
                 //FavoritesListItem.SetActive(true);
+                print("FavoritesListJSONTest.Count > 0");
+                print("FavoritesListJSONTest.Count" + FavoritesListJSONTest.Count);
 
                 for (int i = 0; i < FavoritesListJSONTest.Count; i++)
                 {
@@ -260,6 +265,7 @@ public class FavoritePoisMap : MonoBehaviour
                 Destroy(FavoritesListArea.transform.GetChild(i).gameObject);
             }
         }
+
     }
 
     public void ConfirmDelete(string jazId, string personId, GameObject listItem)

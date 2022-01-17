@@ -30,7 +30,7 @@ public class SaveCreatedRoute : MonoBehaviour
     [SerializeField]
     Button CreatedBtn;
 
-    DataHolderRouteCreation DataHolder;
+    //DataHolderRouteCreation DataHolder;
     List<string> finalChoicesPois;
     List<string> finalChoicesPersonalities;
     string routeName;
@@ -41,7 +41,7 @@ public class SaveCreatedRoute : MonoBehaviour
     List<Route> UnofficialRoutesObjList;
     //TextAsset jsonAllRoutesList;
     string unofficialRoutesListFilePath;
-
+    bool RequestedRoute;
 
    
 
@@ -58,23 +58,23 @@ public class SaveCreatedRoute : MonoBehaviour
         //}
         print(unofficialRoutesListFilePath);
 
-        DataHolder = this.GetComponent<DataHolderRouteCreation>();
+        //DataHolder = this.GetComponent<DataHolderRouteCreation>();
         finalChoicesPois = new List<string>();
         finalChoicesPersonalities = new List<string>();
         AddSugestionsToFinalChoices();
 
 
         //Lista com apenas os ids de todos os jazigos selecionados
-        finalChoicesPois.AddRange(DataHolder.SelectedPois);
-        finalChoicesPois.AddRange(DataHolder.SelectedPoisSugestions);
+        finalChoicesPois.AddRange(RouteCreationDataHolder.SelectedPois);
+        finalChoicesPois.AddRange(RouteCreationDataHolder.SelectedPoisSugestions);
 
 
         //finalChoicesPersonalities.AddRange(DataHolder.SelectedPersonalities);
-        print("SelectedPois " + DataHolder.SelectedPois.Count);
-        print("SelectedPoisSugestions (hash set)" + DataHolder.SelectedPoisSugestions.Count);
-        print("SelectedSugestions (dictionary) " + DataHolder.SelectedSugestions.Count);
+        print("SelectedPois " + RouteCreationDataHolder.SelectedPois.Count);
+        print("SelectedPoisSugestions (hash set)" + RouteCreationDataHolder.SelectedPoisSugestions.Count);
+        print("SelectedSugestions (dictionary) " + RouteCreationDataHolder.SelectedPersonalitiesFromSugestions.Count);
         print("finalChoicesPois " + finalChoicesPois.Count);
-        print("SelectedPersonallitiesPerJaz " + DataHolder.SelectedPersonallitiesPerJaz.Count);
+        print("SelectedPersonallitiesPerJaz " + RouteCreationDataHolder.SelectedPersonallitiesPerJaz.Count);
 
      
         SetUpList();
@@ -85,24 +85,37 @@ public class SaveCreatedRoute : MonoBehaviour
         //GetRouteListFromJson();
         //GetRoutesCodeListFromJson();
         //CreatedBtn.onClick.AddListener(SaveRoute);
-
+        RequestedRoute = false;
         CreatedBtn.onClick.AddListener(delegate
         {
-            StartCoroutine(this.GetComponent<LoadFromAPI>().PostRoute(SerializeChoosenPersonalities().ToString(), LoadingPanel, Scenes));
+            StartCoroutine(this.GetComponent<LoadFromAPI>().PostRoute(SerializeChoosenPersonalities().ToString(), LoadingPanel));
+
         });
+        
     }
 
+
+    private void Update()
+    {
+        if (RouteCreationDataHolder.LastedCreatedRouteCode != null && !RequestedRoute)
+        {
+            print("ENTREI NO UPDATE");
+            LoadingPanel.SetActive(true);
+            StartCoroutine(this.GetComponent<LoadFromAPI>().GetRoute(Scenes));
+            RequestedRoute = true;
+        }
+    }
 
     void AddSugestionsToFinalChoices()
     {
         HashSet<string> personalities;
 
-        foreach (var elem in DataHolder.SelectedSugestions)
+        foreach (var elem in RouteCreationDataHolder.SelectedPersonalitiesFromSugestions)
         {
-            if (!DataHolder.SelectedPersonallitiesPerJaz.TryGetValue(elem.Key, out personalities))
+            if (!RouteCreationDataHolder.SelectedPersonallitiesPerJaz.TryGetValue(elem.Key, out personalities))
             {
                 personalities = new HashSet<string>(elem.Value); //elem.value contem as person das sugestions selectionadas
-                DataHolder.SelectedPersonallitiesPerJaz[elem.Key] = personalities;
+                RouteCreationDataHolder.SelectedPersonallitiesPerJaz[elem.Key] = personalities;
                 print("Mais um jaz: " + elem.Key);
             }
             else
@@ -126,7 +139,7 @@ public class SaveCreatedRoute : MonoBehaviour
     {
         GameObject ListItem = SelectedPoisListArea.transform.GetChild(0).gameObject;
 
-        foreach (var v in DataHolder.SelectedPersonallitiesPerJaz)
+        foreach (var v in RouteCreationDataHolder.SelectedPersonallitiesPerJaz)
         {
             string jazId = v.Key;
             string jazType = MainDataHolder.GetPoi(jazId).JazType;
@@ -275,15 +288,6 @@ public class SaveCreatedRoute : MonoBehaviour
 
     }
 
-
-    IEnumerator ShowLoadingScreen()
-    {
-        LoadingPanel.SetActive(true);
-        yield return new WaitForSeconds(5);
-        Scenes.LoadRouteListScene();
-
-    }
-
     public void SetRouteName(string name)
     {
         this.routeName = name;
@@ -293,14 +297,34 @@ public class SaveCreatedRoute : MonoBehaviour
     {
         this.routeDescription = descr;
     }
-    
+
+    JSONNode SerializeChoosenPersonalities()
+    {
+        var route = new JSONObject();
+        route["designation"] = this.routeName;
+        route["description"] = this.routeDescription;
+
+        var iriList = new JSONArray();
+
+        foreach (string s in finalChoicesPersonalities)
+        {
+            var personalityObj = new JSONObject();
+            personalityObj["iri"] = s;
+            iriList.Add(personalityObj);
+        }
+        route["personalities"] = iriList;
+
+        return route;
+
+    }
+
     //void GetRouteListFromJson()
     //{
     //    if (System.IO.File.Exists(unofficialRoutesListFilePath))
     //    {
     //        string json = File.ReadAllText(unofficialRoutesListFilePath);
     //        UnofficialRoutesList = JSON.Parse(json.ToString());
-            
+
     //        for (int i = 0; i < UnofficialRoutesList["routes"].Count; i++)
     //        {
     //            Route route = new Route();
@@ -357,112 +381,103 @@ public class SaveCreatedRoute : MonoBehaviour
     //    System.IO.File.WriteAllText(unofficialRoutesListFilePath, jsonToWrite);
     //}
 
-    public void SaveRoute()
-    {
-        print("Before add " + UnofficialRoutesObjList.Count);
-        Route createdRoute = new Route();
-        if (UnofficialRoutesObjList.Count == 0)
-        {
-            createdRoute.Id = UNOFFICIAL_ROUTE_ID + "1";
-            createdRoute.Code = UNOFFICIAL_ROUTE + "1";
+    //public void SaveRoute()
+    //{
+    //    print("Before add " + UnofficialRoutesObjList.Count);
+    //    Route createdRoute = new Route();
+    //    if (UnofficialRoutesObjList.Count == 0)
+    //    {
+    //        createdRoute.Id = UNOFFICIAL_ROUTE_ID + "1";
+    //        createdRoute.Code = UNOFFICIAL_ROUTE + "1";
 
-        }
-        else
-        {
-            int id = UnofficialRoutesObjList.Count + 1;
-            createdRoute.Id = UNOFFICIAL_ROUTE_ID + id.ToString();
-            createdRoute.Code = UNOFFICIAL_ROUTE + id.ToString();
+    //    }
+    //    else
+    //    {
+    //        int id = UnofficialRoutesObjList.Count + 1;
+    //        createdRoute.Id = UNOFFICIAL_ROUTE_ID + id.ToString();
+    //        createdRoute.Code = UNOFFICIAL_ROUTE + id.ToString();
 
-        }
-        createdRoute.Name = this.routeName;
-        createdRoute.Description = this.routeDescription;
+    //    }
+    //    createdRoute.Name = this.routeName;
+    //    createdRoute.Description = this.routeDescription;
 
-        createdRoute.RouteCategory = new List<string>();
-        createdRoute.RouteCategory.Add("Personalizado");
+    //    //createdRoute.RouteCategory = new List<string>();
+    //    //createdRoute.RouteCategory.Add("Personalizado");
 
-        createdRoute.Pois = new List<Poi>();
-       
-        for (int k = 0; k < finalChoicesPois.Count; k++)
-        {
-            Poi p = new Poi();
-            //JSONNode poiJson = GetJaz(finalChoicesPois[k]);
-            //string jazIdent = finalChoicesPois[k];
-            print(k + " " + finalChoicesPois[k]);
-            p.Id = finalChoicesPois[k];
-            //p.latitude = this.GetComponent<JazInformations>().GetJazLongitude(jazIdent);
-            //p.longitude = this.GetComponent<JazInformations>().GetJazLongitude(jazIdent);
-            //p.tipoJaz = this.GetComponent<JazInformations>().GetJazType(jazIdent);
-            //p.jazImage = this.GetComponent<JazInformations>().GetJazImage(jazIdent);
-            //p.description = "Lorem ipsum dolor sit amet";
+    //    createdRoute.Pois = new List<Poi>();
 
-            //p.personalidades = new List<string>();
+    //    for (int k = 0; k < finalChoicesPois.Count; k++)
+    //    {
+    //        Poi p = new Poi();
+    //        //JSONNode poiJson = GetJaz(finalChoicesPois[k]);
+    //        //string jazIdent = finalChoicesPois[k];
+    //        print(k + " " + finalChoicesPois[k]);
+    //        p.Id = finalChoicesPois[k];
+    //        //p.latitude = this.GetComponent<JazInformations>().GetJazLongitude(jazIdent);
+    //        //p.longitude = this.GetComponent<JazInformations>().GetJazLongitude(jazIdent);
+    //        //p.tipoJaz = this.GetComponent<JazInformations>().GetJazType(jazIdent);
+    //        //p.jazImage = this.GetComponent<JazInformations>().GetJazImage(jazIdent);
+    //        //p.description = "Lorem ipsum dolor sit amet";
 
-            //for (int y = 0; y < poiJson["personalidades"].Count; y++)
-            //{
-            //    p.personalidades.Add(poiJson["personalidades"][y]["nome"]);
-            //}
+    //        //p.personalidades = new List<string>();
 
-            createdRoute.Pois.Add(p);
-        }
+    //        //for (int y = 0; y < poiJson["personalidades"].Count; y++)
+    //        //{
+    //        //    p.personalidades.Add(poiJson["personalidades"][y]["nome"]);
+    //        //}
 
-        //codes.Add(createdRoute.code);
-        print(" createdRoute.pois " + createdRoute.Pois.Count);
-        UnofficialRoutesObjList.Add(createdRoute);
-        print("After Add " + UnofficialRoutesObjList.Count);
-        //SaveRouteToJson();
-        MainDataHolder.MyUnofficialRoutes = UnofficialRoutesObjList;
+    //        createdRoute.Pois.Add(p);
+    //    }
 
-        this.GetComponent<SerializableDataElements>().SaveRouteCodeToJson(createdRoute.Code);
-        StartCoroutine(ShowLoadingScreen());
-    }
+    //    //codes.Add(createdRoute.code);
+    //    print(" createdRoute.pois " + createdRoute.Pois.Count);
+    //    UnofficialRoutesObjList.Add(createdRoute);
+    //    print("After Add " + UnofficialRoutesObjList.Count);
+    //    //SaveRouteToJson();
+    //    MainDataHolder.MyUnofficialRoutes = UnofficialRoutesObjList;
 
-    public IEnumerator PostRoute()
-    {
-        string json = SerializeChoosenPersonalities().ToString();
-        //print(json);
-        //UnityWebRequest uwr = UnityWebRequest.Post(URL_POST_ROUTE, json);
-        var uwr = new UnityWebRequest(URL_POST_ROUTE, "POST");
-        byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(json);
-        uwr.uploadHandler = (UploadHandler)new UploadHandlerRaw(jsonToSend);
-        uwr.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
-        uwr.SetRequestHeader("Content-Type", "application/json");
-        yield return uwr.SendWebRequest();
-       
-        if (uwr.result != UnityWebRequest.Result.Success)
-        {
-            Debug.Log(uwr.error);
-            string jsonToWrite = uwr.downloadHandler.text;
+    //    this.GetComponent<SerializableDataElements>().SaveRouteCodeToJson(createdRoute.Code);
+    //    StartCoroutine(ShowLoadingScreen());
+    //}
 
-            Debug.Log(jsonToWrite);
-        }
-        else
-        {
-            Debug.Log("SUCCESS");
+    //public IEnumerator PostRoute()
+    //{
+    //    string json = SerializeChoosenPersonalities().ToString();
+    //    //print(json);
+    //    //UnityWebRequest uwr = UnityWebRequest.Post(URL_POST_ROUTE, json);
+    //    var uwr = new UnityWebRequest(URL_POST_ROUTE, "POST");
+    //    byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(json);
+    //    uwr.uploadHandler = (UploadHandler)new UploadHandlerRaw(jsonToSend);
+    //    uwr.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
+    //    uwr.SetRequestHeader("Content-Type", "application/json");
+    //    yield return uwr.SendWebRequest();
 
-            string jsonToWrite = uwr.downloadHandler.text;
+    //    if (uwr.result != UnityWebRequest.Result.Success)
+    //    {
+    //        Debug.Log(uwr.error);
+    //        string jsonToWrite = uwr.downloadHandler.text;
 
-            Debug.Log(jsonToWrite);
-        }
-    }
+    //        Debug.Log(jsonToWrite);
+    //    }
+    //    else
+    //    {
+    //        Debug.Log("SUCCESS");
 
-    JSONNode SerializeChoosenPersonalities()
-    {   
-        var route = new JSONObject();
-        route["designation"] = this.routeName;
-        route["description"] = this.routeDescription;
+    //        string jsonToWrite = uwr.downloadHandler.text;
 
-        var iriList = new JSONArray();
+    //        Debug.Log(jsonToWrite);
+    //    }
+    //}
 
-        foreach (string s in finalChoicesPersonalities)
-        {
-            var personalityObj = new JSONObject();
-            personalityObj["iri"] = s;
-            iriList.Add(personalityObj);
-        }
-        route["personalities"] = iriList;
+    //IEnumerator ShowLoadingScreen()
+    //{
+    //    LoadingPanel.SetActive(true);
+    //    yield return new WaitForSeconds(5);
+    //    Scenes.LoadRouteListScene();
 
-        return route;
+    //}
 
-    }
+
+
 
 }

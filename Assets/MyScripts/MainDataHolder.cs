@@ -6,7 +6,8 @@ using UnityEngine;
 
 public static class MainDataHolder 
 {
-    public const string URL_API = "http://192.168.0.17/api/";
+    //public const string URL_API = "http://192.168.0.17/api/";
+    public const string URL_API = "http://20.76.134.159:8080/api/"; //AZUREs
     //public const string URL_API = "http://localhost/api/";
 
     public static List<Poi> PopularPois;
@@ -18,7 +19,8 @@ public static class MainDataHolder
     public static GameObject[] augmentationsGO;
     //public static List<GameObject> PoisSpawnedOnMap;
     //public static List<GameObject> ObjectTrackers;
-
+    public static List<Personality> clickedMultiplePersonality;
+    public static Personality clickedPersonality;
     public static string RemoveAccents(this string text)
     {
         StringBuilder sbReturn = new StringBuilder();
@@ -50,5 +52,12 @@ public static class MainDataHolder
         return p;
     }
 
+    public static void CopyToClipboard(this string s)
+    {
+        TextEditor te = new TextEditor();
+        te.text = s;
+        te.SelectAll();
+        te.Copy();
+    }
 
 }

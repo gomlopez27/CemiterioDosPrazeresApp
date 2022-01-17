@@ -23,7 +23,7 @@ public class CreateRoute : MonoBehaviour
     [SerializeField]
     GameObject TopText;
 
-    DataHolderRouteCreation DataHolder;
+    //DataHolderRouteCreation DataHolder;
     //JSONNode AllPoiList;
     JSONNode FavPoiList;
     private string filePath;
@@ -46,7 +46,7 @@ public class CreateRoute : MonoBehaviour
     void Start()
     {
 
-        DataHolder = this.GetComponent<DataHolderRouteCreation>();
+        //DataHolder = this.GetComponent<DataHolderRouteCreation>();
         selectedPois = new HashSet<string>();
         //selectedPersonallities = new HashSet<string>();
         PoiItems = new Dictionary<string, Toggle>();
@@ -55,7 +55,6 @@ public class CreateRoute : MonoBehaviour
         selectedFavItems = new List<string>();
         selectedPersonallitiesPerJaz = new Dictionary<string, HashSet<string>>();
 
-        List<string> auxSelectedPois = new List<string>();
         //List<string> auxSelectedPersonalities = new List<string>();
         SetUpPoisList();
         SetUpFavoritesList();
@@ -65,17 +64,34 @@ public class CreateRoute : MonoBehaviour
         NextButton.onClick.AddListener(()=> {
             this.GetComponent<RouteSugestions>().SaveSugestions();
 
-            int totalSelected = selectedPois.Count + DataHolder.SelectedPoisSugestions.Count;
+            int totalSelected = selectedPois.Count + RouteCreationDataHolder.SelectedPoisSugestions.Count;
             
             if (totalSelected > 1)
             {
                 CreateRoutePage.SetActive(false);
                 SaveRoutePage.SetActive(true);
                 this.GetComponent<SaveCreatedRoute>().enabled = true;
+
+                List<string> auxSelectedPois = new List<string>();
                 auxSelectedPois.AddRange(selectedPois);
+                if(RouteCreationDataHolder.SelectedPoisSugestions.Count > 0) //adding selected suggestions
+                {
+                    auxSelectedPois.AddRange(RouteCreationDataHolder.SelectedPoisSugestions);
+
+                }
+
                 Dictionary<string, HashSet<string>> auxSelectedPersonalities = new Dictionary<string, HashSet<string>>(selectedPersonallitiesPerJaz);
-                DataHolder.SelectedPois = auxSelectedPois;
-                DataHolder.SelectedPersonallitiesPerJaz = auxSelectedPersonalities;
+                if (RouteCreationDataHolder.SelectedPersonalitiesFromSugestions.Count > 0) //adding selected suggestions
+                {
+                    foreach (KeyValuePair<string, HashSet<string>> entry in RouteCreationDataHolder.SelectedPersonalitiesFromSugestions)
+                    {
+                        auxSelectedPersonalities.Add(entry.Key, entry.Value);
+                    }
+
+                }
+
+                RouteCreationDataHolder.SelectedPois = auxSelectedPois;
+                RouteCreationDataHolder.SelectedPersonallitiesPerJaz = auxSelectedPersonalities;
             }
             else
             {
@@ -373,7 +389,7 @@ public class CreateRoute : MonoBehaviour
 
     }
 
-    void PersonalityToggleValueChanged(Toggle toggle, string jazId, string personId)
+    public void PersonalityToggleValueChanged(Toggle toggle, string jazId, string personId)
     {
         HashSet<string> personalities;
 
@@ -416,6 +432,10 @@ public class CreateRoute : MonoBehaviour
             }
 
         }
+
+        RouteCreationDataHolder.SelectedPersonallitiesPerJaz = selectedPersonallitiesPerJaz;
+
+        print("CREATE RouteCreationDataHolder.SelectedPersonallitiesPerJaz.Count " + RouteCreationDataHolder.SelectedPersonallitiesPerJaz.Count);
 
     }
 

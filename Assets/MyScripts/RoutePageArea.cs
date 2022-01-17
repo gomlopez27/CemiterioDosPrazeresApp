@@ -11,6 +11,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+
 public class RoutePageArea : MonoBehaviour
 {
     public const string OFFICIAL_ROUTE = "oficial";
@@ -33,26 +34,31 @@ public class RoutePageArea : MonoBehaviour
     Text RouteDistanceTxt;
     [SerializeField]
     Text RouteTitle;
+    [SerializeField] Text ShareCode;
+    [SerializeField] Button CopyCodeBtn;
+    [SerializeField] GameObject ToastMsgCopied;
+    [SerializeField] GameObject CodeObject;
+    [SerializeField] GameObject NoCodeObject;
     //[SerializeField]
     //JazInformations JazInfo;
     //[SerializeField]
     //RouteDataHolder dataHolder;
 
 
-    GameObject Map;
-    GraphicRaycaster raycaster;
-    GameObject panel1;
-    DirectionsFactory _dirFactory;
-    Transform[] poisOnMapTranforms;
-    bool checkRouteInfo;
+    private GameObject Map;
+    private GraphicRaycaster raycaster;
+    private GameObject panel1;
+    private DirectionsFactory _dirFactory;
+    private Transform[] poisOnMapTranforms;
+    private bool checkRouteInfo;
     //GameObject Player;
     //bool hasSetUpDirectionsRoute;
     //Text routeDistance;
     //Text routeDuration;
     // GameObject RouteDirectionsView;
-    List<GameObject> routePoisInMap;
-    Route currentRoute;
-
+    private List<GameObject> routePoisInMap;
+    private Route currentRoute;
+    private List<Poi> currentRoutePois;
     void Awake()
     {
 
@@ -71,16 +77,44 @@ public class RoutePageArea : MonoBehaviour
         panel1 = this.transform.Find("Panel1").gameObject;
         //routePoisInMap = new List<GameObject>();
 
- 
-        routePoisInMap = Map.GetComponent<SpawnRoutePOI>().RouteClicked(RouteDataHolder.currentRouteId);
-       
-
         //RouteDataHolder.currentRoutePoisInMap = routePoisInMap;
-        currentRoute = RouteDataHolder.GetRoute(RouteDataHolder.currentRouteId);
+        currentRoute = RouteDataHolder.GetRoute(RouteDataHolder.currentRouteCode);
         RouteTitle.text = currentRoute.Name;
+
+        if (currentRoute.isOfficial)
+        {
+            CodeObject.SetActive(false);
+            NoCodeObject.SetActive(true);
+        }
+        else
+        {
+            CodeObject.SetActive(true);
+            NoCodeObject.SetActive(false);
+            ShareCode.text = currentRoute.Code;
+        }
+        /*Buscar os POIS que pertecem à rota, a partir da lista de id unicos calculado no momento de deserializacao*/
+        currentRoutePois = new List<Poi>();
+        foreach (string id in currentRoute.PoisIdList)
+        {
+            Poi p = MainDataHolder.GetPoi(id);
+            if (p != null)
+            {
+                currentRoutePois.Add(p);
+            }
+        }
+        RouteDataHolder.currentRoutePois = currentRoutePois;
+        routePoisInMap = Map.GetComponent<SpawnRoutePOI>().RouteClicked(currentRoutePois);
 
         SetUpDirectionsRoute();
         StartRouteBtn.onClick.AddListener(StartRoute);
+
+        CopyCodeBtn.onClick.AddListener(() =>
+        {
+            string s = ShareCode.text;
+            s.CopyToClipboard();
+            print("copied");
+            ShowToastMessage();
+        });
     }
 
     // Update is called once per frame
@@ -135,6 +169,13 @@ public class RoutePageArea : MonoBehaviour
  
     }
 
+    private IEnumerator ShowToastMessage()
+    {
+        ToastMsgCopied.SetActive(true);
+        yield return new WaitForSeconds(1.5f);
+        ToastMsgCopied.SetActive(false);
+    }
+
     public void SetUpDirectionsRoute()
     {
         //spawnedPois = routePois;
@@ -149,7 +190,7 @@ public class RoutePageArea : MonoBehaviour
 
         poisOnMapTranforms = new Transform[size];
 
-        for (int i = 0; i < currentRoute.Pois.Count; i++)
+        for (int i = 0; i < currentRoutePois.Count; i++)
         {
             GameObject g = Instantiate(poiItem, PoisRouteListArea.transform);
             poisOnMapTranforms[i] = routePoisInMap[i].transform;
@@ -157,7 +198,8 @@ public class RoutePageArea : MonoBehaviour
             int poiOrder = i + 1;
             g.transform.Find("POIOrderNr").GetComponent<Text>().text = "Ponto " + poiOrder.ToString();
             Text poiName = g.transform.Find("POIName").GetComponent<Text>();
-            string jazId = currentRoute.Pois[i].Id;
+            //string jazId = currentRoute.Pois[i].Id;
+            string jazId = currentRoutePois[i].Id;
             Poi jaz = MainDataHolder.GetPoi(jazId);
             if(jaz.Personalities.Count > 1)
             {
@@ -282,4 +324,6 @@ public class RoutePageArea : MonoBehaviour
         //_dirFactory.CancelDirections();
         ////PlayerController.GetComponent<UserInRoute>().enabled = false;
     }
+
+  
 }

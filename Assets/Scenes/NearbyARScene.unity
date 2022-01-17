@@ -442,7 +442,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97f4881fb5411d24e9c1292592c963c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  POIPrefab: {fileID: 8613544016033989764, guid: 78f57ab71a068a24cb21542e060a4376, type: 3}
+  POIPrefab: {fileID: 1437419762960108, guid: dc3e257ad8b1d5747aa30de073e2af36, type: 3}
   InitialPanel: {fileID: 1440225395}
   MoreInfoPanel: {fileID: 1414626853}
   RadarPanel: {fileID: 1239747148}
@@ -641,7 +641,7 @@ GameObject:
   m_Component:
   - component: {fileID: 134699859}
   m_Layer: 5
-  m_Name: Personality
+  m_Name: Dates
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3354,7 +3354,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &727713378
 RectTransform:
   m_ObjectHideFlags: 0

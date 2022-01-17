@@ -10,7 +10,8 @@ using UnityEngine.SceneManagement;
 
 public class RoutesList : MonoBehaviour
 {
-    public const string OFFICIAL_ROUTE = "oficial";
+    public const string OFFICIAL_ROUTE = "Rota oficial";
+    public const string PERSONALIZED_ROUTE = "Rota personalizada";
 
     [SerializeField]
     Camera MainCamera;
@@ -28,16 +29,38 @@ public class RoutesList : MonoBehaviour
     string codesListFilePath;
     JSONNode CodesList;
     List<string> codes;
+    bool gotOfficialRoutes;
+    bool gotUnofficialRoutes;
 
     private void Awake()
     {
         codesListFilePath = Application.persistentDataPath + "/RoutesCodesList.json";
-
        
-
     }
 
+ 
+
     public void Start()
+    {
+        BuildFullListOfRoutes();
+        SetUpRoutesList();
+
+        //RouteListItem.SetActive(false);
+        //EmptyRouteListItem.SetActive(true);
+        //StartCoroutine(GetRoutes());
+    }
+    
+    IEnumerator GetRoutes()
+    {
+        StartCoroutine(this.GetComponent<LoadFromAPI>().GetInitialOfficialRoutesLists());
+        StartCoroutine(this.GetComponent<LoadFromAPI>().GetInitialUnofficialRoutesLists());
+        yield return StartCoroutine(this.GetComponent<LoadFromAPI>().GetInitialOfficialRoutesLists());
+        yield return StartCoroutine(this.GetComponent<LoadFromAPI>().GetInitialUnofficialRoutesLists());
+        BuildFullListOfRoutes();
+        SetUpRoutesList();
+
+    }
+    private void BuildFullListOfRoutes()
     {
         AllRoutesObj = new List<Route>();
 
@@ -48,11 +71,10 @@ public class RoutesList : MonoBehaviour
 
         }
 
-
         if (MainDataHolder.MyUnofficialRoutes != null)
         {
-           AllRoutesObj.AddRange(MainDataHolder.MyUnofficialRoutes);
-           print("MainDataHolder.UnofficialRoutes count: " + MainDataHolder.MyUnofficialRoutes.Count);
+            AllRoutesObj.AddRange(MainDataHolder.MyUnofficialRoutes);
+            print("MainDataHolder.UnofficialRoutes count: " + MainDataHolder.MyUnofficialRoutes.Count);
         }
 
         ///OfficialRoutes = GetRouteListFromJson(RouteList);
@@ -61,10 +83,7 @@ public class RoutesList : MonoBehaviour
         //AllRoutes = OfficialRoutes;
         print("AllRoutesObj count: " + AllRoutesObj.Count);
         RouteDataHolder.AllRoutes = AllRoutesObj;
-        SetUpRoutesList();
     }
-
-
     public void AddImportedRoute(Route r)
     {
         AllRoutesObj.Add(r);
@@ -85,7 +104,8 @@ public class RoutesList : MonoBehaviour
         {
             EmptyRouteListItem.SetActive(false);
             RouteListItem.SetActive(true);
-            for (int i = 0; i < AllRoutesObj.Count; i++)
+            //for (int i = 0; i < AllRoutesObj.Count; i++)
+            for (int i = AllRoutesObj.Count - 1; i >=  0; i--)
             {
               
                 GameObject g = Instantiate(RouteListItem, this.transform);
@@ -95,19 +115,29 @@ public class RoutesList : MonoBehaviour
                 g.transform.Find("RouteName").GetComponent<Text>().text = routeName;
 
                 string categoriesString = "";
-                for (int j = 0; j < AllRoutesObj[i].RouteCategory.Count; j++)
+
+                if (AllRoutesObj[i].isOfficial)
                 {
-                    if (j == 0)
-                    {
-                        categoriesString += AllRoutesObj[i].RouteCategory[j];
-
-                    }
-                    else
-                    {
-                        categoriesString += " " + AllRoutesObj[i].RouteCategory[j];
-
-                    }
+                    categoriesString = OFFICIAL_ROUTE;
                 }
+                else
+                {
+                    categoriesString = PERSONALIZED_ROUTE;
+
+                }
+                //for (int j = 0; j < AllRoutesObj[i].RouteCategory.Count; j++)
+                //{
+                //    if (j == 0)
+                //    {
+                //        categoriesString += AllRoutesObj[i].RouteCategory[j];
+
+                //    }
+                //    else
+                //    {
+                //        categoriesString += " " + AllRoutesObj[i].RouteCategory[j];
+
+                //    }
+                //}
                 g.transform.Find("Categories").GetComponent<Text>().text = categoriesString;
 
                 string routeId = AllRoutesObj[i].Id;
@@ -115,7 +145,8 @@ public class RoutesList : MonoBehaviour
                 Route currRoute = AllRoutesObj[i];
                 g.GetComponent<Button>().onClick.AddListener(delegate ()
                 {
-                    RouteDataHolder.currentRouteId = routeId;
+                    RouteDataHolder.currentRouteCode = routeCode;
+                    //RouteDataHolder.currentRouteCode = routeId;
                     SceneManager.LoadScene("RoutePageScene");
 
                     //ItemClicked(currRoute);

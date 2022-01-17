@@ -28,13 +28,20 @@ public static class RouteDataHolder
     public static List<string> savedPoisReached;
 
     public static List<Route> AllRoutes;
-    public static string currentRouteId;
+    public static string currentRouteCode;
+    public static List<Poi> currentRoutePois;
 
-    public static Route GetRoute(string routeId)
+    public static Route GetRoute(string routeCode)
     {
-        Route r = AllRoutes.Find(x => x.Id == routeId);
+        Route r = AllRoutes.Find(x => x.Code == routeCode);
         return r;
     }
+
+    //public static Route GetRoute(string routeId)
+    //{
+    //    Route r = AllRoutes.Find(x => x.Id == routeId);
+    //    return r;
+    //}
 
 
     //public Transform InitialCameraTransform

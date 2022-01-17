@@ -18,15 +18,19 @@ public class LoadFromAPI : MonoBehaviour
 
     //Resources from SI
     private const string POIS_RESOURCE = "funeral-constructions";
-    private const string ROUTES_RESOURCE = "routes";
+    private const string ROUTES_RESOURCE = "routes/";
     private const string CREATE_ROUTES_RESOURCE = "routes/create-route";
+    private const string PERSONALITIES_RESOURCE = "/personalities/";
+    private const string RELATED_PERSONALITIES_RESOURCE = "/related-personalities?onCemetery=true";
 
     private List<string> codeList;
     private string codesRoutesListFilePath;
+    private JSONNode fullRouteNode;
+
 
     private void Start()
     {
-        
+
     }
     public IEnumerator GetInitialPoiList()
     {
@@ -52,7 +56,7 @@ public class LoadFromAPI : MonoBehaviour
         }
     }
 
-    public IEnumerator GetInitialOfficialRoutesLists()
+    public IEnumerator GetInitialOfficialRoutesLists(/*System.Action<int> callbackOnFinish*/)
     {
         //UnityWebRequest www = UnityWebRequest.Get(URL_MOCK_API + OF_ROUTES_MOCK_RESOURCE); //UNCOMMENT when NOT  using the SI
         UnityWebRequest www = UnityWebRequest.Get(MainDataHolder.URL_API + ROUTES_RESOURCE); //UNCOMMENT when USING the SI
@@ -62,6 +66,8 @@ public class LoadFromAPI : MonoBehaviour
         if (www.result != UnityWebRequest.Result.Success)
         {
             Debug.Log(www.error);
+            //callbackOnFinish(1);
+
         }
         else
         {
@@ -69,13 +75,14 @@ public class LoadFromAPI : MonoBehaviour
             JSONNode OfficialRoutesJson = JSON.Parse(jsonToWrite.ToString());
             List<Route> AllRoutes = this.GetComponent<SerializableDataElements>().ConvertJsonToRouteList(OfficialRoutesJson);
             List<Route> OfficialRoutes = new List<Route>();
-            foreach(Route r in AllRoutes)
+            foreach (Route r in AllRoutes)
             {
                 if (r.isOfficial)
                     OfficialRoutes.Add(r);
             }
             MainDataHolder.OfficialRoutes = OfficialRoutes;
             print("MainDataHolder.OfficialRoutes: " + MainDataHolder.OfficialRoutes.Count);
+            //callbackOnFinish(0);
 
             //System.IO.File.WriteAllText(officialRoutesListFilePath, jsonToWrite);
 
@@ -83,7 +90,7 @@ public class LoadFromAPI : MonoBehaviour
     }
 
 
-    public IEnumerator GetInitialUnofficialRoutesLists()
+    public IEnumerator GetInitialUnofficialRoutesLists(/*System.Action<int> callbackOnFinish*/)
     {
         LoadCodeList();
         string codesURL = BuildCodesUrl();
@@ -100,16 +107,19 @@ public class LoadFromAPI : MonoBehaviour
             {
                 Debug.Log(www.error);
                 MainDataHolder.MyUnofficialRoutes = new List<Route>();
+                //callbackOnFinish(1);
+
             }
             else
             {
                 string jsonToWrite = www.downloadHandler.text;
                 JSONNode UnofficialRoutesJson = JSON.Parse(jsonToWrite.ToString());
                 List<Route> UnofficialRoutes = this.GetComponent<SerializableDataElements>().ConvertJsonToRouteList(UnofficialRoutesJson);
-               // MainDataHolder.AllUnofficialRoutes = UnofficialRoutes;
+                // MainDataHolder.AllUnofficialRoutes = UnofficialRoutes;
                 MainDataHolder.MyUnofficialRoutes = UnofficialRoutes; //UNCOMMENT when USING the SI
                 //FilterUnofficialRoutes(UnofficialRoutes); //UNCOMMENT when NOT  using the SI
                 print("MainDataHolder.UnofficialRoutes: " + MainDataHolder.MyUnofficialRoutes.Count);
+                //callbackOnFinish(0);
 
             }
         }
@@ -173,7 +183,7 @@ public class LoadFromAPI : MonoBehaviour
 
     }
 
-    public IEnumerator PostRoute(string json, GameObject LoadingPanel, LoadScenes Scenes)
+    public IEnumerator PostRoute(string json, GameObject LoadingPanel/*, LoadScenes Scenes*/)
     {
         //print(json);
         //UnityWebRequest uwr = UnityWebRequest.Post(URL_POST_ROUTE, json);
@@ -183,7 +193,7 @@ public class LoadFromAPI : MonoBehaviour
         uwr.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
         uwr.SetRequestHeader("Content-Type", "application/json");
 
-    
+
         yield return uwr.SendWebRequest();
 
         while (!uwr.isDone)
@@ -207,28 +217,53 @@ public class LoadFromAPI : MonoBehaviour
             JSONNode CreatedRouteJsonNode = JSON.Parse(jsonCreatedRoute.ToString());
             Route createdRoute = this.GetComponent<SerializableDataElements>().ConvertJsonToRoute(CreatedRouteJsonNode);
 
-            List<Route> auxRoutes = new List<Route>();
-            if (MainDataHolder.MyUnofficialRoutes != null && MainDataHolder.MyUnofficialRoutes.Count > 0) //Check if this user already has personalized routes 
-            {
-                auxRoutes = MainDataHolder.MyUnofficialRoutes;
-            }
-            auxRoutes.Add(createdRoute);
-            MainDataHolder.MyUnofficialRoutes = auxRoutes;
+            RouteCreationDataHolder.LastedCreatedRouteCode = createdRoute.Code;
+            print("RouteCreationDataHolder.LastedCreatedRouteCode: " + RouteCreationDataHolder.LastedCreatedRouteCode);
+            //GetRoute(createdRoute.Code);
+
+            //if(fullRouteNode != null)
+            //{
+            //    Route createdRouteFull = this.GetComponent<SerializableDataElements>().ConvertJsonToRoute(fullRouteNode);
+
+            //    print("createdRouteFull.PoisIdList.Count" + createdRouteFull.PoisIdList.Count);
+
+            //    List<Route> auxRoutes = new List<Route>();
+            //    if (MainDataHolder.MyUnofficialRoutes != null && MainDataHolder.MyUnofficialRoutes.Count > 0) //Check if this user already has personalized routes 
+            //    {
+            //        auxRoutes = MainDataHolder.MyUnofficialRoutes;
+            //    }
+            //    auxRoutes.Add(createdRouteFull);
+            //    MainDataHolder.MyUnofficialRoutes = auxRoutes;
+            //    print("AFTER POST MyUnofficialRoutes.Count" + MainDataHolder.MyUnofficialRoutes.Count);
+
+            //    this.GetComponent<SerializableDataElements>().SaveRouteCodeToJson(createdRouteFull.Code);
+            //    Scenes.LoadRouteListScene();
+            //}
+
+            //print("createdRoute.PoisIdList.Count" + createdRoute.PoisIdList.Count);
+
+            //List<Route> auxRoutes = new List<Route>();
+            //if (MainDataHolder.MyUnofficialRoutes != null && MainDataHolder.MyUnofficialRoutes.Count > 0) //Check if this user already has personalized routes 
+            //{
+            //    auxRoutes = MainDataHolder.MyUnofficialRoutes;
+            //}
+            //auxRoutes.Add(createdRoute);
+            //MainDataHolder.MyUnofficialRoutes = auxRoutes;
 
             this.GetComponent<SerializableDataElements>().SaveRouteCodeToJson(createdRoute.Code);
-            Scenes.LoadRouteListScene();
+            //Scenes.LoadRouteListScene();
 
         }
     }
 
     public IEnumerator GetImportedRoute(string code, GameObject ConfirmPanel, GameObject LoadingPanel, GameObject ToastMsgWrongCode)
     {
-        UnityWebRequest www = UnityWebRequest.Get(MainDataHolder.URL_API + ROUTES_RESOURCE +"/"+ code);
+        UnityWebRequest www = UnityWebRequest.Get(MainDataHolder.URL_API + ROUTES_RESOURCE + code);
         //StartCoroutine(ShowDownloadProgress(UN_ROUTES_RESOURCE, www));
 
         yield return www.SendWebRequest();
         ConfirmPanel.SetActive(false);
-        print(MainDataHolder.URL_API + ROUTES_RESOURCE + "/" + code);
+        print(MainDataHolder.URL_API + ROUTES_RESOURCE + code);
         while (!www.isDone)
         {
             LoadingPanel.SetActive(true);
@@ -255,11 +290,13 @@ public class LoadFromAPI : MonoBehaviour
             Route importedRoute = this.GetComponent<SerializableDataElements>().ConvertJsonToRoute(jsonImportedRoute);
 
             List<Route> auxRoutes = new List<Route>();
-            if (MainDataHolder.MyUnofficialRoutes.Count > 0) //Check if this user already has personalized routes 
+            if (MainDataHolder.MyUnofficialRoutes != null && MainDataHolder.MyUnofficialRoutes.Count > 0) //Check if this user already has personalized routes 
             {
                 auxRoutes = MainDataHolder.MyUnofficialRoutes;
+                
             }
             auxRoutes.Add(importedRoute);
+            print("auxRoutes.count: " + auxRoutes.Count);
             MainDataHolder.MyUnofficialRoutes = auxRoutes;
 
             this.GetComponent<SerializableDataElements>().SaveRouteCodeToJson(importedRoute.Code);
@@ -280,5 +317,98 @@ public class LoadFromAPI : MonoBehaviour
         }
     }
 
+
+    public IEnumerator GetRoute(string code)
+    {
+        UnityWebRequest www = UnityWebRequest.Get(MainDataHolder.URL_API + ROUTES_RESOURCE + code);
+        yield return www.SendWebRequest();
+        print(MainDataHolder.URL_API + ROUTES_RESOURCE + "/" + code);
+
+        if (www.result != UnityWebRequest.Result.Success)
+        {
+            Debug.Log(www.error);
+            print("Código Não existe");
+        }
+        else
+        {
+            string jsonToWrite = www.downloadHandler.text;
+            fullRouteNode = JSON.Parse(jsonToWrite.ToString());
+            print("GOT ROUTE");
+
+        }
+    }
+
+    /*After POST route*/
+    public IEnumerator GetRoute(LoadScenes Scenes)
+    {
+
+        UnityWebRequest www = UnityWebRequest.Get(MainDataHolder.URL_API + ROUTES_RESOURCE + RouteCreationDataHolder.LastedCreatedRouteCode);
+        yield return www.SendWebRequest();
+        print(MainDataHolder.URL_API + ROUTES_RESOURCE + RouteCreationDataHolder.LastedCreatedRouteCode);
+
+        if (www.result != UnityWebRequest.Result.Success)
+        {
+            Debug.Log(www.error);
+            print("Código Não existe");
+        }
+        else
+        {
+            string jsonToWrite = www.downloadHandler.text;
+            fullRouteNode = JSON.Parse(jsonToWrite.ToString());
+            print("GOT ROUTE");
+
+            Route route = this.GetComponent<SerializableDataElements>().ConvertJsonToRoute(fullRouteNode);
+
+            print("createdRoute.PoisIdList.Count" + route.PoisIdList.Count);
+
+            List<Route> auxRoutes = new List<Route>();
+            if (MainDataHolder.MyUnofficialRoutes != null && MainDataHolder.MyUnofficialRoutes.Count > 0) //Check if this user already has personalized routes 
+            {
+                auxRoutes = MainDataHolder.MyUnofficialRoutes;
+            }
+            auxRoutes.Add(route);
+            MainDataHolder.MyUnofficialRoutes = auxRoutes;
+
+            RouteCreationDataHolder.LastedCreatedRouteCode = null;
+
+            Scenes.LoadRouteListScene();
+        }
+
+    }
+
+    //public IEnumerator GetRelatedPersonalities(string personIRI)
+    //{
+    //    //personalities/Q1560243/related-personalities
+    //    UnityWebRequest www = UnityWebRequest.Get(MainDataHolder.URL_API + PERSONALITIES_RESOURCE + personIRI + RELATED_PERSONALITIES_RESOURCE);
+
+    //    yield return www.SendWebRequest();
+    //    while (!www.isDone)
+    //    {
+    //        RouteCreationDataHolder.RelatedPersonalitiesResponseCode = null;
+    //    }
+    //    if (www.result != UnityWebRequest.Result.Success)
+    //    {
+    //        Debug.Log(www.error);
+    //        RouteCreationDataHolder.RelatedPersonalitiesResponseCode = www.responseCode.ToString();
+
+
+    //    }
+    //    else
+    //    {
+    //        string jsonToWrite = www.downloadHandler.text;
+    //        JSONNode PersonalitiesNode = JSON.Parse(jsonToWrite.ToString());
+    //        List<RelatedPersonality> PersonalityList = this.GetComponent<SerializableDataElements>().ConvertJsonRelatedPersonalitiesList(PersonalitiesNode);
+
+    //        RouteCreationDataHolder.RelatedPersonalities = null;
+    //        RouteCreationDataHolder.RelatedPersonalities = PersonalityList;
+    //        print("RouteCreationDataHolder.RelatedPersonalities: " + RouteCreationDataHolder.RelatedPersonalities.Count);
+    //        print("RouteCreationDataHolder.RelatedPersonalities[i].Person.PoiId " + RouteCreationDataHolder.RelatedPersonalities[0].Person.PoiId);
+    //        print("RouteCreationDataHolder.RelatedPersonalities[i].Person.PoiId " + RouteCreationDataHolder.RelatedPersonalities[1].Person.PoiId);
+    //        print("RouteCreationDataHolder.RelatedPersonalities[i].Person.PoiId " + RouteCreationDataHolder.RelatedPersonalities[2].Person.PoiId);
+    //        RouteCreationDataHolder.RelatedPersonalitiesResponseCode = www.responseCode.ToString();
+
+    //        //System.IO.File.WriteAllText(poisListFilePath, jsonToWrite);
+    //    }
+    //}
 
 }
