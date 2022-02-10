@@ -22,6 +22,7 @@ public class PoiClickedController : MonoBehaviour
     private DirectionsFactory _directionsFact;
     private GameObject ToastMsgPanel;
     private GameObject map;
+    private AbstractMap _absMap;
     private Transform StartPoint;
     private Transform EndPoint;
     private Text routeDistanceTxt;
@@ -34,7 +35,7 @@ public class PoiClickedController : MonoBehaviour
     //private JSONNode PoisInMap;
     private List<GameObject> SpawnedPois;
     private GameObject CurrentPoi;
-
+    private bool mapUpdated;
 
     private void Awake()
     {
@@ -47,8 +48,9 @@ public class PoiClickedController : MonoBehaviour
     {
         
         SpawnedPois = map.GetComponent<MySpawnOnMap>().GetSpawnedPois();
-
-        foreach(GameObject go in SpawnedPois)
+        _absMap = map.GetComponent<AbstractMap>();
+        mapUpdated = false;
+        foreach (GameObject go in SpawnedPois)
         {
          
             if(jazId.Equals(go.transform.parent.gameObject.GetComponent<POIMapSpecifications>().GetId()))
@@ -99,7 +101,17 @@ public class PoiClickedController : MonoBehaviour
             {
                 SetUpDirectionsPanel(_directionsFact);
                 //takeMeThreBtnClicked = false;
+
+                //print("StartPoint" + _directionsFact._waypoints[0].position);
+                //print("EndPoint" + _directionsFact._waypoints[1].position);
+                //print("CurrentPoi" + CurrentPoi.transform.position);
             }
+
+            //if (!mapUpdated)
+            //{
+            //    _absMap.OnUpdated += _directionsFact.Query;
+            //    mapUpdated = true;
+            //}
         }
 
     }
@@ -117,6 +129,7 @@ public class PoiClickedController : MonoBehaviour
         Button directionsToBtn = InfoPanel.transform.Find("Buttons/DirectionsBtn").GetComponent<Button>();
         Button addToFavoritesBtn = InfoPanel.transform.Find("Buttons/AddToFavsBtn").GetComponent<Button>();
         Button removeFromFavoritesBtn = InfoPanel.transform.Find("Buttons/RemoveFromFavsBtn").GetComponent<Button>();
+        GameObject seeMoreBtnBackground = InfoPanel.transform.Find("ButtonBackground").gameObject;
 
         directionsToBtn.onClick.AddListener(()=> {
             TakeMeThere();
@@ -149,13 +162,14 @@ public class PoiClickedController : MonoBehaviour
                     MultiplePersonalities.SetActive(true);
                     addToFavoritesBtn.gameObject.SetActive(false);
                     removeFromFavoritesBtn.gameObject.SetActive(false);
-
+                    seeMoreBtnBackground.SetActive(false);
                     SetMultiplePersonalitiesList(jazId, MainDataHolder.PopularPois[i].Personalities);
                 }
                 else  /*Uma personalidade*/
                 {
                     SinglePersonality.SetActive(true);
                     MultiplePersonalities.SetActive(false);
+                    seeMoreBtnBackground.SetActive(true);
                     SetSinglePersonality(jazId, MainDataHolder.PopularPois[i].Personalities[0]);
                     string personId = MainDataHolder.PopularPois[i].Personalities[0].UriId;
 

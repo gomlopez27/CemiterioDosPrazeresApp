@@ -50,16 +50,16 @@ public class RoutesList : MonoBehaviour
         //StartCoroutine(GetRoutes());
     }
     
-    IEnumerator GetRoutes()
-    {
-        StartCoroutine(this.GetComponent<LoadFromAPI>().GetInitialOfficialRoutesLists());
-        StartCoroutine(this.GetComponent<LoadFromAPI>().GetInitialUnofficialRoutesLists());
-        yield return StartCoroutine(this.GetComponent<LoadFromAPI>().GetInitialOfficialRoutesLists());
-        yield return StartCoroutine(this.GetComponent<LoadFromAPI>().GetInitialUnofficialRoutesLists());
-        BuildFullListOfRoutes();
-        SetUpRoutesList();
+    //IEnumerator GetRoutes()
+    //{
+    //    StartCoroutine(this.GetComponent<LoadFromAPI>().GetInitialOfficialRoutesLists());
+    //    StartCoroutine(this.GetComponent<LoadFromAPI>().GetInitialUnofficialRoutesLists());
+    //    yield return StartCoroutine(this.GetComponent<LoadFromAPI>().GetInitialOfficialRoutesLists());
+    //    yield return StartCoroutine(this.GetComponent<LoadFromAPI>().GetInitialUnofficialRoutesLists());
+    //    BuildFullListOfRoutes();
+    //    SetUpRoutesList();
 
-    }
+    //}
     private void BuildFullListOfRoutes()
     {
         AllRoutesObj = new List<Route>();

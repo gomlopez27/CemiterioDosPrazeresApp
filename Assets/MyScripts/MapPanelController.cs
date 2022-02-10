@@ -33,7 +33,7 @@ public class MapPanelController : MonoBehaviour
             if (InfoPanel.activeInHierarchy || FilterPanel.activeInHierarchy)
             {
                 DeactivatePoiClick();
-                DeactiveMapMovement();
+                Map.GetComponent<MapPanZoom>().enabled = false;
             }
             else
             {
@@ -41,10 +41,21 @@ public class MapPanelController : MonoBehaviour
                 {
                     ActivatePoiClick();
                 }
-                ActiveMapMovement();
+                Map.GetComponent<MapPanZoom>().enabled = true;
+
 
             }
         }
+
+        if (Input.touchCount == 2)
+        {
+            DeactivatePoiClick();
+        }
+        else
+        {
+            ActivatePoiClick();
+        }
+
     }
 
 
@@ -64,14 +75,5 @@ public class MapPanelController : MonoBehaviour
         }
     }
 
-    void DeactiveMapMovement()
-    {
-        Map.GetComponent<MapPanning>().enabled = false;
-        Map.GetComponent<QuadTreeCameraMovement>().enabled = false;
-    }
-    void ActiveMapMovement()
-    {
-        Map.GetComponent<MapPanning>().enabled = true;
-        Map.GetComponent<QuadTreeCameraMovement>().enabled = true;
-    }
+   
 }

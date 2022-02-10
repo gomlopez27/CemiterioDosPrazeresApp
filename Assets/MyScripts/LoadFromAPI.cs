@@ -27,7 +27,6 @@ public class LoadFromAPI : MonoBehaviour
     private string codesRoutesListFilePath;
     private JSONNode fullRouteNode;
 
-
     private void Start()
     {
 
@@ -41,10 +40,13 @@ public class LoadFromAPI : MonoBehaviour
         yield return www.SendWebRequest();
         if (www.result != UnityWebRequest.Result.Success)
         {
-            Debug.Log(www.error);
+            print("GetInitialPoiList ERROR:" + www.error);
+            MainDataHolder.serverUnavailable = true;
         }
         else
         {
+            MainDataHolder.serverUnavailable = false;
+
             string jsonToWrite = www.downloadHandler.text;
             JSONNode PoisNode = JSON.Parse(jsonToWrite.ToString());
             List<Poi> PoisList = this.GetComponent<SerializableDataElements>().ConvertJsonToPoiList(PoisNode);
@@ -56,7 +58,7 @@ public class LoadFromAPI : MonoBehaviour
         }
     }
 
-    public IEnumerator GetInitialOfficialRoutesLists(/*System.Action<int> callbackOnFinish*/)
+    public IEnumerator GetInitialOfficialRoutesLists()
     {
         //UnityWebRequest www = UnityWebRequest.Get(URL_MOCK_API + OF_ROUTES_MOCK_RESOURCE); //UNCOMMENT when NOT  using the SI
         UnityWebRequest www = UnityWebRequest.Get(MainDataHolder.URL_API + ROUTES_RESOURCE); //UNCOMMENT when USING the SI
@@ -67,10 +69,13 @@ public class LoadFromAPI : MonoBehaviour
         {
             Debug.Log(www.error);
             //callbackOnFinish(1);
+            MainDataHolder.serverUnavailable = true;
 
         }
         else
         {
+            MainDataHolder.serverUnavailable = false;
+
             string jsonToWrite = www.downloadHandler.text;
             JSONNode OfficialRoutesJson = JSON.Parse(jsonToWrite.ToString());
             List<Route> AllRoutes = this.GetComponent<SerializableDataElements>().ConvertJsonToRouteList(OfficialRoutesJson);
@@ -90,7 +95,7 @@ public class LoadFromAPI : MonoBehaviour
     }
 
 
-    public IEnumerator GetInitialUnofficialRoutesLists(/*System.Action<int> callbackOnFinish*/)
+    public IEnumerator GetInitialUnofficialRoutesLists()
     {
         LoadCodeList();
         string codesURL = BuildCodesUrl();
@@ -105,6 +110,8 @@ public class LoadFromAPI : MonoBehaviour
             yield return www.SendWebRequest();
             if (www.result != UnityWebRequest.Result.Success)
             {
+                MainDataHolder.serverUnavailable = true;
+
                 Debug.Log(www.error);
                 MainDataHolder.MyUnofficialRoutes = new List<Route>();
                 //callbackOnFinish(1);
@@ -112,6 +119,8 @@ public class LoadFromAPI : MonoBehaviour
             }
             else
             {
+                MainDataHolder.serverUnavailable = false;
+
                 string jsonToWrite = www.downloadHandler.text;
                 JSONNode UnofficialRoutesJson = JSON.Parse(jsonToWrite.ToString());
                 List<Route> UnofficialRoutes = this.GetComponent<SerializableDataElements>().ConvertJsonToRouteList(UnofficialRoutesJson);

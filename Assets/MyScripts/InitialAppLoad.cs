@@ -15,6 +15,10 @@ public class InitialAppLoad : MonoBehaviour
     private const string UN_ROUTES_MOCK_RESOURCE = "UnofficialRoutes";
 
     [SerializeField]
+    GameObject LoadingArea;
+    [SerializeField]
+    GameObject ServerUnavailableArea;
+    [SerializeField]
     Slider slider;
     [SerializeField]
     Text loadedPercentage;
@@ -72,7 +76,7 @@ public class InitialAppLoad : MonoBehaviour
         StartCoroutine(this.GetComponent<LoadFromAPI>().GetInitialPoiList());
         StartCoroutine(this.GetComponent<LoadFromAPI>().GetInitialOfficialRoutesLists());
         StartCoroutine(this.GetComponent<LoadFromAPI>().GetInitialUnofficialRoutesLists());
-
+        print("MainDataHolder.serverUnavailable: " + MainDataHolder.serverUnavailable);
         //if (!System.IO.File.Exists(unofficialRoutesListFilePath))
         //{
         //    StartCoroutine(GetInitialUnofficialRoutesLists());
@@ -99,95 +103,109 @@ public class InitialAppLoad : MonoBehaviour
 
     IEnumerator LoadAssetBundleLocally()
     {
-        var bundleLoadRequest = AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, "augmentationsprefabs"));
-        while (!bundleLoadRequest.isDone)
+        if (!MainDataHolder.serverUnavailable) //If was able to connect to server
         {
-            string s = (string.Format("{0:0%}", bundleLoadRequest.progress));
-            loadedPercentage.text = s;
-            slider.value = bundleLoadRequest.progress;
-            yield return null;
-        }
-        yield return bundleLoadRequest;
+            LoadingArea.SetActive(true);
+            ServerUnavailableArea.SetActive(false);
+            var bundleLoadRequest = AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, "augmentationsprefabs"));
+            while (!bundleLoadRequest.isDone)
+            {
+                string s = (string.Format("{0:0%}", bundleLoadRequest.progress));
+                loadedPercentage.text = s;
+                slider.value = bundleLoadRequest.progress;
+                yield return null;
+            }
+            yield return bundleLoadRequest;
 
-        AssetBundle myLoadedAssetBundle = bundleLoadRequest.assetBundle;
-        if (myLoadedAssetBundle == null)
-        {
-            Debug.Log("Failed to load AssetBundle!");
-            yield break;
-        }
+            AssetBundle myLoadedAssetBundle = bundleLoadRequest.assetBundle;
+            if (myLoadedAssetBundle == null)
+            {
+                Debug.Log("Failed to load AssetBundle!");
+                yield break;
+            }
 
-        MainDataHolder.myAssetBundle = myLoadedAssetBundle;
-        print("Asset bundle loaded!");
+            MainDataHolder.myAssetBundle = myLoadedAssetBundle;
+            print("Asset bundle loaded!");
 
-        GameObject[] assetsLoadRequest = myLoadedAssetBundle.LoadAllAssets<GameObject>();
-        yield return assetsLoadRequest;
-        MainDataHolder.augmentationsGO = assetsLoadRequest;
-        myLoadedAssetBundle.Unload(false);
-        this.GetComponent<LoadScenes>().LoadHomeScene();
+            GameObject[] assetsLoadRequest = myLoadedAssetBundle.LoadAllAssets<GameObject>();
+            yield return assetsLoadRequest;
+            MainDataHolder.augmentationsGO = assetsLoadRequest;
+            myLoadedAssetBundle.Unload(false);
 
-
-    }
-
-
-    IEnumerator LoadAssetBundle(string url)
-    {
-        UnityWebRequest request = UnityWebRequestAssetBundle.GetAssetBundle(url);
-        yield return request.SendWebRequest();
-        // print("request progress: " + request.downloadProgress);
-
-        //StartCoroutine(ShowDownloadProgress("Asset bundle loading: ", request));
-
-        if (request.result != UnityWebRequest.Result.Success)
-        {
-            Debug.Log("error: " + request.error);
-            Debug.Log("AssetBundle couldn't be loaded!");
-
+            this.GetComponent<LoadScenes>().LoadHomeScene();
         }
         else
         {
-            print("request progress: " + request.downloadProgress);
-
-            //if (myLoadedAssetBundle != null)
-            //{
-            //    print("myLoadedAssetBundle not null, so unload it");
-            //    myLoadedAssetBundle.Unload(false);
-            //}
-
-            myLoadedAssetBundle = DownloadHandlerAssetBundle.GetContent(request);
-            MainDataHolder.myAssetBundle = myLoadedAssetBundle;
-            print("SUCESS loading Asset Bundle");
-
-            //yield return new WaitUntil(AllLoaded);
-            this.GetComponent<LoadScenes>().LoadHomeScene();
-        }
-
-    }
-
-
-    IEnumerator DownloadAssetFromServer(string url)
-    {
-
-        using (var uwr = UnityWebRequestAssetBundle.GetAssetBundle(url))
-        {
-            var operation = uwr.SendWebRequest();
-            while (!operation.isDone)
-            {
-                string s = (string.Format("{0:0%}", uwr.downloadProgress));
-                loadedPercentage.text = s;
-                slider.value = uwr.downloadProgress;
-                yield return null;
-            }
-
-            AssetBundle bundle = DownloadHandlerAssetBundle.GetContent(uwr);
-            MainDataHolder.myAssetBundle = bundle;
-            loadedPercentage.text = (string.Format("{0:0%}", uwr.downloadProgress));
-            slider.value = 1;
-            print("SUCESS loading Asset Bundle");
-            //bundle.Unload(false);
-
-            //yield return new WaitUntil(AllLoaded);
-            this.GetComponent<LoadScenes>().LoadHomeScene();
+            LoadingArea.SetActive(false);
+            ServerUnavailableArea.SetActive(true);
+            print("FICAR NA PAGINA INICIAL!");
         }
     }
+
 
 }
+
+
+    //IEnumerator LoadAssetBundle(string url)
+    //{
+    //    UnityWebRequest request = UnityWebRequestAssetBundle.GetAssetBundle(url);
+    //    yield return request.SendWebRequest();
+    //    // print("request progress: " + request.downloadProgress);
+
+    //    //StartCoroutine(ShowDownloadProgress("Asset bundle loading: ", request));
+
+    //    if (request.result != UnityWebRequest.Result.Success)
+    //    {
+    //        Debug.Log("error: " + request.error);
+    //        Debug.Log("AssetBundle couldn't be loaded!");
+
+    //    }
+    //    else
+    //    {
+    //        print("request progress: " + request.downloadProgress);
+
+    //        //if (myLoadedAssetBundle != null)
+    //        //{
+    //        //    print("myLoadedAssetBundle not null, so unload it");
+    //        //    myLoadedAssetBundle.Unload(false);
+    //        //}
+
+    //        myLoadedAssetBundle = DownloadHandlerAssetBundle.GetContent(request);
+    //        MainDataHolder.myAssetBundle = myLoadedAssetBundle;
+    //        print("SUCESS loading Asset Bundle");
+
+    //        //yield return new WaitUntil(AllLoaded);
+    //        this.GetComponent<LoadScenes>().LoadHomeScene();
+    //    }
+
+    //}
+
+
+    //IEnumerator DownloadAssetFromServer(string url)
+    //{
+
+    //    using (var uwr = UnityWebRequestAssetBundle.GetAssetBundle(url))
+    //    {
+    //        var operation = uwr.SendWebRequest();
+    //        while (!operation.isDone)
+    //        {
+    //            string s = (string.Format("{0:0%}", uwr.downloadProgress));
+    //            loadedPercentage.text = s;
+    //            slider.value = uwr.downloadProgress;
+    //            yield return null;
+    //        }
+
+    //        AssetBundle bundle = DownloadHandlerAssetBundle.GetContent(uwr);
+    //        MainDataHolder.myAssetBundle = bundle;
+    //        loadedPercentage.text = (string.Format("{0:0%}", uwr.downloadProgress));
+    //        slider.value = 1;
+    //        print("SUCESS loading Asset Bundle");
+    //        //bundle.Unload(false);
+
+    //        //yield return new WaitUntil(AllLoaded);
+
+    //        this.GetComponent<LoadScenes>().LoadHomeScene();
+    //    }
+    //}
+
+//}

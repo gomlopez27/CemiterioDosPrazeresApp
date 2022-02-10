@@ -6,10 +6,10 @@ using UnityEngine;
 
 public static class MainDataHolder 
 {
-    //public const string URL_API = "http://192.168.0.17/api/";
-    public const string URL_API = "http://20.76.134.159:8080/api/"; //AZUREs
+    //public const string URL_API = "http://192.168.0.16/api/";
+    public const string URL_API = "http://20.82.10.62:8080/api/"; //AZUREs
     //public const string URL_API = "http://localhost/api/";
-
+    public static bool serverUnavailable;
     public static List<Poi> PopularPois;
     public static List<Route> OfficialRoutes;
     public static List<Route> MyUnofficialRoutes;

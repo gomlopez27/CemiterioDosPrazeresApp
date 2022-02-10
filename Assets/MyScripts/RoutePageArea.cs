@@ -39,13 +39,14 @@ public class RoutePageArea : MonoBehaviour
     [SerializeField] GameObject ToastMsgCopied;
     [SerializeField] GameObject CodeObject;
     [SerializeField] GameObject NoCodeObject;
+    [SerializeField] GameObject Map;
+
     //[SerializeField]
     //JazInformations JazInfo;
     //[SerializeField]
     //RouteDataHolder dataHolder;
 
 
-    private GameObject Map;
     private GraphicRaycaster raycaster;
     private GameObject panel1;
     private DirectionsFactory _dirFactory;
@@ -70,7 +71,7 @@ public class RoutePageArea : MonoBehaviour
     public void Start()
     {
 
-        Map = LocationBasedGame.transform.Find("Map").gameObject;
+       // Map = LocationBasedGame.transform.Find("Map").gameObject;
        // Player = LocationBasedGame.transform.Find("Player").gameObject;
         _dirFactory = Directions.GetComponent<DirectionsFactory>();
         raycaster = RouteGeneralCanvas.GetComponent<GraphicRaycaster>();
@@ -147,15 +148,16 @@ public class RoutePageArea : MonoBehaviour
                 //print("Clicked on: " + go.name);
                 if (go.name.Equals("Panel1") /*|| go.name.Equals("Panel2")*/)
                 {
-                    go.SetActive(false);
-                    Map.GetComponent<MapPanning>().enabled = true;
-                    Map.GetComponent<MapPanning>().SetCameraInitialPosition();
-
+                    
+                    Map.GetComponent<MapPanZoom>().enabled = true;
+                    Map.GetComponent<MapPanZoom>().SetCameraInitialPosition();
+                    panel1.SetActive(false);
                 }
-                if (go.name.Equals("RouteInfoPanel"))
+                if (go.name.Equals("RouteInfoPanel-Max") || go.name.Equals("PoiListButton")) 
                 {
+                    
+                    Map.GetComponent<MapPanZoom>().enabled = false;
                     panel1.SetActive(true);
-                    Map.GetComponent<MapPanning>().enabled = false;
 
                 }
                 //if (go.name.Equals("PoiInfoPanel"))

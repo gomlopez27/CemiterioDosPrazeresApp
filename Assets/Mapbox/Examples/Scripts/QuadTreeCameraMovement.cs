@@ -6,8 +6,9 @@
 	using UnityEngine;
 	using UnityEngine.EventSystems;
 	using System;
+    using Mapbox.Unity.MeshGeneration.Factories;
 
-	public class QuadTreeCameraMovement : MonoBehaviour
+    public class QuadTreeCameraMovement : MonoBehaviour
 	{
 		[SerializeField]
 		[Range(1, 20)]
@@ -24,6 +25,10 @@
 
 		[SerializeField]
 		bool _useDegreeMethod;
+
+		//[SerializeField]
+		// DirectionsFactory _directionsFact;
+
 
 		private Vector3 _origin;
 		private Vector3 _mousePosition;
@@ -78,6 +83,8 @@
 
             if (allPoisInitialized && zoomUsed) //verifica se já mexou no ecrã para fazer zoom
             {
+				//_directionsFact.UpdateDirections();
+
 				if (_mapManager.Zoom < 14f )
 				{
 					HidePoiAtZoomLevel();
@@ -199,7 +206,7 @@
 			var zoom = Mathf.Max(minZoom, Mathf.Min(_mapManager.Zoom + zoomFactor * _zoomSpeed, 21.0f));
 			if (Math.Abs(zoom - _mapManager.Zoom) > 0.0f)
 			{
-				_mapManager.UpdateMap(_mapManager.CenterLatitudeLongitude, zoom);			
+				_mapManager.UpdateMap(_mapManager.CenterLatitudeLongitude, zoom);
 				zoomUsed = true;
 
 			}

@@ -75,8 +75,8 @@ public class RouteDirectionsArea : MonoBehaviour
        
     public void Start()
     {
-        _referenceCamera.transform.position = new Vector3(0f, _referenceCamera.transform.position.y, _referenceCamera.transform.position.z);
-        _referenceCamera.transform.SetParent(Player.transform);
+        //_referenceCamera.transform.position = new Vector3(0f, _referenceCamera.transform.position.y, _referenceCamera.transform.position.z);
+        //_referenceCamera.transform.SetParent(Player.transform);
         hasInitMap = false;
 
         if (null == _locationProvider)
@@ -185,7 +185,7 @@ public class RouteDirectionsArea : MonoBehaviour
             if (!hasInitMap)
             {
                 AbsMap.SetCenterLatitudeLongitude(latlong);
-                AbsMap.UpdateMap(AbsMap.CenterLatitudeLongitude, 17.6f);
+                AbsMap.UpdateMap(AbsMap.CenterLatitudeLongitude, AbsMap.InitialZoom);
                 hasInitMap = true;
             }
 
@@ -215,8 +215,7 @@ public class RouteDirectionsArea : MonoBehaviour
 
     }
 
-    void StateAfterAr() { 
-    }
+
     //Raio de 10 m
     void UserReachedPoi()
     {
@@ -362,19 +361,19 @@ public class RouteDirectionsArea : MonoBehaviour
       
     }
 
-    public void CenterMapInPoi(Vector2d latlong, string jazId)
-    {
-        string auxName = "Poi-" + jazId;
-        GameObject poiAux = GameObject.Find(auxName);
+    //public void CenterMapInPoi(Vector2d latlong, string jazId)
+    //{
+    //    string auxName = "Poi-" + jazId;
+    //    GameObject poiAux = GameObject.Find(auxName);
 
-        _referenceCamera.transform.position = new Vector3(poiAux.transform.position.x,
-                                                     _referenceCamera.transform.position.y,
-                                                     poiAux.transform.position.z);
-        AbsMap.SetCenterLatitudeLongitude(latlong);
-        AbsMap.UpdateMap(AbsMap.CenterLatitudeLongitude, 17.5f);
-        print("LATLONG: " + string.Format("{0}", AbsMap.CenterLatitudeLongitude));
+    //    _referenceCamera.transform.position = new Vector3(poiAux.transform.position.x,
+    //                                                 _referenceCamera.transform.position.y,
+    //                                                 poiAux.transform.position.z);
+    //    AbsMap.SetCenterLatitudeLongitude(latlong);
+    //    AbsMap.UpdateMap(AbsMap.CenterLatitudeLongitude, 17.5f);
+    //    print("LATLONG: " + string.Format("{0}", AbsMap.CenterLatitudeLongitude));
 
-    }
+    //}
     void SetPoiInfo(Poi poi, int poiNr)
     {
         //Text jazId = this.transform.Find("PoiInfoPanel/ScrollArea/Content/PoiGO/POINrTxt-Value").gameObject.GetComponent<Text>();

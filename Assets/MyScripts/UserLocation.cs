@@ -10,6 +10,11 @@ using UnityEngine.UI;
 
 public class UserLocation : MonoBehaviour
 {
+	//private static string CEMETERY_MAP_SCENE = "CemeteryMapScene";
+	private static string CEMETERY_ROUTE_SCENE = "RoutePageScene";
+	//private static string CEMETERY_ROUTE_DIRECTIONS_SCENE = "RouteDirectionsScene";
+	private static int ORTO_CAMERA_SIZE_MAP_SCENE = 150;
+	private static int ORTO_CAMERA_SIZE_ROUTE_SCENE = 260;
 	[SerializeField]
 	public Camera _referenceCamera;
 	[SerializeField]
@@ -38,6 +43,7 @@ public class UserLocation : MonoBehaviour
 	public void Start()
 	{
 		initialCameraPos = _referenceCamera.transform.position;
+
 
 		_statusText.gameObject.SetActive(true);
 
@@ -112,6 +118,17 @@ public class UserLocation : MonoBehaviour
 		_referenceCamera.transform.position = new Vector3(Player.transform.position.x,
 															 _referenceCamera.transform.position.y,
 															 Player.transform.position.z);
+
+		if (gameObject.scene.name.Equals(CEMETERY_ROUTE_SCENE)){
+			_referenceCamera.orthographicSize = ORTO_CAMERA_SIZE_ROUTE_SCENE;
+
+		}
+		else
+        {
+			_referenceCamera.orthographicSize = ORTO_CAMERA_SIZE_MAP_SCENE;
+
+		}
+
 
 		_map.SetCenterLatitudeLongitude(latlong);
 		_map.UpdateMap(_map.CenterLatitudeLongitude, _map.InitialZoom);

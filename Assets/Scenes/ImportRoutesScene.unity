@@ -8417,7 +8417,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1880367524}
   - component: {fileID: 1880367526}
-  - component: {fileID: 1880367525}
   m_Layer: 5
   m_Name: GeneralInfoArea
   m_TagString: Untagged
@@ -8444,29 +8443,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: -112}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1880367525
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1880367523}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c64a306c7e8f2d248b84fc033383f6c6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MainCamera: {fileID: 363043214}
-  RouteGeneralCanvas: {fileID: 1943530990}
-  RouteDirectionsCanvas: {fileID: 0}
-  LocationBasedGame: {fileID: 50914565}
-  Directions: {fileID: 0}
-  PoisRouteListArea: {fileID: 0}
-  StartRouteBtn: {fileID: 0}
-  RouteDurationTxt: {fileID: 0}
-  RouteDistanceTxt: {fileID: 0}
-  RouteTitle: {fileID: 0}
-  JazInfo: {fileID: 0}
 --- !u!222 &1880367526
 CanvasRenderer:
   m_ObjectHideFlags: 0
