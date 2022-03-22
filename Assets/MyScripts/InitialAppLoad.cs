@@ -103,43 +103,71 @@ public class InitialAppLoad : MonoBehaviour
 
     IEnumerator LoadAssetBundleLocally()
     {
-        if (!MainDataHolder.serverUnavailable) //If was able to connect to server
+        LoadingArea.SetActive(true);
+        ServerUnavailableArea.SetActive(false);
+        var bundleLoadRequest = AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, "augmentationsprefabs"));
+        while (!bundleLoadRequest.isDone)
         {
-            LoadingArea.SetActive(true);
-            ServerUnavailableArea.SetActive(false);
-            var bundleLoadRequest = AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, "augmentationsprefabs"));
-            while (!bundleLoadRequest.isDone)
-            {
-                string s = (string.Format("{0:0%}", bundleLoadRequest.progress));
-                loadedPercentage.text = s;
-                slider.value = bundleLoadRequest.progress;
-                yield return null;
-            }
-            yield return bundleLoadRequest;
-
-            AssetBundle myLoadedAssetBundle = bundleLoadRequest.assetBundle;
-            if (myLoadedAssetBundle == null)
-            {
-                Debug.Log("Failed to load AssetBundle!");
-                yield break;
-            }
-
-            MainDataHolder.myAssetBundle = myLoadedAssetBundle;
-            print("Asset bundle loaded!");
-
-            GameObject[] assetsLoadRequest = myLoadedAssetBundle.LoadAllAssets<GameObject>();
-            yield return assetsLoadRequest;
-            MainDataHolder.augmentationsGO = assetsLoadRequest;
-            myLoadedAssetBundle.Unload(false);
-
-            this.GetComponent<LoadScenes>().LoadHomeScene();
+            string s = (string.Format("{0:0%}", bundleLoadRequest.progress));
+            loadedPercentage.text = s;
+            slider.value = bundleLoadRequest.progress;
+            yield return null;
         }
-        else
+        yield return bundleLoadRequest;
+
+        AssetBundle myLoadedAssetBundle = bundleLoadRequest.assetBundle;
+        if (myLoadedAssetBundle == null)
         {
-            LoadingArea.SetActive(false);
-            ServerUnavailableArea.SetActive(true);
-            print("FICAR NA PAGINA INICIAL!");
+            Debug.Log("Failed to load AssetBundle!");
+            yield break;
         }
+
+        MainDataHolder.myAssetBundle = myLoadedAssetBundle;
+        print("Asset bundle loaded!");
+
+        GameObject[] assetsLoadRequest = myLoadedAssetBundle.LoadAllAssets<GameObject>();
+        yield return assetsLoadRequest;
+        MainDataHolder.augmentationsGO = assetsLoadRequest;
+        myLoadedAssetBundle.Unload(false);
+
+        this.GetComponent<LoadScenes>().LoadHomeScene();
+        //    if (!MainDataHolder.serverUnavailable) //If was able to connect to server
+        //    {
+        //        LoadingArea.SetActive(true);
+        //        ServerUnavailableArea.SetActive(false);
+        //        var bundleLoadRequest = AssetBundle.LoadFromFileAsync(Path.Combine(Application.streamingAssetsPath, "augmentationsprefabs"));
+        //        while (!bundleLoadRequest.isDone)
+        //        {
+        //            string s = (string.Format("{0:0%}", bundleLoadRequest.progress));
+        //            loadedPercentage.text = s;
+        //            slider.value = bundleLoadRequest.progress;
+        //            yield return null;
+        //        }
+        //        yield return bundleLoadRequest;
+
+        //        AssetBundle myLoadedAssetBundle = bundleLoadRequest.assetBundle;
+        //        if (myLoadedAssetBundle == null)
+        //        {
+        //            Debug.Log("Failed to load AssetBundle!");
+        //            yield break;
+        //        }
+
+        //        MainDataHolder.myAssetBundle = myLoadedAssetBundle;
+        //        print("Asset bundle loaded!");
+
+        //        GameObject[] assetsLoadRequest = myLoadedAssetBundle.LoadAllAssets<GameObject>();
+        //        yield return assetsLoadRequest;
+        //        MainDataHolder.augmentationsGO = assetsLoadRequest;
+        //        myLoadedAssetBundle.Unload(false);
+
+        //        this.GetComponent<LoadScenes>().LoadHomeScene();
+        //    }
+        //    else
+        //    {
+        //        LoadingArea.SetActive(false);
+        //        ServerUnavailableArea.SetActive(true);
+        //        print("FICAR NA PAGINA INICIAL!");
+        //    }
     }
 
 

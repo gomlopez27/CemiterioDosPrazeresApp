@@ -358,6 +358,8 @@ public class ObjectTrackerSlotsController : MonoBehaviour
         userCurrentZone.text = userCurrentSlot;
         print("userCurrentSlot: " + userCurrentSlot);
         yield return new WaitForSeconds(5f);
+        print("AFTER 5 SECONDS ");
+
     }
     public void ActivateObjectTracker()
     {
@@ -375,6 +377,7 @@ public class ObjectTrackerSlotsController : MonoBehaviour
                 go.SetActive(true);
                 ot.enabled = true;
                 ActiveTracker.text = go.name;
+                print(go.name);
                 //LoadingText.SetActive(false);
             }
             else
